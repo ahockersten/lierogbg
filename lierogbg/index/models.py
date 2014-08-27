@@ -1,4 +1,6 @@
 from django.db import models
+from django.forms import ModelForm
+from django.utils.translation import ugettext_lazy as _
 
 class Player(models.Model):
     name = models.CharField(max_length = 100)
@@ -7,10 +9,33 @@ class Player(models.Model):
     pool_points = models.IntegerField(default = 0)
 
     def __unicode__(self):
-        return u'%s %i %i' % (self.name, self.ranking_points, self.pool_points)
+        return u'%s' % (self.name)
 
     def clean(self):
         pass
 
     class Meta:
         pass
+
+class PlayedGame(models.Model):
+    start_time = models.DateTimeField()
+    player_left = models.ForeignKey(Player, related_name="player_left")
+    player_right = models.ForeignKey(Player, related_name="player_right")
+    winner = models.ForeignKey(Player, related_name="winner")
+
+class PlayedGameForm(ModelForm):
+    class Meta:
+        model = PlayedGame
+        fields = (
+            'start_time',
+            'player_left',
+            'player_right',
+            'winner',
+        )
+
+        labels = {
+            'start_time'   : _('Start time'),
+            'player_left'  : _('Left player'),
+            'player_right' : _('Right player'),
+            'winner'       : _('Winner'),
+        }

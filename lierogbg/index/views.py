@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.template import Context
 from django.contrib.auth.decorators import login_required
-from index.models import Player
+from index.models import Player, PlayedGameForm
 
 @login_required
 def index(request):
@@ -26,3 +26,32 @@ def create_player_table():
         players.append((current_rank, p.name, p.ranking_points, p.pool_points))
         current_rank = current_rank + 1
     return players
+
+def add_game(request):
+    played_game_form = PlayedGameForm()
+
+    context = Context({
+        'played_game_form' : played_game_form
+    })
+
+    return render(request, 'index/add_game.html', context)
+
+def submit_game(request):
+    played_game_form = PlayedGameForm(request.POST)
+    if played_game_form.is_valid():
+        pl = played_game_form.cleaned_data['player_left']
+        pr = played_game_form.cleaned_data['player_right']
+        winner = played_game_form.cleaned_data['winner']
+        loser = pl if winner == pr else pr
+        ante_multiplier = 0.02
+        loser_ante = round(((loser.ranking_points + loser.pool_points) ** 2) * 0.001 * ante_multiplier)
+        if loser_ante == 0:
+            loser_ante = 1
+        winner.ranking_points = winner.ranking_points + loser_ante
+        loser.ranking_points = loser.ranking_points - loser_ante
+        winner.save()
+        loser.save()
+        return redirect('index.views.index')
+    else:
+        return redirect('index.views.index')
+
