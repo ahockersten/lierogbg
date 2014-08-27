@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.template import Context
 from django.contrib.auth.decorators import login_required
-from index.models import Player, PlayedGameForm, PlayedGame
+from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm, SubgameFormSet
 
 def ranking(request):
     context = Context({
@@ -64,9 +64,11 @@ def create_games_table():
 @login_required
 def add_game(request):
     played_game_form = PlayedGameForm()
+    subgame_formset = SubgameFormSet(instance=PlayedGame())
 
     context = Context({
-        'played_game_form' : played_game_form
+        'played_game_form' : played_game_form,
+        'subgame_formset'  : subgame_formset,
     })
 
     return render(request, 'index/add_game.html', context)
@@ -74,8 +76,13 @@ def add_game(request):
 @login_required
 def submit_game(request):
     played_game_form = PlayedGameForm(request.POST)
+
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
+        subgame_formset = SubgameFormSet(request.POST, instance=played_game)
+
+        if not subgame_formset.is_valid():
+            return redirect('index.views.error')
 
         pl = played_game.player_left
         pr = played_game.player_right
@@ -115,6 +122,13 @@ def submit_game(request):
         loser.save()
         played_game.save()
         played_game_form.save_m2m()
+
+        for form in subgame_formset.forms:
+            subgame = form.save(commit=False)
+            subgame.parent = played_game
+            subgame.save()
+            form.save_m2m()
+
         return redirect('index.views.ranking')
     else:
         return redirect('index.views.error')

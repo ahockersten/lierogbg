@@ -1,6 +1,8 @@
 from django.db import models
 from django.forms import ModelForm
+from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
+
 
 class Player(models.Model):
     name = models.CharField(max_length = 100)
@@ -17,10 +19,11 @@ class Player(models.Model):
     class Meta:
         pass
 
+# a game is divided into several sub-games
 class PlayedGame(models.Model):
     start_time = models.DateTimeField()
-    player_left = models.ForeignKey(Player, related_name="player_left")
-    player_right = models.ForeignKey(Player, related_name="player_right")
+    player_left = models.ForeignKey(Player, related_name="playedgame_player_left")
+    player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
     winner = models.ForeignKey(Player, related_name="winner")
     # ranking points for left player, before match
     rp_pl_before = models.IntegerField()
@@ -60,3 +63,32 @@ class PlayedGameForm(ModelForm):
             'player_right' : _('Right player'),
             'winner'       : _('Winner'),
         }
+
+class Subgame(models.Model):
+    parent = models.ForeignKey(PlayedGame)
+    pl_lives = models.IntegerField()
+    pr_lives = models.IntegerField()
+
+    def __unicode__(self):
+        return u'%i - %i' % (self.pl_lives, self.pr_lives)
+
+    def clean(self):
+        pass
+
+    class Meta:
+        pass
+
+class SubgameForm(ModelForm):
+    class Meta:
+        model = Subgame
+        fields = (
+            'pl_lives',
+            'pr_lives',
+        )
+
+        labels = {
+            'pl_lives'     : _('Left player lives left'),
+            'pr_lives'     : _('Right player lives left')
+        }
+
+SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1)
