@@ -22,7 +22,7 @@ def authenticate(request):
     if user is not None:
         if user.is_active:
             auth.login(request, user)
-            return redirect('index.views.index')
+            return redirect('index.views.ranking')
         else:
             context = Context({
                 'error_msg' : _('User disabled')
@@ -42,7 +42,7 @@ def login(request):
     if request.GET.get('next'):
         next_view = request.GET['next']
     else:
-        next_view = 'index.views.index'
+        next_view = 'index.views.ranking'
 
     context = Context()
 
@@ -59,5 +59,5 @@ def logout(request):
         # Logout
         auth.logout(request)
 
-    return redirect('index.views.index')
+    return redirect('index.views.ranking')
 
