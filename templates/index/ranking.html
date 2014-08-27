@@ -15,6 +15,9 @@
                 <th>{% trans "Player" %}</th>
                 <th>{% trans "Ranking points" %}</th>
                 <th>{% trans "Pool points" %}</th>
+                <th>{% trans "Wins" %}</th>
+                <th>{% trans "Losses" %}</th>
+                <th>{% trans "Games" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +27,9 @@
                 <td>{{ p.name }}</td>
                 <td>{{ p.ranking_points }}</td>
                 <td>{{ p.pool_points }}</td>
+                <td>{{ p.wins }}</td>
+                <td>{{ p.losses }}</td>
+                <td>{{ p.games }}</td>
             </tr>
         {% endfor %}
         </tbody>
