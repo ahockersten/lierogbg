@@ -47,10 +47,10 @@ def create_games_table():
         tmp["player_left"] = g.player_left
         tmp["player_right"] = g.player_right
         tmp["winner"] = g.winner
-        tmp["rp_pl"] = g.rp_pl_before
+        tmp["rp_pl"] = g.rp_pl_after
         tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
         tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
-        tmp["rp_pr"] = g.rp_pr_before
+        tmp["rp_pr"] = g.rp_pr_after
         tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
         tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
         games.append(tmp)
