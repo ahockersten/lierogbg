@@ -67,7 +67,6 @@
 {% block custom_scripts %}
 <script type="text/javascript">
 $(document).ready(function () {
-    // Code adapted from http://djangosnippets.org/snippets/1389/
     function updateElementIndex(el, prefix, ndx) {
         var id_regex = new RegExp('(' + prefix + '-\\d+-)');
         var replacement = prefix + '-' + ndx + '-';
@@ -114,7 +113,7 @@ $(document).ready(function () {
             $(row).children().removeClass("error");
 
             // Relabel or rename all the relevant bits
-            $(row).find().each(function () {
+            $(row).find("*").each(function () {
                 updateElementIndex(this, prefix, formCount);
                 $(this).val("");
             });
@@ -127,7 +126,7 @@ $(document).ready(function () {
             $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
         } // End if
         else {
-            alert("{% trans "Sorry, you can only enter a maximum of ten matches." %}");
+            alert("{% trans "Sorry, you can only enter a maximum of ten submatches." %}");
         }
         return false;
     }
