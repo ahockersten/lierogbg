@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-27 13:30+0200\n"
+"POT-Creation-Date: 2014-08-27 15:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,19 +25,19 @@ msgstr "Användaren avstängd"
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
-#: lierogbg/index/models.py:45
+#: lierogbg/index/models.py:58
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:46 templates/index/games.html:15
+#: lierogbg/index/models.py:59 templates/index/games.html:15
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:47 templates/index/games.html:16
+#: lierogbg/index/models.py:60 templates/index/games.html:17
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:48 templates/index/games.html:17
+#: lierogbg/index/models.py:61 templates/index/games.html:19
 msgid "Winner"
 msgstr "Vinnare"
 
@@ -100,7 +100,7 @@ msgstr "Logga in"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
-#: templates/index/add_game.html:28 templates/index/games.html:33
+#: templates/index/add_game.html:28 templates/index/games.html:43
 #: templates/index/ranking.html:33
 msgid "Add game"
 msgstr "Lägg till match"
@@ -108,6 +108,14 @@ msgstr "Lägg till match"
 #: templates/index/games.html:14
 msgid "Time"
 msgstr "Tid"
+
+#: templates/index/games.html:16
+msgid "Left player RP"
+msgstr "Vänster spelares RP"
+
+#: templates/index/games.html:18
+msgid "Right player RP"
+msgstr "Höger spelares RP"
 
 #: templates/index/ranking.html:15
 msgid "Player"

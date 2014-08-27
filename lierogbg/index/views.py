@@ -22,7 +22,12 @@ def create_player_table():
     players = []
     current_rank = 1
     for p in player_list:
-        players.append((current_rank, p.name, p.ranking_points, p.pool_points))
+        tmp = {}
+        tmp["current_rank"] = current_rank
+        tmp["name"] = p.name
+        tmp["ranking_points"] = p.ranking_points
+        tmp["pool_points"] = p.pool_points
+        players.append(tmp)
         current_rank = current_rank + 1
     return players
 
@@ -37,7 +42,18 @@ def create_games_table():
     games_list = PlayedGame.objects.all().order_by('start_time').reverse()
     games = []
     for g in games_list:
-        games.append((g.start_time, g.player_left, g.player_right, g.winner))
+        tmp = {}
+        tmp["start_time"] = g.start_time
+        tmp["player_left"] = g.player_left
+        tmp["player_right"] = g.player_right
+        tmp["winner"] = g.winner
+        tmp["rp_pl"] = g.rp_pl_before
+        tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
+        tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
+        tmp["rp_pr"] = g.rp_pr_before
+        tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
+        tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
+        games.append(tmp)
     return games
 
 @login_required
@@ -54,12 +70,24 @@ def add_game(request):
 def submit_game(request):
     played_game_form = PlayedGameForm(request.POST)
     if played_game_form.is_valid():
-        pl = played_game_form.cleaned_data['player_left']
-        pr = played_game_form.cleaned_data['player_right']
-        winner = played_game_form.cleaned_data['winner']
+        played_game = played_game_form.save(commit=False)
+
+        pl = played_game.player_left
+        pr = played_game.player_right
+        winner = played_game.winner
         if (pl == pr or (winner != pl and winner != pr)):
             return redirect('index.views.error')
         loser = pl if winner == pr else pr
+        # the line below is needed due to winner and (pl|pr) not actually
+        # pointing to the same thing somehow, which messes up ranking points
+        # and pool points
+        winner = pl if winner == pl else pr
+
+        played_game.rp_pl_before = pl.ranking_points
+        played_game.rp_pr_before = pr.ranking_points
+        played_game.pp_pl_before = pl.pool_points
+        played_game.pp_pr_before = pr.pool_points
+
         ante_multiplier = 0.02
         if (winner.pool_points != 0):
             winner.ranking_points = winner.ranking_points + min(winner.pool_points, 40)
@@ -67,14 +95,21 @@ def submit_game(request):
         if (loser.pool_points != 0):
             loser.ranking_points = loser.ranking_points + min(loser.pool_points, 40)
             loser.pool_points = loser.pool_points - min(loser.pool_points, 40)
-        loser_ante = round(((loser.ranking_points + loser.pool_points) ** 2) * 0.001 * ante_multiplier)
+        loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
         if loser_ante == 0:
             loser_ante = 1
         winner.ranking_points = winner.ranking_points + loser_ante
         loser.ranking_points = loser.ranking_points - loser_ante
+
+        played_game.rp_pl_after = pl.ranking_points
+        played_game.rp_pr_after = pr.ranking_points
+        played_game.pp_pl_after = pl.pool_points
+        played_game.pp_pr_after = pr.pool_points
+
         winner.save()
         loser.save()
-        played_game_form.save()
+        played_game.save()
+        played_game_form.save_m2m()
         return redirect('index.views.ranking')
     else:
         return redirect('index.views.error')
