@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-27 08:57+0200\n"
+"POT-Creation-Date: 2014-08-27 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,22 @@ msgstr "Användaren avstängd"
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
+#: lierogbg/index/models.py:37
+msgid "Start time"
+msgstr "Starttid"
+
+#: lierogbg/index/models.py:38
+msgid "Left player"
+msgstr "Vänster spelare"
+
+#: lierogbg/index/models.py:39
+msgid "Right player"
+msgstr "Höger spelare"
+
+#: lierogbg/index/models.py:40
+msgid "Winner"
+msgstr "Vinnare"
+
 #: lierogbg/lierogbg/settings.py:81
 msgid "Swedish"
 msgstr "Svenska"
@@ -34,11 +50,12 @@ msgid "English"
 msgstr "Engelska"
 
 #: templates/base.html:10 templates/accounts/error.html:7
-#: templates/accounts/login.html:7 templates/index/index.html:7
+#: templates/accounts/login.html:7 templates/index/add_game.html:8
+#: templates/index/error.html:7 templates/index/index.html:7
 msgid "LieroGBG"
 msgstr "LieroGBG"
 
-#: templates/accounts/error.html:7
+#: templates/accounts/error.html:7 templates/index/error.html:7
 msgid "Error"
 msgstr "Fel"
 
@@ -65,3 +82,7 @@ msgstr "Logga in"
 #: templates/admin/base_site.html:4
 msgid "Django site admin"
 msgstr "Djangos administration"
+
+#: templates/index/add_game.html:28
+msgid "Add game"
+msgstr "Lägg till spel"
