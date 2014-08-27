@@ -21,7 +21,7 @@
                         <td>{{ field|addcss:'form-control' }}</td>
                     </tr>
                     {% for field in played_game_form.hidden_fields %}
-                        <tr><td>
+                        <tr style="display:none;"><td style="display:none;">
                             <div style="display:none;">{{ field }}</div>
                         </td></tr>
                     {% endfor %}
@@ -40,7 +40,7 @@
                             </tr>
                         {% endfor %}
                         {% for field in form.hidden_fields %}
-                            <tr><td>
+                            <tr style="display:none;"><td style="display:none;">
                                 <div style="display:none;">{{ field }}</div>
                             </td></tr>
                         {% endfor %}
@@ -84,11 +84,11 @@ $(document).ready(function () {
             var forms = $('.item'); // Get all the forms
             // Update the total number of forms (1 less than before)
             $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-            var i = 0;
+            formCount = forms.length;
             // Go through the forms and set their indices, names and IDs
-            for (formCount = forms.length; i < formCount; i++) {
-                $(forms.get(i)).children().children().each(function () {
-                    if ($(this).attr('type') == 'text') updateElementIndex(this, prefix, i);
+            for (var i = 0; i < formCount; i++) {
+                $(forms.get(i)).find("*").each(function () {
+                    updateElementIndex(this, prefix, i);
                 });
             }
         } // End if
@@ -119,9 +119,10 @@ $(document).ready(function () {
             });
 
             // Add an event handler for the delete item/form link
-            $(row).find(".delete").click(function () {
+            $(row).find(".delete_form").click(function () {
                 return deleteForm(this, prefix);
             });
+
             // Update the total form count
             $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
         } // End if
