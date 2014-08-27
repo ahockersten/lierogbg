@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-27 13:26+0200\n"
+"POT-Creation-Date: 2014-08-27 13:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,15 +29,15 @@ msgstr "Användaren finns inte"
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:46
+#: lierogbg/index/models.py:46 templates/index/games.html:15
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:47
+#: lierogbg/index/models.py:47 templates/index/games.html:16
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:48
+#: lierogbg/index/models.py:48 templates/index/games.html:17
 msgid "Winner"
 msgstr "Vinnare"
 
@@ -104,3 +104,19 @@ msgstr "Djangos administration"
 #: templates/index/ranking.html:33
 msgid "Add game"
 msgstr "Lägg till match"
+
+#: templates/index/games.html:14
+msgid "Time"
+msgstr "Tid"
+
+#: templates/index/ranking.html:15
+msgid "Player"
+msgstr "Spelare"
+
+#: templates/index/ranking.html:16
+msgid "Ranking points"
+msgstr "Ranking-poäng"
+
+#: templates/index/ranking.html:17
+msgid "Pool points"
+msgstr "Pool-poäng"
