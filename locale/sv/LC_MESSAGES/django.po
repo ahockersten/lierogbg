@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-27 11:20+0200\n"
+"POT-Creation-Date: 2014-08-27 13:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,19 +25,19 @@ msgstr "Användaren avstängd"
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
-#: lierogbg/index/models.py:37
+#: lierogbg/index/models.py:45
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:38
+#: lierogbg/index/models.py:46
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:39
+#: lierogbg/index/models.py:47
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:40
+#: lierogbg/index/models.py:48
 msgid "Winner"
 msgstr "Vinnare"
 
@@ -51,17 +51,34 @@ msgstr "Engelska"
 
 #: templates/base.html:10 templates/accounts/error.html:7
 #: templates/accounts/login.html:7 templates/index/add_game.html:8
-#: templates/index/error.html:7 templates/index/index.html:7
+#: templates/index/error.html:7 templates/index/games.html:7
+#: templates/index/ranking.html:7
 msgid "LieroGBG"
 msgstr "LieroGBG"
+
+#: templates/base.html:40
+msgid "Ranking"
+msgstr "Ranking"
+
+#: templates/base.html:43
+msgid "Games"
+msgstr "Matcher"
+
+#: templates/base.html:47
+msgid "Administration"
+msgstr "Administration"
+
+#: templates/base.html:50
+msgid "Logout"
+msgstr "Logga ut"
+
+#: templates/base.html:54 templates/accounts/login.html:7
+msgid "Login"
+msgstr "Logga in"
 
 #: templates/accounts/error.html:7 templates/index/error.html:7
 msgid "Error"
 msgstr "Fel"
-
-#: templates/accounts/login.html:7
-msgid "Login"
-msgstr "Logga in"
 
 #: templates/accounts/login.html:15
 msgid "Username"
@@ -83,6 +100,7 @@ msgstr "Logga in"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
-#: templates/index/add_game.html:28
+#: templates/index/add_game.html:28 templates/index/games.html:33
+#: templates/index/ranking.html:33
 msgid "Add game"
 msgstr "Lägg till spel"

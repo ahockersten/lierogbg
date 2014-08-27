@@ -22,6 +22,14 @@ class PlayedGame(models.Model):
     player_left = models.ForeignKey(Player, related_name="player_left")
     player_right = models.ForeignKey(Player, related_name="player_right")
     winner = models.ForeignKey(Player, related_name="winner")
+    def __unicode__(self):
+        return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)
+
+    def clean(self):
+        pass
+
+    class Meta:
+        pass
 
 class PlayedGameForm(ModelForm):
     class Meta:

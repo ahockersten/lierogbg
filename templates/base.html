@@ -36,6 +36,12 @@
         <div class="container-narrow">
             <div class="navbar navbar-default" role="navigation">
                 <ul class="nav nav-pills navbar-right">
+                    <li id="ranking" >
+                            <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+                    </li>
+                    <li id="games" >
+                            <a href="{% url 'index.views.games' %}">{% trans "Games" %}</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li id="administration" >
                             <a href="/admin">{% trans "Administration" %}</a>

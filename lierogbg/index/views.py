@@ -8,14 +8,14 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.template import Context
 from django.contrib.auth.decorators import login_required
-from index.models import Player, PlayedGameForm
+from index.models import Player, PlayedGameForm, PlayedGame
 
-def index(request):
+def ranking(request):
     context = Context({
         'players' : create_player_table()
     })
 
-    return render(request, 'index/index.html', context)
+    return render(request, 'index/ranking.html', context)
 
 def create_player_table():
     player_list = Player.objects.all().order_by('ranking_points').reverse()
@@ -25,6 +25,20 @@ def create_player_table():
         players.append((current_rank, p.name, p.ranking_points, p.pool_points))
         current_rank = current_rank + 1
     return players
+
+def games(request):
+    context = Context({
+        'games' : create_games_table()
+    })
+
+    return render(request, 'index/games.html', context)
+
+def create_games_table():
+    games_list = PlayedGame.objects.all().order_by('start_time').reverse()
+    games = []
+    for g in games_list:
+        games.append((g.start_time, g.player_left, g.player_right, g.winner))
+    return games
 
 @login_required
 def add_game(request):
@@ -60,7 +74,8 @@ def submit_game(request):
         loser.ranking_points = loser.ranking_points - loser_ante
         winner.save()
         loser.save()
-        return redirect('index.views.index')
+        played_game_form.save()
+        return redirect('index.views.ranking')
     else:
         return redirect('index.views.error')
 
