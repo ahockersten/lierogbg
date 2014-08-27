@@ -1,0 +1,169 @@
+@import "variables.less";
+
+@containerBorderRadius: 10px;
+
+body {
+    margin-top: 2%;
+    font-family: @sansFont;
+    background-color: @backgroundColor;
+}
+
+/* Custom container */
+.container-narrow {
+    margin: 0 auto;
+    max-width: 980px;
+    background-color: @pageBackground;
+    border-radius: @containerBorderRadius;
+    box-shadow: 0 0 12px 0px #555;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+.row {
+    margin: 10px;
+}
+
+#logo {
+    color: @primary1;
+    font-family: 'VT323', sans-serif;
+    font-size: xx-large;
+    font-weight: normal;
+}
+
+.headerFontProperties {
+    font-size: medium;
+    font-family: @sansFont;
+    //font-weight: bold;
+}
+
+.dropdown-menu > li > a {
+    .headerFontProperties;
+}
+
+a {
+    color: @primary1;
+}
+
+a:hover,
+a:focus,
+a:active {
+    color: @secondary1b;
+}
+
+.nav > li > a:hover,
+.nav > li a:focus {
+  background-color: @secondary1a;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+    color: white;
+    background-color: @primary1;
+}
+
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
+    color: white;
+    background-color: @primary1;
+}
+
+.dropdown-menu > li > a {
+    color: @primary1;
+    background-color: @mastheadBackgroundColor;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    color: @secondary1b;
+    background-color: @secondary1a;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus, {
+    color: white;
+    background-color: @primary1;
+}
+
+.dropdown-menu {
+    background-color: @mastheadBackgroundColor;
+}
+
+.nav .caret {
+    border-bottom-color: @primary1;
+    border-top-color: @primary1;
+}
+
+.nav a:focus .caret,
+.nav a:hover .caret {
+    border-bottom-color: @secondary1b;
+    border-top-color: @secondary1b;
+}
+
+.nav .open a:hover .caret,
+.nav .open a:focus .caret {
+    border-bottom-color: @mastheadBackgroundColor;
+    border-top-color: @mastheadBackgroundColor;
+}
+
+#logo {
+    line-height: 50px;
+}
+
+#logout {
+    background-color: #cccccc;
+}
+
+.booking-table {
+    padding:   3px 0px 3px 0px;
+}
+.booking-table > .list-group-item {
+    padding:   3px 0px 3px 0px;
+    text-align: center;
+}
+
+.booking-table-booked {
+    padding:   3px 0px 3px 0px;
+}
+.booking-table-booked > .list-group-item {
+    padding:   3px 0px 3px 0px;
+    text-align: center;
+    background-color: #ffd340;
+}
+
+.booking-table-free {
+    padding:   3px 0px 3px 0px;
+}
+.booking-table-free > .list-group-item {
+    padding:   3px 0px 3px 0px;
+    text-align: center;
+    background-color: #70ed3b;
+}
+
+.date-filter {
+    cursor: pointer;
+}
+
+.room-feature {
+    height: 1.3em;
+}
+
+.room-row,
+.hall-row {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* Make the room and hall selection boxes in create reservation a bit bigger.
+ * We ought to set a size for these html elements instead, but that seems quite
+ * cumbersome */
+#id_rooms {
+    height: 500px;
+}
+#id_halls {
+    height: 130px;
+}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{# new url behaviour in Django 1.5 #}
+{% load url from future %}
+
+{% load i18n %}
+
+{% block title %}{% trans "LieroGBG" %} {% trans "Error" %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Oh snap!</h1>
+</div>
+
+<div class="alert alert-danger">
+    <strong>{{ error_msg }}</strong>
+</div>
+{% endblock %}
