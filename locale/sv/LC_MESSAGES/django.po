@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-27 15:16+0200\n"
+"POT-Creation-Date: 2014-08-27 16:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,7 +60,7 @@ msgstr "LieroGBG"
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/base.html:43
+#: templates/base.html:43 templates/index/ranking.html:20
 msgid "Games"
 msgstr "Matcher"
 
@@ -100,8 +100,8 @@ msgstr "Logga in"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
-#: templates/index/add_game.html:28 templates/index/games.html:43
-#: templates/index/ranking.html:33
+#: templates/index/add_game.html:28 templates/index/games.html:49
+#: templates/index/ranking.html:39
 msgid "Add game"
 msgstr "Lägg till match"
 
@@ -128,3 +128,11 @@ msgstr "Ranking-poäng"
 #: templates/index/ranking.html:17
 msgid "Pool points"
 msgstr "Pool-poäng"
+
+#: templates/index/ranking.html:18
+msgid "Wins"
+msgstr "Vinster"
+
+#: templates/index/ranking.html:19
+msgid "Losses"
+msgstr "Förluster"

@@ -3,6 +3,7 @@
 # @file views.py
 #
 
+from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
@@ -27,6 +28,10 @@ def create_player_table():
         tmp["name"] = p.name
         tmp["ranking_points"] = p.ranking_points
         tmp["pool_points"] = p.pool_points
+        tmp["games"] = len(PlayedGame.objects.all().filter(Q(player_left=p) |
+                                                           Q(player_right=p)))
+        tmp["wins"] = len(PlayedGame.objects.all().filter(winner=p))
+        tmp["losses"] = tmp["games"] - tmp["wins"]
         players.append(tmp)
         current_rank = current_rank + 1
     return players
