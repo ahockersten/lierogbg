@@ -59,5 +59,5 @@ def logout(request):
         # Logout
         auth.logout(request)
 
-    return redirect('accounts.views.login')
+    return redirect('index.views.index')
 
