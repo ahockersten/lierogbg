@@ -11,25 +11,25 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Player</th>
-                <th>Ranking points</th>
-                <th>Pool points</th>
+                <th>Time</th>
+                <th>Left player</th>
+                <th>Right player</th>
+                <th>Winner</th>
             </tr>
         </thead>
         <tbody>
-        {% for p in players %}
+        {% for g in games %}
             <tr>
-                <td>{{ p.0 }}</td>
-                <td>{{ p.1 }}</td>
-                <td>{{ p.2 }}</td>
-                <td>{{ p.3 }}</td>
+                <td>{{ g.0 }}</td>
+                <td>{{ g.1 }}</td>
+                <td>{{ g.2 }}</td>
+                <td>{{ g.3 }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
 <div>
-    <a class="btn btn-default" href={% url 'index.views.add_game' %}>Add game</a>
+    <a class="btn btn-default" href={% url 'index.views.add_game' %}>{% trans "Add game" %}</a>
 </div>
 {% endblock %}

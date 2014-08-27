@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{# new url behaviour in Django 1.5 #}
+{% load url from future %}
+
+{% load i18n %}
+
+{% block title %}{% trans "LieroGBG" %}{% endblock %}
+
+{% block content %}
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Player</th>
+                <th>Ranking points</th>
+                <th>Pool points</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for p in players %}
+            <tr>
+                <td>{{ p.0 }}</td>
+                <td>{{ p.1 }}</td>
+                <td>{{ p.2 }}</td>
+                <td>{{ p.3 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <a class="btn btn-default" href={% url 'index.views.add_game' %}>{% trans "Add game" %}</a>
+</div>
+{% endblock %}
