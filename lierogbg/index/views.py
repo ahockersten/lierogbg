@@ -22,7 +22,12 @@ def create_player_table():
     players = []
     current_rank = 1
     for p in player_list:
-        players.append((current_rank, p.name, p.ranking_points, p.pool_points))
+        tmp = {}
+        tmp["current_rank"] = current_rank
+        tmp["name"] = p.name
+        tmp["ranking_points"] = p.ranking_points
+        tmp["pool_points"] = p.pool_points
+        players.append(tmp)
         current_rank = current_rank + 1
     return players
 
