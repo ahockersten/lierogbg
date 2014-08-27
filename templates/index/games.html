@@ -13,17 +13,33 @@
             <tr>
                 <th>{% trans "Time" %}</th>
                 <th>{% trans "Left player" %}</th>
+                <th>{% trans "Left player RP" %}</th>
                 <th>{% trans "Right player" %}</th>
+                <th>{% trans "Right player RP" %}</th>
                 <th>{% trans "Winner" %}</th>
             </tr>
         </thead>
         <tbody>
         {% for g in games %}
             <tr>
-                <td>{{ g.0 }}</td>
-                <td>{{ g.1 }}</td>
-                <td>{{ g.2 }}</td>
-                <td>{{ g.3 }}</td>
+                <td>{{ g.start_time }}</td>
+                <td>{{ g.player_left }}</td>
+                <td>
+                    {% if g.rp_pl_positive %}
+                        {{ g.rp_pl }} <span class="rp_change_positive">(+{{ g.rp_pl_change }})</span>
+                    {% else %}
+                        {{ g.rp_pl }} <span class="rp_change_negative">({{ g.rp_pl_change }})</span>
+                    {% endif %}
+                </td>
+                <td>{{ g.player_right }}</td>
+                <td>
+                    {% if g.rp_pr_positive %}
+                        {{ g.rp_pr }} <span class="rp_change_positive">(+{{ g.rp_pr_change }})</span>
+                    {% else %}
+                        {{ g.rp_pr }} <span class="rp_change_negative">({{ g.rp_pr_change }})</span>
+                    {% endif %}
+                </td>>
+                <td>{{ g.winner }}</td>
             </tr>
         {% endfor %}
         </tbody>
