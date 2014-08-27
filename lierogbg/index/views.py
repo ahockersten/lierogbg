@@ -10,7 +10,6 @@ from django.template import Context
 from django.contrib.auth.decorators import login_required
 from index.models import Player, PlayedGameForm
 
-@login_required
 def index(request):
     context = Context({
         'players' : create_player_table()
@@ -27,6 +26,7 @@ def create_player_table():
         current_rank = current_rank + 1
     return players
 
+@login_required
 def add_game(request):
     played_game_form = PlayedGameForm()
 
@@ -36,14 +36,23 @@ def add_game(request):
 
     return render(request, 'index/add_game.html', context)
 
+@login_required
 def submit_game(request):
     played_game_form = PlayedGameForm(request.POST)
     if played_game_form.is_valid():
         pl = played_game_form.cleaned_data['player_left']
         pr = played_game_form.cleaned_data['player_right']
         winner = played_game_form.cleaned_data['winner']
+        if (pl == pr or (winner != pl and winner != pr)):
+            return redirect('index.views.error')
         loser = pl if winner == pr else pr
         ante_multiplier = 0.02
+        if (winner.pool_points != 0):
+            winner.ranking_points = winner.ranking_points + min(winner.pool_points, 40)
+            winner.pool_points = winner.pool_points - min(winner.pool_points, 40)
+        if (loser.pool_points != 0):
+            loser.ranking_points = loser.ranking_points + min(loser.pool_points, 40)
+            loser.pool_points = loser.pool_points - min(loser.pool_points, 40)
         loser_ante = round(((loser.ranking_points + loser.pool_points) ** 2) * 0.001 * ante_multiplier)
         if loser_ante == 0:
             loser_ante = 1
@@ -53,5 +62,8 @@ def submit_game(request):
         loser.save()
         return redirect('index.views.index')
     else:
-        return redirect('index.views.index')
+        return redirect('index.views.error')
 
+def error(request):
+    context = Context({})
+    return render(request, 'index/error.html', context)
