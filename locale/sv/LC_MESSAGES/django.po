@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-27 16:03+0200\n"
+"POT-Creation-Date: 2014-08-28 14:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,21 +25,29 @@ msgstr "Användaren avstängd"
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
-#: lierogbg/index/models.py:58
+#: lierogbg/index/models.py:61
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:59 templates/index/games.html:15
+#: lierogbg/index/models.py:62 templates/index/games.html:15
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:60 templates/index/games.html:17
+#: lierogbg/index/models.py:63 templates/index/games.html:17
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:61 templates/index/games.html:19
+#: lierogbg/index/models.py:64 templates/index/games.html:19
 msgid "Winner"
 msgstr "Vinnare"
+
+#: lierogbg/index/models.py:90
+msgid "Left player lives left"
+msgstr "Antal liv kvar för vänster spelare"
+
+#: lierogbg/index/models.py:91
+msgid "Right player lives left"
+msgstr "Antal liv kvar för höger spelare"
 
 #: lierogbg/lierogbg/settings.py:81
 msgid "Swedish"
@@ -100,10 +108,34 @@ msgstr "Logga in"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
-#: templates/index/add_game.html:28 templates/index/games.html:49
+#: templates/index/add_game.html:18
+msgid "Match info"
+msgstr "Match-info"
+
+#: templates/index/add_game.html:36
+msgid "Subgame info"
+msgstr "Undermatch-info"
+
+#: templates/index/add_game.html:48
+msgid "Delete subgame"
+msgstr "Ta bort under-match"
+
+#: templates/index/add_game.html:53
+msgid "Add subgame"
+msgstr "Lägg till under-match"
+
+#: templates/index/add_game.html:57 templates/index/games.html:49
 #: templates/index/ranking.html:39
 msgid "Add game"
 msgstr "Lägg till match"
+
+#: templates/index/add_game.html:92
+msgid "You have to enter at least one subgame!"
+msgstr "Du måste skriva in minst en under-match!"
+
+#: templates/index/add_game.html:126
+msgid "Sorry, you can only enter a maximum of ten subgames."
+msgstr "Tyvärr, du får skriva in max 10 under-matcher."
 
 #: templates/index/games.html:14
 msgid "Time"

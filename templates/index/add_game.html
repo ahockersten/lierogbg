@@ -13,53 +13,49 @@
 <div>
     <form action="{% url 'index.views.submit_game' %}" method="post">
         {% csrf_token %}
-        <table class="table">
-            <tbody>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                {% trans "Match info" %}
+            </div>
+            <div class="panel-body">
                 {% for field in played_game_form.visible_fields %}
-                    <tr>
-                        <td>{{ field.label_tag }}</td>
-                        <td>{{ field|addcss:'form-control' }}</td>
-                    </tr>
+                    <div>
+                        {{ field.label_tag }}
+                        {{ field|addcss:'form-control' }}
+                    </div>
                     {% for field in played_game_form.hidden_fields %}
-                        <tr style="display:none;"><td style="display:none;">
-                            <div style="display:none;">{{ field }}</div>
-                        </td></tr>
+                        <div style="display:none;">{{ field }}</div>
                     {% endfor %}
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
         {{ subgame_formset.management_form }}
         {% for form in subgame_formset %}
-            <div class="item">
-                <table class="table">
-                    <tbody>
-                        {% for field in form.visible_fields %}
-                            <tr>
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field|addcss:'form-control' }}</td>
-                            </tr>
-                        {% endfor %}
-                        {% for field in form.hidden_fields %}
-                            <tr style="display:none;"><td style="display:none;">
-                                <div style="display:none;">{{ field }}</div>
-                            </td></tr>
-                        {% endfor %}
-                        <tr><td>
-                            <a class="btn btn-default delete_form" href="">{% trans "Delete subgame" %}</a>
-                        </td></tr>
-                    </tbody>
-                </table>
+        <div class="panel panel-info subgame_item">
+            <div class="panel-heading">
+                {% trans "Subgame info" %}
             </div>
+            <div class="panel-body">
+                {% for field in form.visible_fields %}
+                    <div>
+                        {{ field.label_tag }}
+                        {{ field|addcss:'form-control' }}
+                    </div>
+                {% endfor %}
+                {% for field in form.hidden_fields %}
+                    <div style="display:none;">{{ field }}</div>
+                {% endfor %}
+                    <a class="btn btn-default delete_form" href="">{% trans "Delete subgame" %}</a>
+            </div>
+        </div>
         {% endfor %}
-        <table class="table">
-            <tbody>
-                <tr><td>
-                    <a class="btn btn-default" id="add_form" href="">{% trans "Add subgame" %}</a>
-                </td></tr>
-            </tbody>
-        </table>
+        <div>
+            <a class="btn btn-default" id="add_form" href="">{% trans "Add subgame" %}</a>
+        </div>
 
-        <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
+        <div class="well">
+            <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
+        </div>
     </form>
 </div>
 {% endblock %}
@@ -80,8 +76,8 @@ $(document).ready(function () {
         var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
         if (formCount > 1) {
             // Delete the item/form
-            $(btn).parents('.item').remove();
-            var forms = $('.item'); // Get all the forms
+            $(btn).parents('.subgame_item').remove();
+            var forms = $('.subgame_item'); // Get all the forms
             // Update the total number of forms (1 less than before)
             $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
             formCount = forms.length;
@@ -100,12 +96,12 @@ $(document).ready(function () {
 
     function addForm(btn, prefix) {
         var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        // You can only submit a maximum of 10 todo items
+        // You can only submit a maximum of 10 subgames
         if (formCount < 10) {
             // Clone a form (without event handlers) from the first form
-            var row = $(".item:first").clone(false).get(0);
+            var row = $(".subgame_item:first").clone(false).get(0);
             // Insert it after the last form
-            $(row).removeAttr('id').hide().insertAfter(".item:last").slideDown(300);
+            $(row).removeAttr('id').hide().insertAfter(".subgame_item:last").slideDown(300);
 
             // Remove the bits we don't want in the new row/form
             // e.g. error messages
@@ -127,7 +123,7 @@ $(document).ready(function () {
             $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
         } // End if
         else {
-            alert("{% trans "Sorry, you can only enter a maximum of ten submatches." %}");
+            alert("{% trans "Sorry, you can only enter a maximum of ten subgames." %}");
         }
         return false;
     }

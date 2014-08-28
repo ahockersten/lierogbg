@@ -91,4 +91,4 @@ class SubgameForm(ModelForm):
             'pr_lives'     : _('Right player lives left')
         }
 
-SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1, can_delete=False)
+SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1, can_delete=False, form=SubgameForm)
