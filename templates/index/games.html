@@ -21,7 +21,7 @@
         </thead>
         <tbody>
         {% for g in games %}
-            <tr>
+            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
                 <td>{{ g.start_time }}</td>
                 <td>{{ g.player_left }}</td>
                 <td>
@@ -40,6 +40,24 @@
                     {% endif %}
                 </td>
                 <td>{{ g.winner }}</td>
+            </tr>
+            <tr class="collapse" id="more-info-{{forloop.counter}}">
+                <td colspan="6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            {% trans "Detailed match info" %}
+                        </div>
+                        <div class="panel-body">
+                            {% for sg in g.subgames %}
+                                {% if sg.3 %}
+                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }} <a href="{{ MEDIA_URL }}{{ sg.3.url }}">X</a><br/>
+                                {% else %}
+                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }} X<br/>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
