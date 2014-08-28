@@ -58,6 +58,12 @@ def create_games_table():
         tmp["rp_pr"] = g.rp_pr_after
         tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
         tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
+        subgames = Subgame.objects.all().filter(parent=g)
+        subgames_tmp = []
+        for subgame in subgames:
+            subgames_tmp.append((subgame.map_played, subgame.pl_lives,
+                                 subgame.pr_lives, subgame.replay_file))
+        tmp["subgames"] = subgames_tmp
         games.append(tmp)
     return games
 
