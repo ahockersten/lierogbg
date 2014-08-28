@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-28 14:06+0200\n"
+"POT-Creation-Date: 2014-08-28 14:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,13 +41,21 @@ msgstr "Höger spelare"
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:90
+#: lierogbg/index/models.py:94
+msgid "Map played"
+msgstr "Spelad karta"
+
+#: lierogbg/index/models.py:95
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:91
+#: lierogbg/index/models.py:96
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
+
+#: lierogbg/index/models.py:97
+msgid "Replay file"
+msgstr "Replay-fil"
 
 #: lierogbg/lierogbg/settings.py:81
 msgid "Swedish"

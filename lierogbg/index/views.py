@@ -79,7 +79,7 @@ def submit_game(request):
 
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
-        subgame_formset = SubgameFormSet(request.POST, instance=played_game)
+        subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
 
         if not subgame_formset.is_valid():
             return redirect('index.views.error')

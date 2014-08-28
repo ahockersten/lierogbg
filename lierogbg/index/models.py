@@ -66,8 +66,10 @@ class PlayedGameForm(ModelForm):
 
 class Subgame(models.Model):
     parent = models.ForeignKey(PlayedGame)
+    map_played = models.CharField(max_length = 100, blank=True)
     pl_lives = models.IntegerField()
     pr_lives = models.IntegerField()
+    replay_file = models.FileField(blank=True, upload_to="replays/")
 
     def __unicode__(self):
         return u'%i - %i' % (self.pl_lives, self.pr_lives)
@@ -82,13 +84,17 @@ class SubgameForm(ModelForm):
     class Meta:
         model = Subgame
         fields = (
+            'map_played',
             'pl_lives',
             'pr_lives',
+            'replay_file',
         )
 
         labels = {
+            'map_played'   : _('Map played'),
             'pl_lives'     : _('Left player lives left'),
-            'pr_lives'     : _('Right player lives left')
+            'pr_lives'     : _('Right player lives left'),
+            'replay_file'  : _('Replay file')
         }
 
 SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1, can_delete=False, form=SubgameForm)
