@@ -28,10 +28,23 @@ def create_player_table():
         tmp["name"] = p.name
         tmp["ranking_points"] = p.ranking_points
         tmp["pool_points"] = p.pool_points
-        tmp["games"] = len(PlayedGame.objects.all().filter(Q(player_left=p) |
-                                                           Q(player_right=p)))
-        tmp["wins"] = len(PlayedGame.objects.all().filter(winner=p))
+        games = PlayedGame.objects.all().filter(Q(player_left=p) |
+                                                Q(player_right=p))
+        tmp["games"] = len(games)
+        tmp["wins"] = len(games.filter(winner=p))
         tmp["losses"] = tmp["games"] - tmp["wins"]
+        lives = 0
+        for g in games:
+            subgames = Subgame.objects.all().filter(parent=g)
+            for s in subgames:
+                if g.player_left == p:
+                    lives = lives + s.pl_lives
+                    lives = lives - s.pr_lives
+                else:
+                    lives = lives - s.pl_lives
+                    lives = lives + s.pr_lives
+        tmp["lives"] = lives
+        tmp["lives_positive"] = True if lives >= 0 else False
         players.append(tmp)
         current_rank = current_rank + 1
     return players

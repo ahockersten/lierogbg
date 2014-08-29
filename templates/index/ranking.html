@@ -18,6 +18,7 @@
                 <th>{% trans "Wins" %}</th>
                 <th>{% trans "Losses" %}</th>
                 <th>{% trans "Games" %}</th>
+                <th>{% trans "Lives" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,11 @@
                 <td>{{ p.wins }}</td>
                 <td>{{ p.losses }}</td>
                 <td>{{ p.games }}</td>
+                {% if p.lives_positive %}
+                    <td><span class="change_positive">+{{ p.lives }}</span></td>
+                {% else %}
+                    <td><span class="change_negative">{{ p.lives }}</span></td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>
