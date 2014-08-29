@@ -124,12 +124,37 @@ def submit_game(request):
             pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
             pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
 
+        subgames = []
+        for form in subgame_formset.forms:
+            subgames.append(form.save(commit=False))
+
         if winner == None:
+            # if there is no winner, each player gets half of the ante
+            # if this is not an even sum, give the remainder to the player
+            # who had the most lives left in the match. If both are equal,
+            # give it to the player with the fewest ranking points. If both
+            # are still equal, give it to the left player
             pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
             pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
             ante = (pl_ante + pr_ante) / 2
+            ante_rem = (pl_ante + pr_ante) % 2
             pl.ranking_points = pl.ranking_points - pl_ante + ante
             pr.ranking_points = pr.ranking_points - pr_ante + ante
+            if ante_rem != 0:
+                pl_lives = 0
+                pr_lives = 0
+                for subgame in subgames:
+                    pl_lives = pl_lives + subgame.pl_lives
+                    pr_lives = pr_lives + subgame.pr_lives
+                if pl_lives == pr_lives:
+                    if pl.ranking_points >= pr.ranking_points:
+                        pl.ranking_points = pl.ranking_points + 1
+                    else:
+                        pr.ranking_points = pr.ranking_points + 1
+                elif pl_lives > pr_lives:
+                    pl.ranking_points = pl.ranking_points + 1
+                else:
+                    pr.ranking_points = pr.ranking_points + 1
         else:
             loser = pl if winner == pr else pr
             # the line below is needed due to winner and (pl|pr) not actually
@@ -153,10 +178,10 @@ def submit_game(request):
         played_game.save()
         played_game_form.save_m2m()
 
-        for form in subgame_formset.forms:
-            subgame = form.save(commit=False)
+        for subgame in subgames:
             subgame.parent = played_game
             subgame.save()
+        for form in subgame_formset.forms:
             form.save_m2m()
 
         return redirect('index.views.ranking')
