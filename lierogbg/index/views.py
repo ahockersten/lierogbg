@@ -25,10 +25,8 @@ def create_player_table():
     current_rank = 1
     for p in player_list:
         tmp = {}
+        tmp["player"] = p
         tmp["current_rank"] = current_rank
-        tmp["name"] = p.name
-        tmp["ranking_points"] = p.ranking_points
-        tmp["pool_points"] = p.pool_points
         games = PlayedGame.objects.all().filter(Q(player_left=p) |
                                                 Q(player_right=p))
         tmp["games"] = len(games)
@@ -63,14 +61,10 @@ def create_games_table():
     games = []
     for g in games_list:
         tmp = {}
-        tmp["start_time"] = g.start_time
-        tmp["player_left"] = g.player_left
-        tmp["player_right"] = g.player_right
+        tmp["game"] = g
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
-        tmp["rp_pl"] = g.rp_pl_after
         tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
         tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
-        tmp["rp_pr"] = g.rp_pr_after
         tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
         tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
         subgames = Subgame.objects.all().filter(parent=g)

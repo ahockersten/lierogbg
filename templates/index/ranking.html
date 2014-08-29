@@ -26,9 +26,9 @@
         {% for p in players %}
             <tr>
                 <td>{{ p.current_rank }}</td>
-                <td>{{ p.name }}</td>
-                <td>{{ p.ranking_points }}</td>
-                <td>{{ p.pool_points }}</td>
+                <td>{{ p.player.name }}</td>
+                <td>{{ p.player.ranking_points }}</td>
+                <td>{{ p.player.pool_points }}</td>
                 <td>{{ p.wins }}</td>
                 <td>{{ p.losses }}</td>
                 <td>{{ p.ties }}</td>
