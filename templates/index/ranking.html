@@ -17,7 +17,9 @@
                 <th>{% trans "Pool points" %}</th>
                 <th>{% trans "Wins" %}</th>
                 <th>{% trans "Losses" %}</th>
+                <th>{% trans "Ties" %}</th>
                 <th>{% trans "Games" %}</th>
+                <th>{% trans "Lives" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +31,13 @@
                 <td>{{ p.pool_points }}</td>
                 <td>{{ p.wins }}</td>
                 <td>{{ p.losses }}</td>
+                <td>{{ p.ties }}</td>
                 <td>{{ p.games }}</td>
+                {% if p.lives_positive %}
+                    <td><span class="change_positive">+{{ p.lives }}</span></td>
+                {% else %}
+                    <td><span class="change_negative">{{ p.lives }}</span></td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

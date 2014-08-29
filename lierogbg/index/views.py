@@ -3,12 +3,13 @@
 # @file views.py
 #
 
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.template import Context
-from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
 from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm, SubgameFormSet
 
 def ranking(request):
@@ -28,10 +29,24 @@ def create_player_table():
         tmp["name"] = p.name
         tmp["ranking_points"] = p.ranking_points
         tmp["pool_points"] = p.pool_points
-        tmp["games"] = len(PlayedGame.objects.all().filter(Q(player_left=p) |
-                                                           Q(player_right=p)))
-        tmp["wins"] = len(PlayedGame.objects.all().filter(winner=p))
-        tmp["losses"] = tmp["games"] - tmp["wins"]
+        games = PlayedGame.objects.all().filter(Q(player_left=p) |
+                                                Q(player_right=p))
+        tmp["games"] = len(games)
+        tmp["wins"] = len(games.filter(winner=p))
+        tmp["ties"] = len(games.filter(winner=None))
+        tmp["losses"] = tmp["games"] - tmp["wins"] - tmp["ties"]
+        lives = 0
+        for g in games:
+            subgames = Subgame.objects.all().filter(parent=g)
+            for s in subgames:
+                if g.player_left == p:
+                    lives = lives + s.pl_lives
+                    lives = lives - s.pr_lives
+                else:
+                    lives = lives - s.pl_lives
+                    lives = lives + s.pr_lives
+        tmp["lives"] = lives
+        tmp["lives_positive"] = True if lives >= 0 else False
         players.append(tmp)
         current_rank = current_rank + 1
     return players
@@ -51,7 +66,7 @@ def create_games_table():
         tmp["start_time"] = g.start_time
         tmp["player_left"] = g.player_left
         tmp["player_right"] = g.player_right
-        tmp["winner"] = g.winner
+        tmp["winner"] = _('Tied') if g.winner == None else g.winner
         tmp["rp_pl"] = g.rp_pl_after
         tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
         tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
@@ -93,13 +108,8 @@ def submit_game(request):
         pl = played_game.player_left
         pr = played_game.player_right
         winner = played_game.winner
-        if (pl == pr or (winner != pl and winner != pr)):
+        if (pl == pr or (winner != pl and winner != pr and winner != None)):
             return redirect('index.views.error')
-        loser = pl if winner == pr else pr
-        # the line below is needed due to winner and (pl|pr) not actually
-        # pointing to the same thing somehow, which messes up ranking points
-        # and pool points
-        winner = pl if winner == pl else pr
 
         played_game.rp_pl_before = pl.ranking_points
         played_game.rp_pr_before = pr.ranking_points
@@ -107,25 +117,39 @@ def submit_game(request):
         played_game.pp_pr_before = pr.pool_points
 
         ante_multiplier = 0.02
-        if (winner.pool_points != 0):
-            winner.ranking_points = winner.ranking_points + min(winner.pool_points, 40)
-            winner.pool_points = winner.pool_points - min(winner.pool_points, 40)
-        if (loser.pool_points != 0):
-            loser.ranking_points = loser.ranking_points + min(loser.pool_points, 40)
-            loser.pool_points = loser.pool_points - min(loser.pool_points, 40)
-        loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
-        if loser_ante == 0:
-            loser_ante = 1
-        winner.ranking_points = winner.ranking_points + loser_ante
-        loser.ranking_points = loser.ranking_points - loser_ante
+        if (pl.pool_points != 0):
+            pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
+            pl.pool_points = pl.pool_points - min(pl.pool_points, 40)
+        if (pr.pool_points != 0):
+            pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
+            pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
+
+        if winner == None:
+            pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
+            pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
+            ante = (pl_ante + pr_ante) / 2
+            pl.ranking_points = pl.ranking_points - pl_ante + ante
+            pr.ranking_points = pr.ranking_points - pr_ante + ante
+        else:
+            loser = pl if winner == pr else pr
+            # the line below is needed due to winner and (pl|pr) not actually
+            # pointing to the same thing somehow, which messes up ranking points
+            # and pool points
+            winner = pl if winner == pl else pr
+
+            loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
+            if loser_ante == 0:
+                loser_ante = 1
+            winner.ranking_points = winner.ranking_points + loser_ante
+            loser.ranking_points = loser.ranking_points - loser_ante
 
         played_game.rp_pl_after = pl.ranking_points
         played_game.rp_pr_after = pr.ranking_points
         played_game.pp_pl_after = pl.pool_points
         played_game.pp_pr_after = pr.pool_points
 
-        winner.save()
-        loser.save()
+        pl.save()
+        pr.save()
         played_game.save()
         played_game_form.save_m2m()
 
