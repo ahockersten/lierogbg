@@ -13,7 +13,13 @@ sudo apt-get update
 sudo apt-get install python-django python-pip nodejs
 sudo npm install -g less
 
+Install instructions
+===================
+make
+cd lierogbg
+python manage.py collectstatic
+
 How to test developer builds
 ============
-cd lierogbg
 python manage.py runserver
+
