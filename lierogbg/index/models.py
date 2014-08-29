@@ -1,12 +1,13 @@
 from datetimewidget.widgets import DateTimeWidget
-
 from django.db import models
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
+from index import fields
 
 class Player(models.Model):
     name = models.CharField(max_length = 100)
+    color = fields.ColorField()
     real_name = models.CharField(max_length = 100, blank = True)
     ranking_points = models.IntegerField(default = 1000)
     pool_points = models.IntegerField(default = 0)
