@@ -6,6 +6,7 @@
 {% load myfilters %}
 
 {% block title %}{% trans "LieroGBG" %}{% endblock %}
+{% block custom_css %}{{ played_game_form.media.css }}{% endblock %}
 
 {% block content %}
 <div>
@@ -137,6 +138,6 @@ $(document).ready(function () {
         return deleteForm(this, "subgame_set");
     });
 });
-
 </script>
+{{ played_game_form.media.js }}
 {% endblock %}
