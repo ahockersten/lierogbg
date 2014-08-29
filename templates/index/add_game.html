@@ -12,7 +12,7 @@
 <div>
 </div>
 <div>
-    <form action="{% url 'index.views.submit_game' %}" enctype="multipart/form-data" method="post" role="form">
+    <form action="{% url 'index.views.submit_game' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
         {% csrf_token %}
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -21,8 +21,12 @@
             <div class="panel-body">
                 {% for field in played_game_form.visible_fields %}
                     <div class="form-group">
-                        {{ field.label_tag }}
-                        {{ field|addcss:'form-control' }}
+                        <div class="col-xs-3">
+                            {{ field.label_tag }}
+                        </div>
+                        <div class="col-xs-9">
+                            {{ field|addcss:'form-control' }}
+                        </div>
                     </div>
                     {% for field in played_game_form.hidden_fields %}
                         <div style="display:none;">{{ field }}</div>
@@ -39,14 +43,20 @@
             <div class="panel-body">
                 {% for field in form.visible_fields %}
                     <div class="form-group">
-                        {{ field.label_tag }}
-                        {{ field|addcss:'form-control' }}
+                        <div class="col-xs-3">
+                            {{ field.label_tag }}
+                        </div>
+                        <div class="col-xs-9">
+                            {{ field|addcss:'form-control' }}
+                        </div>
                     </div>
                 {% endfor %}
                 {% for field in form.hidden_fields %}
                     <div style="display:none;">{{ field }}</div>
                 {% endfor %}
+                <div>
                     <a class="btn btn-default delete_form" href="">{% trans "Delete subgame" %}</a>
+                </div>
             </div>
         </div>
         {% endfor %}
