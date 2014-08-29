@@ -48,13 +48,22 @@
                             {% trans "Detailed match info" %}
                         </div>
                         <div class="panel-body">
-                            {% for sg in g.subgames %}
-                                {% if sg.3 %}
-                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }} <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a><br/>
-                                {% else %}
-                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }}<br/>
-                                {% endif %}
-                            {% endfor %}
+                            <table class="table table-striped">
+                                <tbody>
+                                    {% for sg in g.subgames %}
+                                        <tr>
+                                            <td>Game {{ forloop.counter }}</td>
+                                            <td>{{ sg.0 }}</td>
+                                            <td>{{ sg.1 }} - {{ sg.2 }}</td>
+                                            <td>
+                                                {% if sg.3 %}
+                                                    <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </td>
