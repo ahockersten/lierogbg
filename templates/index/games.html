@@ -50,9 +50,9 @@
                         <div class="panel-body">
                             {% for sg in g.subgames %}
                                 {% if sg.3 %}
-                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }} <a href="{{ sg.3.url }}">X</a><br/>
+                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }} <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a><br/>
                                 {% else %}
-                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }} X<br/>
+                                    Game {{ forloop.counter }}: {{ sg.0 }} {{ sg.1 }} - {{ sg.2 }}<br/>
                                 {% endif %}
                             {% endfor %}
                         </div>
