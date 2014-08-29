@@ -3,7 +3,6 @@ from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 
-
 class Player(models.Model):
     name = models.CharField(max_length = 100)
     real_name = models.CharField(max_length = 100, blank = True)
@@ -24,7 +23,7 @@ class PlayedGame(models.Model):
     start_time = models.DateTimeField()
     player_left = models.ForeignKey(Player, related_name="playedgame_player_left")
     player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
-    winner = models.ForeignKey(Player, related_name="winner")
+    winner = models.ForeignKey(Player, related_name="winner", blank=True, null=True)
     # ranking points for left player, before match
     rp_pl_before = models.IntegerField()
     rp_pr_before = models.IntegerField()
