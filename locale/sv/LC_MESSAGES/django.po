@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-28 16:02+0200\n"
+"POT-Creation-Date: 2014-08-29 14:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgstr "Ta bort under-match"
 msgid "Add subgame"
 msgstr "Lägg till under-match"
 
-#: templates/index/add_game.html:57 templates/index/games.html:63
+#: templates/index/add_game.html:57 templates/index/games.html:84
 #: templates/index/ranking.html:39
 msgid "Add game"
 msgstr "Lägg till match"
@@ -160,6 +160,22 @@ msgstr "Höger spelares RP"
 #: templates/index/games.html:48
 msgid "Detailed match info"
 msgstr "Detaljerad match-info"
+
+#: templates/index/games.html:54
+msgid "Game"
+msgstr "Match"
+
+#: templates/index/games.html:55
+msgid "Map"
+msgstr "Karta"
+
+#: templates/index/games.html:56
+msgid "Score"
+msgstr "Slutställning"
+
+#: templates/index/games.html:57
+msgid "Download"
+msgstr "Ladda ner"
 
 #: templates/index/ranking.html:15
 msgid "Player"
