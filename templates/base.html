@@ -40,6 +40,14 @@
     <body>
         <div class="container-narrow">
             <div class="navbar navbar-default" role="navigation">
+                {% if user.is_authenticated %}
+                    <ul class="nav nav-pills navbar-left">
+                        <li id="add_game" >
+                            <a href="{% url 'index.views.add_game' %}">{% trans "Add game" %}</a>
+                        </li>
+                    </ul>
+                {% endif %}
+
                 <ul class="nav nav-pills navbar-right">
                     <li id="ranking" >
                             <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
