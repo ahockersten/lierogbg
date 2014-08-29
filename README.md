@@ -5,6 +5,7 @@ Things you will need
 - LESS
 - A recent version of node.js (available via ppa:chris-lea/node.js) (needed for LESS)
 - nodejs and npm from above source (version in Ubuntu 12.10 won't work) (needed for LESS)
+- django-datetime-widget
 
 Or, more easily put:
 sudo add-apt-repository ppa:chris-lea/node.js
@@ -12,6 +13,7 @@ sudo add-apt-repository ppa:chris-lea/python-django
 sudo apt-get update
 sudo apt-get install python-django python-pip nodejs
 sudo npm install -g less
+sudo pip install django-datetime-widget
 
 Install instructions
 ===================

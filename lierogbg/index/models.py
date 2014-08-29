@@ -1,3 +1,5 @@
+from datetimewidget.widgets import DateTimeWidget
+
 from django.db import models
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
@@ -55,12 +57,17 @@ class PlayedGameForm(ModelForm):
             'player_right',
             'winner',
         )
-
         labels = {
             'start_time'   : _('Start time'),
             'player_left'  : _('Left player'),
             'player_right' : _('Right player'),
             'winner'       : _('Winner'),
+        }
+        widgets = {
+            'start_time' : DateTimeWidget(usel10n = True,
+                                          bootstrap_version=3,
+                                          options= {'format' : 'yyyy-mm-dd hh:ii',
+                                                    'weekStart' : '1'})
         }
 
 class Subgame(models.Model):

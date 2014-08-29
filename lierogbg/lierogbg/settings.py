@@ -145,6 +145,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
+    # external stuff
+    'datetimewidget',
+
     # our own apps
     'index',
     'accounts',
