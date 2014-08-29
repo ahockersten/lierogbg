@@ -21,7 +21,7 @@
         </thead>
         <tbody>
         {% for g in games %}
-            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' }%">
+            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' %}">
                 <td>{{ g.start_time }}</td>
                 <td>{{ g.player_left }}</td>
                 <td>
