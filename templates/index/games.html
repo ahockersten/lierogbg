@@ -8,7 +8,7 @@
 
 {% block content %}
 <div>
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
                 <th>{% trans "Time" %}</th>
@@ -21,7 +21,7 @@
         </thead>
         <tbody>
         {% for g in games %}
-            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
+            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' }%">
                 <td>{{ g.start_time }}</td>
                 <td>{{ g.player_left }}</td>
                 <td>
