@@ -90,4 +90,3 @@ clean:
 	@-rm -f $(CSS_FILES) $(BOOTSTRAP_LOCAL_FONTS_FILES)
 	@echo Deleting JS files
 	@-rm -f $(BOOTSTRAP_LOCAL_JS_FILES)
-
