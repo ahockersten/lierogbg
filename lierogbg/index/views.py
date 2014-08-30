@@ -186,7 +186,7 @@ def submit_game(request):
             winner = pl if winner == pl else pr
 
             loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            if loser_ante == 0:
+            if loser_ante == 0 and loser.ranking_points != 0:
                 loser_ante = 1
             winner.ranking_points = winner.ranking_points + loser_ante
             loser.ranking_points = loser.ranking_points - loser_ante
