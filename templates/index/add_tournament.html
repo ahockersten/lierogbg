@@ -41,18 +41,18 @@
     </div>
     <div class="panel panel-info">
         <div class="panel-heading">
-            {% trans "Ante per position" %}
+            {% trans "Ante per placing" %}
         </div>
         <div class="panel-body">
-            {{ tournament_placement_ante_formset.management_form }}
-            <div class="tournament_placement_ante_item">
-                {% for form in tournament_placement_ante_formset %}
+            {{ tournament_placing_ante_formset.management_form }}
+            <div class="tournament_placing_ante_item">
+                {% for form in tournament_placing_ante_formset %}
                     <div class="form-group">
                         <div class="col-xs-1">
-                            {{ form.position.label_tag }}
+                            {{ form.placing.label_tag }}
                         </div>
                         <div class="col-xs-5">
-                            {{ form.position|addcss:'form-control placing' }}
+                            {{ form.placing|addcss:'form-control placing' }}
                         </div>
                         <div class="col-xs-1">
                             {{ form.ante.label_tag }}
@@ -89,7 +89,7 @@ $(document).ready(function () {
     function update_ante_boxes() {
         var num_players = $("#id_players option:selected").length;
         // hide all ante boxes first
-        var ante_boxes = $(".tournament_placement_ante_item");
+        var ante_boxes = $(".tournament_placing_ante_item");
         if (num_players == 0) {
             ante_boxes.each(function(index) {
                 $(this).hide();
@@ -113,13 +113,13 @@ $(document).ready(function () {
             }
             else {
                 for (var i = ante_boxes.length; i < num_players; i++) {
-                    var last_ante_box = $(".tournament_placement_ante_item:last")
+                    var last_ante_box = $(".tournament_placing_ante_item:last")
                     var new_last = last_ante_box.clone(false).get(0);
                     // Insert it after the last box
                     $(new_last).removeAttr('id').insertAfter(last_ante_box);
                     // Relabel or rename all the relevant bits
                     $(new_last).find("*").each(function () {
-                        updateElementIndex(this, "tournamentplacementante_set", i);
+                        updateElementIndex(this, "tournamentplacingante_set", i);
                         $(this).val("");
                     });
                 }
@@ -128,7 +128,7 @@ $(document).ready(function () {
         update_placing_boxes();
         update_change_handlers();
         // Update the total form count
-        $("#id_tournamentplacementante_set-TOTAL_FORMS").val(num_players);
+        $("#id_tournamentplacingante_set-TOTAL_FORMS").val(num_players);
     }
 
     function update_add_tournament_btn() {

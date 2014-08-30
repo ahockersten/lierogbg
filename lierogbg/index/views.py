@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
-from index.models import SubgameFormSet, Tournament, TournamentPlacementAnteFormSet
+from index.models import SubgameFormSet, Tournament, TournamentPlacingAnteFormSet
 from index.models import TournamentCreateForm, TournamentEditForm
 
 def ranking(request):
@@ -87,20 +87,47 @@ def tournaments(request):
 @login_required
 def add_tournament(request):
     tournament_form = TournamentCreateForm()
-    tournament_placement_ante_formset = TournamentPlacementAnteFormSet(instance=Tournament())
+    tournament_placing_ante_formset = TournamentPlacingAnteFormSet(instance=Tournament())
 
     context = Context({
-        'tournament_form'                   : tournament_form,
-        'tournament_placement_ante_formset' : tournament_placement_ante_formset,
+        'tournament_form'                 : tournament_form,
+        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
     })
     return render(request, 'index/add_tournament.html', context)
+
+@login_required
+def edit_tournament(request, tournament):
+    tournament_form = TournamentEditForm()
+    context = Context({
+        'tournament_form' : tournament_form,
+    })
+    return render(request, 'index/edit_tournament.html', context)
 
 @login_required
 def submit_tournament(request):
     tournament_form = TournamentCreateForm(request.POST)
 
     if tournament_form.is_valid():
-        return redirect('index.views.ranking')
+        tournament = tournament_form.save(commit = False)
+        tournament.total_ante = 0
+        tournament.save()
+        tournament_form.save_m2m()
+        total_ante = 0
+
+        for player in tournament.players.all():
+            # FIXME this can be reused for update_total_ante
+            if (player.pool_points != 0):
+                player.ranking_points = player.ranking_points + min(player.pool_points, tournament.pool_points)
+            player_ante = round(player.ranking_points * tournament.ante * 0.01)
+            if player_ante == 0 and player.ranking_points != 0:
+                player_ante = 1
+            player.ranking_points = player.ranking_points - player_ante
+            player.save()
+            total_ante = total_ante + player_ante
+        tournament.total_ante = total_ante
+        tournament.save()
+        tournament_form.save_m2m()
+        return redirect('index.views.edit_tournament', tournament)
     else:
         return redirect('index.views.error')
 

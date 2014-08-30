@@ -87,33 +87,30 @@ class TournamentEditForm(ModelForm):
             'finished'     : _('Finished'),
         }
 
-# this is the number of points given to each placement in a tournament
-# FIXME change to placing next db change
-class TournamentPlacementAnte(models.Model):
+# this is the number of points given to each placing in a tournament
+class TournamentPlacingAnte(models.Model):
     # the tournament this ante belongs to
     tournament = models.ForeignKey(Tournament)
-    # the position it should be given to
-    position = models.IntegerField()  # FIXME change to placing next db change
+    # the placing it should be given to
+    placing = models.IntegerField()  # FIXME change to placing next db change
     # the ante this placing receives
     ante = models.IntegerField()
 
-# FIXME change to placing next db change
-class TournamentPlacementAnteForm(ModelForm):
+class TournamentPlacingAnteForm(ModelForm):
     class Meta:
-        model = TournamentPlacementAnte
+        model = TournamentPlacingAnte
         fields = (
-            'position',
+            'placing',
             'ante',
         )
         labels = {
-            'position' : _('Placing'),
-            'ante'     : _('Received ante'),
+            'placing' : _('Placing'),
+            'ante'    : _('Received ante'),
         }
 
-# FIXME change to placing next db change
-TournamentPlacementAnteFormSet = inlineformset_factory(Tournament, TournamentPlacementAnte,
+TournamentPlacingAnteFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
                                                        extra = 1, can_delete = False,
-                                                       form = TournamentPlacementAnteForm)
+                                                       form = TournamentPlacingAnteForm)
 
 
 # records a played game
