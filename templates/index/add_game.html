@@ -33,29 +33,29 @@
     </div>
     {{ subgame_formset.management_form }}
     {% for form in subgame_formset %}
-    <div class="panel panel-info subgame_item">
-        <div class="panel-heading">
-            {% trans "Subgame info" %}
-        </div>
-        <div class="panel-body">
-            {% for field in form.visible_fields %}
-                <div class="form-group">
-                    <div class="col-xs-3">
-                        {{ field.label_tag }}
+        <div class="panel panel-info subgame_item">
+            <div class="panel-heading">
+                {% trans "Subgame info" %}
+            </div>
+            <div class="panel-body">
+                {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            {{ field.label_tag }}
+                        </div>
+                        <div class="col-xs-9">
+                            {{ field|addcss:'form-control' }}
+                        </div>
                     </div>
-                    <div class="col-xs-9">
-                        {{ field|addcss:'form-control' }}
-                    </div>
+                {% endfor %}
+                {% for field in form.hidden_fields %}
+                    <div style="display:none;">{{ field }}</div>
+                {% endfor %}
+                <div>
+                    <a class="btn btn-default delete_form" href="">{% trans "Delete subgame" %}</a>
                 </div>
-            {% endfor %}
-            {% for field in form.hidden_fields %}
-                <div style="display:none;">{{ field }}</div>
-            {% endfor %}
-            <div>
-                <a class="btn btn-default delete_form" href="">{% trans "Delete subgame" %}</a>
             </div>
         </div>
-    </div>
     {% endfor %}
     <div>
         <a class="btn btn-default" id="add_form" href="">{% trans "Add subgame" %}</a>
