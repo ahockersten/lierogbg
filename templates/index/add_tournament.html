@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{# new url behaviour in Django 1.5 #}
+{% load url from future %}
+
+{% load i18n %}
+{% load myfilters %}
+
+{% block title %}{% trans "LieroGBG" %}{% endblock %}
+{% block custom_css %}{{ tournament_form.media.css }}{% endblock %}
+
+{% block content %}
+<form action="{% url 'index.views.submit_tournament' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {% trans "Tournament info" %}
+        </div>
+        <div class="panel-body">
+            {% for field in tournament_form.visible_fields %}
+                <div class="form-group">
+                    <div class="col-xs-3">
+                        {{ field.label_tag }}
+                    </div>
+                    <div class="col-xs-9">
+                        {{ field|addcss:'form-control' }}
+                    </div>
+                </div>
+                {% for field in tournament_form.hidden_fields %}
+                    <div style="display:none;">{{ field }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            {% trans "Ante per position" %}
+        </div>
+        <div class="panel-body">
+            <div class="tournament_placement_ante_item">
+                {{ tournament_placement_ante_formset.management_form }}
+                {% for form in tournament_placement_ante_formset %}
+                    <div class="form-group">
+                        {% for field in form.visible_fields %}
+                            <div class="col-xs-1">
+                                {{ field.label_tag }}
+                            </div>
+                            <div class="col-xs-5">
+                                {{ field|addcss:'form-control' }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% for field in form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="well">
+        <button type="submit" class="btn btn-success">{% trans "Add tournament" %}</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block custom_scripts %}
+{{ tournament_form.media.js }}
+<script type="text/javascript">
+$(document).ready(function () {
+    'use strict';
+    function update_ante_boxes() {
+        var num_players = $("#id_players option:selected").length;
+        // hide all ante boxes first
+        var ante_boxes = $(".tournament_placement_ante_item");
+        if (num_players == 0) {
+            ante_boxes.each(function(index) {
+                $(this).hide();
+                if (index > 0) {
+                    $(this).remove();
+                }
+            });
+        }
+        else {
+            if (num_players == 1) {
+                ante_boxes.each(function(index) {
+                    $(this).show();
+                });
+            }
+            if (ante_boxes.length > num_players) {
+                ante_boxes.each(function(index) {
+                    if (index + 1> num_players) {
+                        $(this).remove();
+                    }
+                });
+            }
+            else {
+                for (var i = ante_boxes.length; i < num_players; i++) {
+                    var last_ante_box = $(".tournament_placement_ante_item:last")
+                    var new_last = last_ante_box.clone(false).get(0);
+                    // Insert it after the last box
+                    $(new_last).removeAttr('id').hide().insertAfter(last_ante_box).slideDown(300);
+                    // Relabel or rename all the relevant bits
+                    $(new_last).find("*").each(function () {
+                        updateElementIndex(this, "tournamentplacementante_set", i);
+                        $(this).val("");
+                    });
+                    // Update the total form count
+                    //$("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+                }
+            }
+        }
+    }
+
+    $("#id_players").change(function() {
+        update_ante_boxes();
+    });
+
+    update_ante_boxes();
+});
+</script>
+{% endblock %}

@@ -10,7 +10,9 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
-from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm, SubgameFormSet
+from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
+from index.models import SubgameFormSet, Tournament, TournamentPlacementAnteFormSet
+from index.models import TournamentCreateForm, TournamentEditForm
 
 def ranking(request):
     context = Context({
@@ -75,6 +77,33 @@ def create_games_table():
         tmp["subgames"] = subgames_tmp
         games.append(tmp)
     return games
+
+def tournaments(request):
+    context = Context({
+        'tournaments' : create_games_table()
+    })
+
+    return render(request, 'index/tournaments.html', context)
+
+@login_required
+def add_tournament(request):
+    tournament_form = TournamentCreateForm()
+    tournament_placement_ante_formset = TournamentPlacementAnteFormSet(instance=Tournament())
+
+    context = Context({
+        'tournament_form'                   : tournament_form,
+        'tournament_placement_ante_formset' : tournament_placement_ante_formset,
+    })
+    return render(request, 'index/add_tournament.html', context)
+
+@login_required
+def submit_tournament(request):
+    tournament_form = TournamentCreateForm(request.POST)
+
+    if tournament_form.is_valid():
+        return redirect('index.views.ranking')
+    else:
+        return redirect('index.views.error')
 
 @login_required
 def add_game(request):
