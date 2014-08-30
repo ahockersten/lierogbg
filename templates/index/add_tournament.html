@@ -36,8 +36,8 @@
             {% trans "Ante per position" %}
         </div>
         <div class="panel-body">
+            {{ tournament_placement_ante_formset.management_form }}
             <div class="tournament_placement_ante_item">
-                {{ tournament_placement_ante_formset.management_form }}
                 {% for form in tournament_placement_ante_formset %}
                     <div class="form-group">
                         {% for field in form.visible_fields %}
@@ -97,17 +97,17 @@ $(document).ready(function () {
                     var last_ante_box = $(".tournament_placement_ante_item:last")
                     var new_last = last_ante_box.clone(false).get(0);
                     // Insert it after the last box
-                    $(new_last).removeAttr('id').hide().insertAfter(last_ante_box).slideDown(300);
+                    $(new_last).removeAttr('id').insertAfter(last_ante_box);
                     // Relabel or rename all the relevant bits
                     $(new_last).find("*").each(function () {
                         updateElementIndex(this, "tournamentplacementante_set", i);
                         $(this).val("");
                     });
-                    // Update the total form count
-                    //$("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
                 }
             }
         }
+        // Update the total form count
+        $("#id_tournamentplacementante_set-TOTAL_FORMS").val(num_players);
     }
 
     $("#id_players").change(function() {
