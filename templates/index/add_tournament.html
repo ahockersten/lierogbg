@@ -48,14 +48,18 @@
             <div class="tournament_placement_ante_item">
                 {% for form in tournament_placement_ante_formset %}
                     <div class="form-group">
-                        {% for field in form.visible_fields %}
-                            <div class="col-xs-1">
-                                {{ field.label_tag }}
-                            </div>
-                            <div class="col-xs-5">
-                                {{ field|addcss:'form-control' }}
-                            </div>
-                        {% endfor %}
+                        <div class="col-xs-1">
+                            {{ form.position.label_tag }}
+                        </div>
+                        <div class="col-xs-5">
+                            {{ form.position|addcss:'form-control placing' }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form.ante.label_tag }}
+                        </div>
+                        <div class="col-xs-5">
+                            {{ form.ante|addcss:'form-control' }}
+                        </div>
                     </div>
                     {% for field in form.hidden_fields %}
                         <div style="display:none;">{{ field }}</div>
@@ -75,6 +79,12 @@
 <script type="text/javascript">
 $(document).ready(function () {
     'use strict';
+    function update_placing_boxes() {
+        $(".placing").each(function(index) {
+            $(this).attr('readonly', true);
+            $(this).val(index + 1);
+        });
+    }
     function update_ante_boxes() {
         var num_players = $("#id_players option:selected").length;
         // hide all ante boxes first
@@ -114,6 +124,7 @@ $(document).ready(function () {
                 }
             }
         }
+        update_placing_boxes();
         // Update the total form count
         $("#id_tournamentplacementante_set-TOTAL_FORMS").val(num_players);
     }
@@ -121,6 +132,8 @@ $(document).ready(function () {
     $("#id_players").change(function() {
         update_ante_boxes();
     });
+
+    update_placing_boxes();
 
     $("#id_ante, #id_players, #id_pool_points").change(function() {
         $.ajax({

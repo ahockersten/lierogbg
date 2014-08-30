@@ -88,14 +88,16 @@ class TournamentEditForm(ModelForm):
         }
 
 # this is the number of points given to each placement in a tournament
+# FIXME change to placing next db change
 class TournamentPlacementAnte(models.Model):
     # the tournament this ante belongs to
     tournament = models.ForeignKey(Tournament)
     # the position it should be given to
-    position = models.IntegerField()
-    # the ante this placement receives
+    position = models.IntegerField()  # FIXME change to placing next db change
+    # the ante this placing receives
     ante = models.IntegerField()
 
+# FIXME change to placing next db change
 class TournamentPlacementAnteForm(ModelForm):
     class Meta:
         model = TournamentPlacementAnte
@@ -104,10 +106,11 @@ class TournamentPlacementAnteForm(ModelForm):
             'ante',
         )
         labels = {
-            'position' : _('Position'),
+            'position' : _('Placing'),
             'ante'     : _('Received ante'),
         }
 
+# FIXME change to placing next db change
 TournamentPlacementAnteFormSet = inlineformset_factory(Tournament, TournamentPlacementAnte,
                                                        extra = 1, can_delete = False,
                                                        form = TournamentPlacementAnteForm)
