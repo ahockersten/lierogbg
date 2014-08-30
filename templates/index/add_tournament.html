@@ -58,7 +58,7 @@
                             {{ form.ante.label_tag }}
                         </div>
                         <div class="col-xs-5">
-                            {{ form.ante|addcss:'form-control' }}
+                            {{ form.ante|addcss:'form-control placing_ante' }}
                         </div>
                     </div>
                     {% for field in form.hidden_fields %}
@@ -69,7 +69,7 @@
         </div>
     </div>
     <div class="well">
-        <button type="submit" class="btn btn-success">{% trans "Add tournament" %}</button>
+        <button id="id_add_tournament_btn" type="submit" class="btn btn-success">{% trans "Add tournament" %}</button>
     </div>
 </form>
 {% endblock %}
@@ -85,6 +85,7 @@ $(document).ready(function () {
             $(this).val(index + 1);
         });
     }
+
     function update_ante_boxes() {
         var num_players = $("#id_players option:selected").length;
         // hide all ante boxes first
@@ -125,14 +126,38 @@ $(document).ready(function () {
             }
         }
         update_placing_boxes();
+        update_change_handlers();
         // Update the total form count
         $("#id_tournamentplacementante_set-TOTAL_FORMS").val(num_players);
+    }
+
+    function update_add_tournament_btn() {
+        // calculate ante split so that it adds up to ante total. If so
+        // enable button. If not, don't enable button
+        var summed_ante = 0;
+        $(".placing_ante").each(function(index) {
+            summed_ante = summed_ante + parseInt($(this).val());
+        });
+        var total_ante = parseInt($("#id_total_ante").val());
+        if (total_ante === summed_ante) {
+            $("#id_add_tournament_btn").attr('disabled', false);
+        }
+        else {
+            $("#id_add_tournament_btn").attr('disabled', true);
+        }
+    }
+
+    function update_change_handlers() {
+        $("#id_ante, #id_players, #id_pool_points, .placing_ante").change(function() {
+            update_add_tournament_btn();
+        });
     }
 
     $("#id_players").change(function() {
         update_ante_boxes();
     });
 
+    update_add_tournament_btn();
     update_placing_boxes();
 
     $("#id_ante, #id_players, #id_pool_points").change(function() {
@@ -147,7 +172,7 @@ $(document).ready(function () {
                 pool_points: $('#id_pool_points').val(),
             },
             success: function(data) {
-                $("#id_total_ante").val(parseFloat(data));
+                $("#id_total_ante").val(parseInt(data));
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Please report this error: " + errorThrown + xhr.status +
@@ -155,6 +180,8 @@ $(document).ready(function () {
             }
         });
     });
+
+    update_change_handlers();
 
     update_ante_boxes();
 });
