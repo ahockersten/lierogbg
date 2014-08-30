@@ -9,6 +9,7 @@ urlpatterns = patterns('index.views',
     url(r'^tournaments\/$', 'tournaments', name="tournaments"),
     url(r'^submit_game\/$', 'submit_game', name="submit_game"),
     url(r'^submit_tournament\/$', 'submit_tournament', name="submit_tournament"),
+    url(r'^update_total_ante\/$', 'update_total_ante', name="update_total_ante"),
     url(r'^\/*$', 'ranking', name="ranking"),
 )
 

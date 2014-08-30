@@ -5,9 +5,8 @@
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
@@ -210,6 +209,28 @@ def submit_game(request):
         return redirect('index.views.ranking')
     else:
         return redirect('index.views.error')
+
+@login_required
+def update_total_ante(request):
+    if request.is_ajax():
+        try:
+            players_id = request.POST.getlist( 'players')
+            players = Player.objects.all().filter(pk__in = players_id)
+            ante = int(request.POST['ante']) * 0.01
+            pool_points = int(request.POST['pool_points'])
+            total_ante = 0
+            for player in players:
+                if (player.pool_points != 0):
+                    player.ranking_points = player.ranking_points + min(player.pool_points, pool_points)
+                player_ante = round(player.ranking_points * ante)
+                if player_ante == 0 and player.ranking_points != 0:
+                    player_ante = 1
+                total_ante = total_ante + player_ante
+            return HttpResponse(str(total_ante))
+        except ValueError:
+            return HttpResponse('Error') # incorrect post
+    else:
+        raise Http404
 
 def error(request):
     context = Context({})

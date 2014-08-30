@@ -29,6 +29,14 @@
                     <div style="display:none;">{{ field }}</div>
                 {% endfor %}
             {% endfor %}
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label for="id_total_ante">{% trans "Total Ante:" %}</label>
+                </div>
+                <div class="col-xs-9">
+                    <input id="id_total_ante" class="form-control" type="number" name="total_ante" readonly></input>
+                </div>
+            </div>
         </div>
     </div>
     <div class="panel panel-info">
@@ -87,7 +95,7 @@ $(document).ready(function () {
             }
             if (ante_boxes.length > num_players) {
                 ante_boxes.each(function(index) {
-                    if (index + 1> num_players) {
+                    if (index + 1 > num_players) {
                         $(this).remove();
                     }
                 });
@@ -112,6 +120,27 @@ $(document).ready(function () {
 
     $("#id_players").change(function() {
         update_ante_boxes();
+    });
+
+    $("#id_ante, #id_players, #id_pool_points").change(function() {
+        $.ajax({
+            type: "POST",
+            url: {% url 'index.views.update_total_ante' %},
+            traditional: true,
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                players: $('#id_players').val(),
+                ante: $('#id_ante').val(),
+                pool_points: $('#id_pool_points').val(),
+            },
+            success: function(data) {
+                $("#id_total_ante").val(parseFloat(data));
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Please report this error: " + errorThrown + xhr.status +
+                      xhr.responseText);
+            }
+        });
     });
 
     update_ante_boxes();
