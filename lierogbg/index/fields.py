@@ -34,10 +34,7 @@ class ColorField(models.PositiveIntegerField):
         try:
             string = hex(value)[2:]
 
-            if string == "0":
-                string = "000000"
-
-            return "#" + string.upper()
+            return "#" + string.zfill(6).upper()
         except TypeError:
             return None
 
