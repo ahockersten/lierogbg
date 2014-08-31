@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-31 15:38+0200\n"
+"POT-Creation-Date: 2014-08-31 17:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,37 +32,35 @@ msgstr "Starttid"
 #: lierogbg/index/models.py:73 lierogbg/index/models.py:95
 #: templates/index/tournaments.html:12
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
-#: lierogbg/index/models.py:74 templates/index/edit_tournament.html:26
-#, fuzzy
+#: lierogbg/index/models.py:74 templates/index/edit_tournament.html:29
 msgid "Players"
 msgstr "Spelare"
 
 #: lierogbg/index/models.py:75
 msgid "Ante (in %)"
-msgstr ""
+msgstr "Ante (i %)"
 
 #: lierogbg/index/models.py:76
-#, fuzzy
 msgid "Pool points unlocked"
-msgstr "Pool-poäng"
+msgstr "Pool-poäng upplåsta"
 
 #: lierogbg/index/models.py:96 templates/index/tournaments.html:17
 msgid "Total ante"
-msgstr ""
+msgstr "Total ante"
 
 #: lierogbg/index/models.py:97 templates/index/tournaments.html:18
 msgid "Finished"
-msgstr ""
+msgstr "Slutförd"
 
 #: lierogbg/index/models.py:128 lierogbg/index/models.py:145
 msgid "Placing"
-msgstr ""
+msgstr "Placering"
 
 #: lierogbg/index/models.py:129 lierogbg/index/models.py:146
 msgid "Received ante"
-msgstr ""
+msgstr "Mottagen ante"
 
 #: lierogbg/index/models.py:147 templates/index/ranking.html:13
 msgid "Player"
@@ -97,7 +95,7 @@ msgstr "Antal liv kvar för höger spelare"
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:66
+#: lierogbg/index/views.py:67
 msgid "Tied"
 msgstr "Oavgjort"
 
@@ -119,14 +117,14 @@ msgid "LieroGBG"
 msgstr "LieroGBG"
 
 #: templates/base.html:44 templates/index/add_game.html:12
-#: templates/index/edit_tournament.html:99
+#: templates/index/edit_tournament.html:107
+#: templates/index/edit_tournament.html:114
 msgid "Add game"
 msgstr "Lägg till match"
 
 #: templates/base.html:47 templates/index/add_tournament.html:70
-#, fuzzy
 msgid "Add tournament"
-msgstr "Lägg till under-match"
+msgstr "Lägg till turnering"
 
 #: templates/base.html:54
 msgid "Ranking"
@@ -137,9 +135,8 @@ msgid "Games"
 msgstr "Matcher"
 
 #: templates/base.html:60
-#, fuzzy
 msgid "Tournaments"
-msgstr "Undermatch-info"
+msgstr "Turneringar"
 
 #: templates/base.html:64
 msgid "Administration"
@@ -178,32 +175,29 @@ msgid "Django site admin"
 msgstr "Djangos administration"
 
 #: templates/index/add_tournament.html:14
-#: templates/index/edit_tournament.html:13
-#, fuzzy
+#: templates/index/edit_tournament.html:16
 msgid "Tournament info"
-msgstr "Undermatch-info"
+msgstr "Turnerings-info"
 
 #: templates/index/add_tournament.html:32
 msgid "Total Ante:"
-msgstr ""
+msgstr "Total Ante:"
 
 #: templates/index/add_tournament.html:42
 msgid "Ante per placing"
-msgstr ""
+msgstr "Ante per placering"
 
-#: templates/index/edit_tournament.html:56
-#, fuzzy
-msgid "Matches played"
-msgstr "Spelad karta"
+#: templates/index/edit_tournament.html:59
+msgid "Games played"
+msgstr "Spelade matcher"
 
-#: templates/index/edit_tournament.html:64
+#: templates/index/edit_tournament.html:67
 msgid "Final placings"
-msgstr ""
+msgstr "Slutplacering"
 
-#: templates/index/edit_tournament.html:106
-#, fuzzy
+#: templates/index/edit_tournament.html:101
 msgid "Save tournament"
-msgstr "Lägg till under-match"
+msgstr "Spara turnering"
 
 #: templates/index/ranking.html:14
 msgid "Ranking points"
@@ -231,20 +225,19 @@ msgstr "Liv"
 
 #: templates/index/tournaments.html:11
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: templates/index/tournaments.html:14
-#, fuzzy
 msgid "Number of players"
-msgstr "Vänster spelare"
+msgstr "Antal spelare"
 
 #: templates/index/tournaments.html:15
 msgid "Number of games"
-msgstr ""
+msgstr "Antal matcher"
 
 #: templates/index/tournaments.html:16
 msgid "Ante percentage"
-msgstr ""
+msgstr "Ante i procent"
 
 #: templates/index/includes/add_game_form_contents.html:6
 msgid "Match info"
@@ -289,9 +282,3 @@ msgstr "Slutställning"
 #: templates/index/includes/list_games.html:54
 msgid "Download"
 msgstr "Ladda ner"
-
-#~ msgid "You have to enter at least one subgame!"
-#~ msgstr "Du måste skriva in minst en under-match!"
-
-#~ msgid "Sorry, you can only enter a maximum of ten subgames."
-#~ msgstr "Tyvärr, du får skriva in max 10 under-matcher."
