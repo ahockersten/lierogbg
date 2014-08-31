@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
+from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
 from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
 from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte
@@ -170,7 +171,8 @@ def edit_tournament(request, tournament_id):
     tournament_extra_data = {}
     tournament_extra_data["tournament_pk"] = tournament_id
     tournament_extra_data["players"] = instance.players.all()
-    tournament_extra_data["games"] = create_games_table(PlayedGame.objects.all().filter(tournament=instance))
+    all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=instance).order_by('start_time').reverse()
+    tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
     context = Context({
         'played_game_form'                : played_game_form,
         'subgame_formset'                 : subgame_formset,
@@ -316,7 +318,10 @@ def submit_game(request, tournament_id=None):
         for form in subgame_formset.forms:
             form.save_m2m()
 
-        return redirect('index.views.ranking')
+        if request.is_ajax():
+            return HttpResponse()
+        else:
+            return redirect('index.views.ranking')
     else:
         return redirect('index.views.error')
 
@@ -339,6 +344,17 @@ def update_total_ante(request):
             return HttpResponse(str(total_ante))
         except ValueError:
             return HttpResponse('Error') # incorrect post
+    else:
+        raise Http404
+
+def get_games_list(request, tournament_id):
+    if request.is_ajax():
+        tournament = get_object_or_404(Tournament, id=tournament_id)
+        all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=tournament).order_by('start_time').reverse()
+        context = Context({
+            'games' : create_games_table(all_games_in_tournament_by_date)
+        })
+        return render(request, 'index/includes/list_games.html', context)
     else:
         raise Http404
 
