@@ -118,8 +118,11 @@ def add_tournament(request):
 def edit_tournament(request, tournament):
     instance = get_object_or_404(Tournament, pk=tournament)
     tournament_form = TournamentEditForm(instance=instance)
+    tournament_extra_data = {}
+    tournament_extra_data["players"] = instance.players.all()
     context = Context({
         'tournament_form' : tournament_form,
+        'tournament_extra_data' : tournament_extra_data,
     })
     return render(request, 'index/edit_tournament.html', context)
 

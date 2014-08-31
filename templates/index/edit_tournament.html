@@ -16,19 +16,42 @@
             {% trans "Tournament info" %}
         </div>
         <div class="panel-body">
-            {% for field in tournament_form.visible_fields %}
-                <div class="form-group">
-                    <div class="col-xs-3">
-                        {{ field.label_tag }}
-                    </div>
-                    <div class="col-xs-9">
-                        {{ field|addcss:'form-control' }}
-                    </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ tournament_form.name.label_tag }}
                 </div>
-                {% for field in tournament_form.hidden_fields %}
-                    <div style="display:none;">{{ field }}</div>
-                {% endfor %}
-            {% endfor %}
+                <div class="col-xs-9">
+                    {{ tournament_form.name|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label for="id_players">{% trans "Players" %}</label>
+                </div>
+                <div class="col-xs-9">
+                    <span id="id_players" class="form-control">
+                        {% for player in tournament_extra_data.players %}
+                            {{ player }}
+                        {% endfor %}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ tournament_form.total_ante.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ tournament_form.total_ante|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ tournament_form.finished.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ tournament_form.finished|addcss:'form-control' }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="well">
