@@ -21,9 +21,9 @@
         <tbody>
         {% for t in tournaments %}
             {% if t.finished %}
-                <tr>
+                <tr class="tournament_view_link" id="id_tournament_{{ t.pk }}">
             {% else %}
-                <tr class="tournament_link" id="id_tournament_{{ t.pk }}">
+                <tr class="tournament_edit_link" id="id_tournament_{{ t.pk }}">
             {% endif %}
                 <td>{{ t.start_time }}</td>
                 <td>{{ t.name }}</td>
@@ -49,12 +49,20 @@
 <script type="text/javascript">
 $(document).ready(function () {
     'use strict';
-    $(".tournament_link").click(function() {
+    $(".tournament_edit_link").click(function() {
         var tournament_key = $(this).attr("id")
         var id_regex = new RegExp('id_tournament_(\\d+)');
         var replacement = "$1";
         var replaced = tournament_key.replace(id_regex, replacement);
         window.location.href = {% url 'index.views.edit_tournament' '' %} + replaced;
+    });
+
+    $(".tournament_view_link").click(function() {
+        var tournament_key = $(this).attr("id")
+        var id_regex = new RegExp('id_tournament_(\\d+)');
+        var replacement = "$1";
+        var replaced = tournament_key.replace(id_regex, replacement);
+        window.location.href = {% url 'index.views.view_tournament' '' %} + replaced;
     });
 });
 </script>

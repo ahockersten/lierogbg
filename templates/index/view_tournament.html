@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load myfilters %}
+
+{% block title %}{% trans "LieroGBG" %}{% endblock %}
+{% block custom_css %}
+{{ tournament_form.media.css }}
+{{ played_game_form.media.css }}
+{% endblock %}
+
+{% block content %}
+<form action="" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {% trans "Tournament info" %}
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ tournament_form.name.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ tournament_form.name|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label for="id_players">{% trans "Players" %}</label>
+                </div>
+                <div class="col-xs-9">
+                    <span id="id_players" class="form-control">
+                        {% for player in tournament_extra_data.players %}
+                            {{ player }}
+                        {% endfor %}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ tournament_form.total_ante.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ tournament_form.total_ante|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ tournament_form.finished.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ tournament_form.finished|addcss:'form-control' }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            {% trans "Games played" %}
+        </div>
+        <div class="panel-body">
+            {% include 'index/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
+        </div>
+    </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            {% trans "Final placings" %}
+        </div>
+        <div class="panel-body">
+            {{ tournament_placing_ante_formset.management_form }}
+            <div class="tournament_placing_ante_item">
+                {% for form in tournament_placing_ante_formset %}
+                    <div class="form-group">
+                        <div class="col-xs-1">
+                            {{ form.placing.label_tag }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form.placing|addcss:'form-control placing' }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form.ante.label_tag }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form.ante|addcss:'form-control placing_ante' }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form.player.label_tag }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form.player|addcss:'form-control' }}
+                        </div>
+                    </div>
+                    {% for field in form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block custom_scripts %}
+{{ tournament_form.media.js }}
+{{ played_game_form.media.js }}
+<script type="text/javascript">
+$(document).ready(function () {
+    'use strict';
+    function update_placing_boxes() {
+        $(".placing, .placing_ante").each(function(index) {
+            $(this).attr('readonly', true);
+        });
+    }
+
+    update_placing_boxes();
+    $("#id_total_ante").attr('readonly', true);
+    $(".form-control").attr('readonly', true);
+});
+</script>
+{% endblock %}
