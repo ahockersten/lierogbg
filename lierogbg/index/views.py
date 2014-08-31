@@ -192,12 +192,12 @@ def view_tournament(request, tournament_id):
 @login_required
 def save_tournament(request, tournament_id):
     instance = get_object_or_404(Tournament, id=tournament_id)
-    tournament_form = TournamentEditForm(request.POST, instance=instance)
+    tournament_form = TournamentEditForm(request.POST, instance = instance)
 
     if tournament_form.is_valid():
         tournament = tournament_form.save(commit = False)
         tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(request.POST,
-                                               instance=tournament)
+                                               instance = tournament)
 
         if not tournament_placing_ante_formset.is_valid():
             return redirect('index.views.error')
@@ -213,7 +213,7 @@ def save_tournament(request, tournament_id):
 
         # tournament finished. Hand out points
         if tournament.finished:
-            tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+            tpas = TournamentPlacingAnte.objects.all().filter(tournament = instance)
             for tpa in tpas:
                 tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
                 tpa.player.save()
