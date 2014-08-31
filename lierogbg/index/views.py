@@ -11,8 +11,8 @@ from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
 from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte
-from index.models import TournamentPlacingAnteFormSet, TournamentCreateForm
-from index.models import TournamentEditForm
+from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAnteFormSet
+from index.models import TournamentCreateForm, TournamentEditForm
 
 def ranking(request):
     context = Context({
@@ -118,10 +118,14 @@ def add_tournament(request):
 def edit_tournament(request, tournament):
     instance = get_object_or_404(Tournament, pk=tournament)
     tournament_form = TournamentEditForm(instance=instance)
+
+    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
     tournament_extra_data = {}
     tournament_extra_data["players"] = instance.players.all()
     context = Context({
         'tournament_form' : tournament_form,
+        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
         'tournament_extra_data' : tournament_extra_data,
     })
     return render(request, 'index/edit_tournament.html', context)

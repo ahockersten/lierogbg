@@ -133,6 +133,25 @@ TournamentPlacingAnteFormSet = inlineformset_factory(Tournament, TournamentPlaci
                                                        extra = 1, can_delete = False,
                                                        form = TournamentPlacingAnteForm)
 
+class TournamentPlacingAnteSubmitForm(ModelForm):
+    class Meta:
+        model = TournamentPlacingAnte
+        fields = (
+            'placing',
+            'ante',
+            'player'
+        )
+        labels = {
+            'placing' : _('Placing'),
+            'ante'    : _('Received ante'),
+            'player'  : _('Player'),
+        }
+
+TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
+                                        extra = 0, can_delete = False,
+                                        form = TournamentPlacingAnteSubmitForm)
+
+
 # records a played game
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
