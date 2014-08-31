@@ -52,13 +52,13 @@ def create_player_table():
     return players
 
 def games(request):
+    all_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()
     context = Context({
-        'games' : create_games_table()
+        'games' : create_games_table(all_games_by_date)
     })
     return render(request, 'index/games.html', context)
 
-def create_games_table():
-    games_list = PlayedGame.objects.all().order_by('start_time').reverse()
+def create_games_table(games_list):
     games = []
     for g in games_list:
         tmp = {}
@@ -162,16 +162,21 @@ def submit_tournament(request):
 def edit_tournament(request, tournament_id):
     instance = get_object_or_404(Tournament, pk=tournament_id)
     tournament_form = TournamentEditForm(instance=instance)
+    played_game_form = PlayedGameForm(initial={'tournament' : instance})
+    subgame_formset = SubgameFormSet(instance=PlayedGame())
 
     tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
     tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
     tournament_extra_data = {}
     tournament_extra_data["tournament_pk"] = tournament_id
     tournament_extra_data["players"] = instance.players.all()
+    tournament_extra_data["games"] = create_games_table(PlayedGame.objects.all().filter(tournament=instance))
     context = Context({
-        'tournament_form' : tournament_form,
+        'played_game_form'                : played_game_form,
+        'subgame_formset'                 : subgame_formset,
+        'tournament_form'                 : tournament_form,
         'tournament_placing_ante_formset' : tournament_placing_ante_formset,
-        'tournament_extra_data' : tournament_extra_data,
+        'tournament_extra_data'           : tournament_extra_data,
     })
     return render(request, 'index/edit_tournament.html', context)
 
@@ -214,11 +219,19 @@ def add_game(request):
     return render(request, 'index/add_game.html', context)
 
 @login_required
-def submit_game(request):
+def submit_game_ajax(request):
+    pass
+
+@login_required
+def submit_game(request, tournament_id=None):
+    tournament = None
+    if tournament_id != None:
+        tournament = get_object_or_404(Tournament, id=tournament_id)
     played_game_form = PlayedGameForm(request.POST)
 
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
+        played_game.tournament = tournament
         subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
 
         if not subgame_formset.is_valid():

@@ -48,7 +48,7 @@ function addForm(btn, prefix) {
         });
 
         // Add an event handler for the delete item/form link
-        $(row).find(".delete_form").click(function () {
+        $(row).find(".delete_subgame_form").click(function () {
             return deleteForm(this, prefix);
         });
 

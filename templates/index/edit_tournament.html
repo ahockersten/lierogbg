@@ -3,7 +3,10 @@
 {% load myfilters %}
 
 {% block title %}{% trans "LieroGBG" %}{% endblock %}
-{% block custom_css %}{{ tournament_form.media.css }}{% endblock %}
+{% block custom_css %}
+{{ tournament_form.media.css }}
+{{ played_game_form.media.css }}
+{% endblock %}
 
 {% block content %}
 <form action="{% url 'index.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
@@ -51,7 +54,15 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-info">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            {% trans "Games played" %}
+        </div>
+        <div class="panel-body">
+            {% include 'index/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
+        </div>
+    </div>
+    <div class="panel panel-success">
         <div class="panel-heading">
             {% trans "Final placings" %}
         </div>
@@ -90,10 +101,26 @@
         <button id="id_save_tournament_btn" type="submit" class="btn btn-success">{% trans "Save tournament" %}</button>
     </div>
 </form>
+
+<div class="panel panel-info">
+    <div class="panel-heading" data-toggle="collapse" data-target="#add_game_body">
+        {% trans "Add game" %}
+    </div>
+    <div class="panel-body collapse" id="add_game_body">
+        <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+            {% csrf_token %}
+            {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset %}
+            <div class="well">
+                <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 {% block custom_scripts %}
 {{ tournament_form.media.js }}
+{{ played_game_form.media.js }}
 <script type="text/javascript">
 $(document).ready(function () {
     'use strict';

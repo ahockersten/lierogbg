@@ -5,20 +5,6 @@
 
 {% block content %}
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>{% trans "Time" %}</th>
-                <th>{% trans "Left player" %}</th>
-                <th>{% trans "Left player RP" %}</th>
-                <th>{% trans "Right player" %}</th>
-                <th>{% trans "Right player RP" %}</th>
-                <th>{% trans "Winner" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% include 'index/includes/list_games.html' with games=games %}
-        </tbody>
-    </table>
+    {% include 'index/includes/list_games.html' with games=games show_rp=True %}
 </div>
 {% endblock %}
