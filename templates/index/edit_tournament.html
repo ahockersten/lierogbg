@@ -29,7 +29,7 @@
                     <label for="id_players">{% trans "Players" %}</label>
                 </div>
                 <div class="col-xs-9">
-                    <span id="id_players" class="form-control">
+                    <span id="id_players" class="form-control" readonly>
                         {% for player in tournament_extra_data.players %}
                             {{ player }}
                         {% endfor %}
