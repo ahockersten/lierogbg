@@ -9,7 +9,7 @@
 {% block custom_css %}{{ tournament_form.media.css }}{% endblock %}
 
 {% block content %}
-<form action="{% url 'index.views.submit_tournament' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+<form action="{% url 'index.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
     {% csrf_token %}
     <div class="panel panel-primary">
         <div class="panel-heading">

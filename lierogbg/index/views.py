@@ -115,22 +115,6 @@ def add_tournament(request):
     return render(request, 'index/add_tournament.html', context)
 
 @login_required
-def edit_tournament(request, tournament):
-    instance = get_object_or_404(Tournament, pk=tournament)
-    tournament_form = TournamentEditForm(instance=instance)
-
-    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
-    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
-    tournament_extra_data = {}
-    tournament_extra_data["players"] = instance.players.all()
-    context = Context({
-        'tournament_form' : tournament_form,
-        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
-        'tournament_extra_data' : tournament_extra_data,
-    })
-    return render(request, 'index/edit_tournament.html', context)
-
-@login_required
 def submit_tournament(request):
     tournament_form = TournamentCreateForm(request.POST)
 
@@ -174,6 +158,49 @@ def submit_tournament(request):
             form.save_m2m()
 
         return redirect('index.views.edit_tournament', tournament.pk)
+    else:
+        return redirect('index.views.error')
+
+@login_required
+def edit_tournament(request, tournament_id):
+    instance = get_object_or_404(Tournament, pk=tournament_id)
+    tournament_form = TournamentEditForm(instance=instance)
+
+    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
+    tournament_extra_data = {}
+    tournament_extra_data["tournament_pk"] = tournament_id
+    tournament_extra_data["players"] = instance.players.all()
+    context = Context({
+        'tournament_form' : tournament_form,
+        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
+        'tournament_extra_data' : tournament_extra_data,
+    })
+    return render(request, 'index/edit_tournament.html', context)
+
+@login_required
+def save_tournament(request, tournament_id):
+    instance = get_object_or_404(Tournament, id=tournament_id)
+    tournament_form = TournamentEditForm(request.POST, instance=instance)
+
+    if tournament_form.is_valid():
+        tournament = tournament_form.save(commit = False)
+        tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(request.POST,
+                                               instance=tournament)
+
+        if not tournament_placing_ante_formset.is_valid():
+            return redirect('index.views.error')
+
+        tournament.save()
+        tournament_form.save_m2m()
+
+        for form in tournament_placing_ante_formset.forms:
+            tpa = form.save(commit = False)
+            tpa.tournament = tournament
+            tpa.save()
+            form.save_m2m()
+
+        return redirect('index.views.tournaments')
     else:
         return redirect('index.views.error')
 
