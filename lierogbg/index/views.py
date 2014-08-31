@@ -133,9 +133,12 @@ def submit_tournament(request):
         tournament_form.save_m2m()
         total_ante = 0
         for player in tournament.players.all():
-            # FIXME this should be reused for update_total_ante
+            # FIXME this should be reused for update_total_ante, except for the
+            # part where this saves changed pool points and ranking points
             if (player.pool_points != 0):
-                player.ranking_points = player.ranking_points + min(player.pool_points, tournament.pool_points)
+                added_pool_points = min(player.pool_points, tournament.pool_points)
+                player.ranking_points = player.ranking_points + added_pool_points
+                player.pool_points = player.pool_points - added_pool_points
             player_ante = int(round(player.ranking_points * tournament.ante * 0.01))
             if player_ante == 0 and player.ranking_points != 0:
                 player_ante = 1
