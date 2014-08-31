@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-31 18:53+0200\n"
+"POT-Creation-Date: 2014-08-31 23:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,15 @@ msgstr "Användaren avstängd"
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
-#: lierogbg/index/models.py:72 lierogbg/index/models.py:202
+#: lierogbg/index/fields.py:8
+msgid "Enter a valid Color value: e.g. \"#ff0022\""
+msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
+
+#: lierogbg/index/fields.py:25
+msgid "Hex value for a color"
+msgstr "Hex-värde för en färg"
+
+#: lierogbg/index/models.py:72 lierogbg/index/models.py:201
 msgid "Start time"
 msgstr "Starttid"
 
@@ -67,36 +75,36 @@ msgstr "Mottagen ante"
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:203 templates/index/includes/list_games.html:7
+#: lierogbg/index/models.py:202 templates/index/includes/list_games.html:7
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:204 templates/index/includes/list_games.html:11
+#: lierogbg/index/models.py:203 templates/index/includes/list_games.html:11
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:205 templates/index/tournaments.html:13
+#: lierogbg/index/models.py:204 templates/index/tournaments.html:13
 #: templates/index/includes/list_games.html:15
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:247
+#: lierogbg/index/models.py:246
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/index/models.py:248
+#: lierogbg/index/models.py:247
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:249
+#: lierogbg/index/models.py:248
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/index/models.py:250
+#: lierogbg/index/models.py:249
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:67
+#: lierogbg/index/views.py:66
 msgid "Tied"
 msgstr "Oavgjort"
 
