@@ -10,8 +10,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
-from index.models import SubgameFormSet, Tournament, TournamentPlacingAnteFormSet
-from index.models import TournamentCreateForm, TournamentEditForm
+from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte
+from index.models import TournamentPlacingAnteFormSet, TournamentCreateForm
+from index.models import TournamentEditForm
 
 def ranking(request):
     context = Context({
@@ -84,7 +85,10 @@ def create_tournament_table():
         tmp["pk"] = t.pk
         tmp["start_time"] = t.start_time
         tmp["name"] = t.name
-        tmp["winner"] = t.winner
+        print TournamentPlacingAnte.objects.all()
+        print TournamentPlacingAnte.objects.all().filter(tournament=t)
+        print TournamentPlacingAnte.objects.all().filter(tournament=t).filter(placing=1)
+        tmp["winner"] = TournamentPlacingAnte.objects.all().filter(tournament=t).filter(placing=1)[0].player
         tmp["players"] = len(t.players.all())
         tmp["games"] = len(PlayedGame.objects.all().filter(tournament=t))
         tmp["ante"] = t.ante
@@ -125,6 +129,14 @@ def submit_tournament(request):
 
     if tournament_form.is_valid():
         tournament = tournament_form.save(commit = False)
+        tournament_placing_ante_formset = TournamentPlacingAnteFormSet(request.POST,
+                                                                       instance=tournament)
+
+        # FIXME this is not valid here, since the tournament for each has not
+        # been setup yet
+        #if not tournament_placing_ante_formset.is_valid():
+        #    return redirect('index.views.error')
+
         # FIXME need to validate that the total_ante calculated
         # is the same as the sum of all placings' antes. The
         # javascript should ensure that this is always true,
@@ -133,7 +145,7 @@ def submit_tournament(request):
         tournament.save()
         tournament_form.save_m2m()
         total_ante = 0
-
+        print "a"
         for player in tournament.players.all():
             # FIXME this should be reused for update_total_ante
             if (player.pool_points != 0):
@@ -147,6 +159,13 @@ def submit_tournament(request):
         tournament.total_ante = total_ante
         tournament.save()
         tournament_form.save_m2m()
+
+        for form in tournament_placing_ante_formset.forms:
+            tpa = form.save(commit = False)
+            tpa.tournament = tournament
+            tpa.save()
+            form.save_m2m()
+
         return redirect('index.views.edit_tournament', tournament.pk)
     else:
         return redirect('index.views.error')

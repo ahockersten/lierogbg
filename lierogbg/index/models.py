@@ -46,8 +46,6 @@ class Tournament(models.Model):
     pool_points = models.IntegerField(default = 0)
     # the calculated total ante
     total_ante = models.IntegerField()
-    # winner of the tournament
-    winner = models.ForeignKey(Player, null = True, related_name="tournament_winner")
 
     def __unicode__(self):
         return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
@@ -91,13 +89,11 @@ class TournamentEditForm(ModelForm):
         fields = (
             'name',
             'total_ante',
-            'winner',
             'finished',
         )
         labels = {
             'name'         : _('Name'),
             'total_ante'   : _('Total ante'),
-            'winner'       : _('Winner'),
             'finished'     : _('Finished'),
         }
 
@@ -106,9 +102,20 @@ class TournamentPlacingAnte(models.Model):
     # the tournament this ante belongs to
     tournament = models.ForeignKey(Tournament)
     # the placing it should be given to
-    placing = models.IntegerField()  # FIXME change to placing next db change
+    placing = models.IntegerField()
     # the ante this placing receives
     ante = models.IntegerField()
+    # the player that got this placing
+    player = models.ForeignKey(Player, null = True, blank = True)
+
+    def __unicode__(self):
+        return u'%s %s %s %s' % (self.tournament, self.placing, self.ante, self.player)
+
+    def clean(self):
+        pass
+
+    class Meta:
+        pass
 
 class TournamentPlacingAnteForm(ModelForm):
     class Meta:
