@@ -66,14 +66,20 @@
                         <div class="col-xs-1">
                             {{ form.placing.label_tag }}
                         </div>
-                        <div class="col-xs-5">
+                        <div class="col-xs-3">
                             {{ form.placing|addcss:'form-control placing' }}
                         </div>
                         <div class="col-xs-1">
                             {{ form.ante.label_tag }}
                         </div>
-                        <div class="col-xs-5">
+                        <div class="col-xs-3">
                             {{ form.ante|addcss:'form-control placing_ante' }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form.player.label_tag }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form.player|addcss:'form-control' }}
                         </div>
                     </div>
                     {% for field in form.hidden_fields %}
