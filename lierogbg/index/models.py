@@ -39,13 +39,15 @@ class Tournament(models.Model):
     # name of the tournament. May be left blank
     name = models.CharField(max_length = 100, blank = True)
     # players participating in this tournament
-    players = models.ManyToManyField(Player)
+    players = models.ManyToManyField(Player, related_name="tournament_players")
     # ante from each player, in percent
     ante = models.IntegerField()
     # the number of points to take from the point pool for each player
     pool_points = models.IntegerField(default = 0)
     # the calculated total ante
     total_ante = models.IntegerField()
+    # winner of the tournament
+    winner = models.ForeignKey(Player, null = True, related_name="tournament_winner")
 
     def __unicode__(self):
         return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
@@ -89,11 +91,13 @@ class TournamentEditForm(ModelForm):
         fields = (
             'name',
             'total_ante',
+            'winner',
             'finished',
         )
         labels = {
             'name'         : _('Name'),
             'total_ante'   : _('Total ante'),
+            'winner'       : _('Winner'),
             'finished'     : _('Finished'),
         }
 
@@ -121,7 +125,6 @@ class TournamentPlacingAnteForm(ModelForm):
 TournamentPlacingAnteFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
                                                        extra = 1, can_delete = False,
                                                        form = TournamentPlacingAnteForm)
-
 
 # records a played game
 class PlayedGame(models.Model):

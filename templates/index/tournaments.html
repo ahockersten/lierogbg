@@ -8,71 +8,54 @@
 
 {% block content %}
 <div>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>{% trans "Date" %}</th>
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Winner" %}</th>
-                <th>{% trans "Total Pool" %}</th>
+                <th>{% trans "Number of players" %}</th>
+                <th>{% trans "Ante percentage" %}</th>
+                <th>{% trans "Total ante" %}</th>
+                <th>{% trans "Finished" %}</th>
             </tr>
         </thead>
         <tbody>
-        {% for g in games %}
-            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' %}">
-                <td>{{ g.game.start_time }}</td>
-                <td>{{ g.game.player_left }}</td>
+        {% for t in tournaments %}
+            <tr class="tournament_link" id="id_tournament_{{ t.pk }}" href="foo">
+                <td>{{ t.start_time }}</td>
+                <td>{{ t.name }}</td>
+                <td>{{ t.winner }}</td>
+                <td>{{ t.players }}</td>
+                <td>{{ t.ante }}</td>
+                <td>{{ t.total_ante }}</td>
                 <td>
-                    {% if g.rp_pl_positive %}
-                        {{ g.game.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
+                    {% if t.finished %}
+                        <span class="glyphicon glyphicon-ok"></span>
                     {% else %}
-                        {{ g.game.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
+                        <span class="glyphicon glyphicon-remove"></span>
                     {% endif %}
-                </td>
-                <td>{{ g.game.player_right }}</td>
-                <td>
-                    {% if g.rp_pr_positive %}
-                        {{ g.game.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
-                    {% else %}
-                        {{ g.game.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
-                    {% endif %}
-                </td>
-                <td>{{ g.game.winner }}</td>
-            </tr>
-            <tr class="collapse" id="more-info-{{forloop.counter}}">
-                <td colspan="6">
-                    <div class="panel panel-info">
-                        <div class="panel-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>{% trans "Game" %}</th>
-                                        <th>{% trans "Map" %}</th>
-                                        <th>{% trans "Score" %}</th>
-                                        <th>{% trans "Download" %}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for sg in g.subgames %}
-                                        <tr>
-                                            <td>Game {{ forloop.counter }}</td>
-                                            <td>{{ sg.0 }}</td>
-                                            <td>{{ sg.1 }} - {{ sg.2 }}</td>
-                                            <td>
-                                                {% if sg.3 %}
-                                                    <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+{% endblock %}
+{% block custom_scripts %}
+<script type="text/javascript">
+$(document).ready(function () {
+    'use strict';
+    $(".tournament_link").click(function() {
+        var tournament_key = $(this).attr("id")
+        var id_regex = new RegExp('id_tournament_(\\d+)');
+        var replacement = "$1";
+        var replaced = tournament_key.replace(id_regex, replacement);
+        window.location.href = {% url 'index.views.edit_tournament' '' %} + replaced;
+    });
+});
+</script>
+
+
+</script
 {% endblock %}

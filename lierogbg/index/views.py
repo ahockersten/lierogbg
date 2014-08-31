@@ -76,9 +76,26 @@ def create_games_table():
         games.append(tmp)
     return games
 
+def create_tournament_table():
+    tournaments_list = Tournament.objects.all().order_by('start_time').reverse()
+    tournaments = []
+    for t in tournaments_list:
+        tmp = {}
+        tmp["pk"] = t.pk
+        tmp["start_time"] = t.start_time
+        tmp["name"] = t.name
+        tmp["winner"] = t.winner
+        tmp["players"] = len(t.players.all())
+        tmp["games"] = len(PlayedGame.objects.all().filter(tournament=t))
+        tmp["ante"] = t.ante
+        tmp["total_ante"] = t.total_ante
+        tmp["finished"] = t.finished
+        tournaments.append(tmp)
+    return tournaments
+
 def tournaments(request):
     context = Context({
-        'tournaments' : create_games_table()
+        'tournaments' : create_tournament_table()
     })
     return render(request, 'index/tournaments.html', context)
 
