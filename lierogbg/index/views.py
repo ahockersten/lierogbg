@@ -85,9 +85,6 @@ def create_tournament_table():
         tmp["pk"] = t.pk
         tmp["start_time"] = t.start_time
         tmp["name"] = t.name
-        print TournamentPlacingAnte.objects.all()
-        print TournamentPlacingAnte.objects.all().filter(tournament=t)
-        print TournamentPlacingAnte.objects.all().filter(tournament=t).filter(placing=1)
         tmp["winner"] = TournamentPlacingAnte.objects.all().filter(tournament=t).filter(placing=1)[0].player
         tmp["players"] = len(t.players.all())
         tmp["games"] = len(PlayedGame.objects.all().filter(tournament=t))
