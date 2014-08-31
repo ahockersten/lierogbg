@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-31 18:27+0200\n"
+"POT-Creation-Date: 2014-08-31 18:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,6 +35,7 @@ msgid "Name"
 msgstr "Namn"
 
 #: lierogbg/index/models.py:74 templates/index/edit_tournament.html:29
+#: templates/index/view_tournament.html:29
 msgid "Players"
 msgstr "Spelare"
 
@@ -112,7 +113,7 @@ msgstr "Engelska"
 #: templates/index/add_tournament.html:6
 #: templates/index/edit_tournament.html:5 templates/index/error.html:4
 #: templates/index/games.html:4 templates/index/ranking.html:4
-#: templates/index/tournaments.html:4
+#: templates/index/tournaments.html:4 templates/index/view_tournament.html:5
 msgid "LieroGBG"
 msgstr "LieroGBG"
 
@@ -174,8 +175,17 @@ msgstr "Logga in"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
+#: templates/index/add_game.html:4
+msgid "add game"
+msgstr "lägg till match"
+
+#: templates/index/add_tournament.html:6
+msgid "add tournament"
+msgstr "lägg till turnering"
+
 #: templates/index/add_tournament.html:14
 #: templates/index/edit_tournament.html:16
+#: templates/index/view_tournament.html:16
 msgid "Tournament info"
 msgstr "Turnerings-info"
 
@@ -187,17 +197,31 @@ msgstr "Total Ante:"
 msgid "Ante per placing"
 msgstr "Ante per placering"
 
+#: templates/index/edit_tournament.html:5
+msgid "edit tournament"
+msgstr "editera turnering"
+
 #: templates/index/edit_tournament.html:59
+#: templates/index/view_tournament.html:59
 msgid "Games played"
 msgstr "Spelade matcher"
 
 #: templates/index/edit_tournament.html:67
+#: templates/index/view_tournament.html:67
 msgid "Final placings"
 msgstr "Slutplacering"
 
 #: templates/index/edit_tournament.html:101
 msgid "Save tournament"
 msgstr "Spara turnering"
+
+#: templates/index/games.html:4
+msgid "games"
+msgstr "matcher"
+
+#: templates/index/ranking.html:4
+msgid "ranking"
+msgstr "ranking"
 
 #: templates/index/ranking.html:14
 msgid "Ranking points"
@@ -223,6 +247,10 @@ msgstr "Oavgjorda"
 msgid "Lives"
 msgstr "Liv"
 
+#: templates/index/tournaments.html:4
+msgid "tournaments"
+msgstr "turneringar"
+
 #: templates/index/tournaments.html:11
 msgid "Date"
 msgstr "Datum"
@@ -238,6 +266,10 @@ msgstr "Antal matcher"
 #: templates/index/tournaments.html:16
 msgid "Ante percentage"
 msgstr "Ante i procent"
+
+#: templates/index/view_tournament.html:5
+msgid "view tournament"
+msgstr "visa turnering"
 
 #: templates/index/includes/add_game_form_contents.html:6
 msgid "Match info"
@@ -271,26 +303,26 @@ msgstr "Höger spelares RP"
 msgid "Game type"
 msgstr "Speltyp"
 
-#: templates/index/includes/list_games.html:49
+#: templates/index/includes/list_games.html:53
 msgid "Tournament"
 msgstr "Turnering"
 
-#: templates/index/includes/list_games.html:51
+#: templates/index/includes/list_games.html:55
 msgid "Ranked"
 msgstr "Rankad"
 
-#: templates/index/includes/list_games.html:63
+#: templates/index/includes/list_games.html:67
 msgid "Game"
 msgstr "Match"
 
-#: templates/index/includes/list_games.html:64
+#: templates/index/includes/list_games.html:68
 msgid "Map"
 msgstr "Karta"
 
-#: templates/index/includes/list_games.html:65
+#: templates/index/includes/list_games.html:69
 msgid "Score"
 msgstr "Slutställning"
 
-#: templates/index/includes/list_games.html:66
+#: templates/index/includes/list_games.html:70
 msgid "Download"
 msgstr "Ladda ner"

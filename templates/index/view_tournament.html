@@ -2,14 +2,14 @@
 {% load i18n %}
 {% load myfilters %}
 
-{% block title %}{% trans "LieroGBG" %} {% trans "edit tournament" %}{% endblock %}
+{% block title %}{% trans "LieroGBG" %} {% trans "view tournament" %}{% endblock %}
 {% block custom_css %}
 {{ tournament_form.media.css }}
 {{ played_game_form.media.css }}
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'index.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+<form action="" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
     {% csrf_token %}
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -29,7 +29,7 @@
                     <label for="id_players">{% trans "Players" %}</label>
                 </div>
                 <div class="col-xs-9">
-                    <span id="id_players" class="form-control" readonly>
+                    <span id="id_players" class="form-control">
                         {% for player in tournament_extra_data.players %}
                             {{ player }}
                         {% endfor %}
@@ -97,25 +97,7 @@
             </div>
         </div>
     </div>
-    <div class="well">
-        <button id="id_save_tournament_btn" type="submit" class="btn btn-success">{% trans "Save tournament" %}</button>
-    </div>
 </form>
-
-<div class="panel panel-info">
-    <div class="panel-heading" data-toggle="collapse" data-target="#add_game_body">
-        {% trans "Add game" %}
-    </div>
-    <div class="panel-body collapse" id="add_game_body">
-        <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk False %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
-            {% csrf_token %}
-            {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset %}
-            <div class="well">
-                <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add game" %}</button>
-            </div>
-        </form>
-    </div>
-</div>
 {% endblock %}
 
 {% block custom_scripts %}
@@ -130,42 +112,9 @@ $(document).ready(function () {
         });
     }
 
-    function update_games_played() {
-        $.ajax({
-            type: "GET",
-            url: "{% url 'index.views.get_games_list' tournament_extra_data.tournament_pk %}",
-            traditional: true,
-            success: function(data) {
-                $("#id_list_games_table").replaceWith(data);
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert("Please report this error: " + errorThrown + xhr.status +
-                      xhr.responseText);
-            }
-        });
-    }
-
     update_placing_boxes();
     $("#id_total_ante").attr('readonly', true);
-
-    $("#id_add_game_btn").click(function() {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'index.views.submit_game' tournament_extra_data.tournament_pk False %}",
-            traditional: true,
-            data: $("#id_add_game_form").serialize(),
-            success: function(data) {
-                update_games_played();
-                $("#add_game_body").collapse('hide');
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert("Please report this error: " + errorThrown + xhr.status +
-                      xhr.responseText);
-            }
-        });
-        // prevent normal submission routine
-        return false;
-    });
+    $(".form-control").attr('readonly', true);
 });
 </script>
 {% endblock %}

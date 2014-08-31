@@ -14,6 +14,7 @@ urlpatterns = patterns('index.views',
     url(r'^submit_tournament\/$', 'submit_tournament', name="submit_tournament"),
     url(r'^tournaments\/$', 'tournaments', name="tournaments"),
     url(r'^update_total_ante\/$', 'update_total_ante', name="update_total_ante"),
+    url(r'^view_tournament\/(?P<tournament_id>.*)', 'view_tournament', name='view_tournament'),
     url(r'^\/*$', 'ranking', name="ranking"),
 )
 
