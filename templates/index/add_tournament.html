@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load myfilters %}
+
+{% block title %}{% trans "LieroGBG" %}{% endblock %}
+{% block custom_css %}{{ tournament_form.media.css }}{% endblock %}
+
+{% block content %}
+<form action="{% url 'index.views.submit_tournament' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {% trans "Tournament info" %}
+        </div>
+        <div class="panel-body">
+            {% for field in tournament_form.visible_fields %}
+                <div class="form-group">
+                    <div class="col-xs-3">
+                        {{ field.label_tag }}
+                    </div>
+                    <div class="col-xs-9">
+                        {{ field|addcss:'form-control' }}
+                    </div>
+                </div>
+                {% for field in tournament_form.hidden_fields %}
+                    <div style="display:none;">{{ field }}</div>
+                {% endfor %}
+            {% endfor %}
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label for="id_total_ante">{% trans "Total Ante:" %}</label>
+                </div>
+                <div class="col-xs-9">
+                    <input id="id_total_ante" class="form-control" type="number" name="total_ante" readonly></input>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            {% trans "Ante per placing" %}
+        </div>
+        <div class="panel-body">
+            {{ tournament_placing_ante_formset.management_form }}
+            <div class="tournament_placing_ante_item">
+                {% for form in tournament_placing_ante_formset %}
+                    <div class="form-group">
+                        <div class="col-xs-1">
+                            {{ form.placing.label_tag }}
+                        </div>
+                        <div class="col-xs-5">
+                            {{ form.placing|addcss:'form-control placing' }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form.ante.label_tag }}
+                        </div>
+                        <div class="col-xs-5">
+                            {{ form.ante|addcss:'form-control placing_ante' }}
+                        </div>
+                    </div>
+                    {% for field in form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="well">
+        <button id="id_add_tournament_btn" type="submit" class="btn btn-success">{% trans "Add tournament" %}</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block custom_scripts %}
+{{ tournament_form.media.js }}
+<script type="text/javascript">
+$(document).ready(function () {
+    'use strict';
+    function update_placing_boxes() {
+        $(".placing").each(function(index) {
+            $(this).attr('readonly', true);
+            $(this).val(index + 1);
+        });
+    }
+
+    function update_ante_boxes() {
+        var num_players = $("#id_players option:selected").length;
+        // hide all ante boxes first
+        var ante_boxes = $(".tournament_placing_ante_item");
+        if (num_players == 0) {
+            ante_boxes.each(function(index) {
+                $(this).hide();
+                if (index > 0) {
+                    $(this).remove();
+                }
+            });
+        }
+        else {
+            if (num_players == 1) {
+                ante_boxes.each(function(index) {
+                    $(this).show();
+                });
+            }
+            if (ante_boxes.length > num_players) {
+                ante_boxes.each(function(index) {
+                    if (index + 1 > num_players) {
+                        $(this).remove();
+                    }
+                });
+            }
+            else {
+                for (var i = ante_boxes.length; i < num_players; i++) {
+                    var last_ante_box = $(".tournament_placing_ante_item:last")
+                    var new_last = last_ante_box.clone(false).get(0);
+                    // Insert it after the last box
+                    $(new_last).removeAttr('id').insertAfter(last_ante_box);
+                    // Relabel or rename all the relevant bits
+                    $(new_last).find("*").each(function () {
+                        updateElementIndex(this, "tournamentplacingante_set", i);
+                        $(this).val("");
+                    });
+                }
+            }
+        }
+        update_placing_boxes();
+        update_change_handlers();
+        // Update the total form count
+        $("#id_tournamentplacingante_set-TOTAL_FORMS").val(num_players);
+    }
+
+    function update_add_tournament_btn() {
+        // calculate ante split so that it adds up to ante total. If so
+        // enable button. If not, don't enable button
+        var summed_ante = 0;
+        $(".placing_ante").each(function(index) {
+            summed_ante = summed_ante + parseInt($(this).val());
+        });
+        var total_ante = parseInt($("#id_total_ante").val());
+        if (total_ante === summed_ante) {
+            $("#id_add_tournament_btn").attr('disabled', false);
+        }
+        else {
+            $("#id_add_tournament_btn").attr('disabled', true);
+        }
+    }
+
+    function update_change_handlers() {
+        $("#id_ante, #id_players, #id_pool_points, .placing_ante").change(function() {
+            update_add_tournament_btn();
+        });
+
+        $("#id_ante, #id_players, #id_pool_points .placing_ante").change(function() {
+            $.ajax({
+                type: "POST",
+                url: {% url 'index.views.update_total_ante' %},
+                traditional: true,
+                data: {
+                    csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                    players: $('#id_players').val(),
+                    ante: $('#id_ante').val(),
+                    pool_points: $('#id_pool_points').val(),
+                },
+                success: function(data) {
+                    $("#id_total_ante").val(parseInt(data));
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Please report this error: " + errorThrown + xhr.status +
+                          xhr.responseText);
+                }
+            });
+        });
+    }
+
+    $("#id_players").change(function() {
+        update_ante_boxes();
+    });
+
+    update_add_tournament_btn();
+    update_placing_boxes();
+    update_change_handlers();
+    update_ante_boxes();
+});
+</script>
+{% endblock %}

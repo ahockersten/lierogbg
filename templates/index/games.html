@@ -1,80 +1,10 @@
 {% extends "base.html" %}
-{# new url behaviour in Django 1.5 #}
-{% load url from future %}
-
 {% load i18n %}
 
 {% block title %}{% trans "LieroGBG" %}{% endblock %}
 
 {% block content %}
 <div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>{% trans "Time" %}</th>
-                <th>{% trans "Left player" %}</th>
-                <th>{% trans "Left player RP" %}</th>
-                <th>{% trans "Right player" %}</th>
-                <th>{% trans "Right player RP" %}</th>
-                <th>{% trans "Winner" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for g in games %}
-            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' %}">
-                <td>{{ g.start_time }}</td>
-                <td>{{ g.player_left }}</td>
-                <td>
-                    {% if g.rp_pl_positive %}
-                        {{ g.rp_pl }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
-                    {% else %}
-                        {{ g.rp_pl }} <span class="change_negative">({{ g.rp_pl_change }})</span>
-                    {% endif %}
-                </td>
-                <td>{{ g.player_right }}</td>
-                <td>
-                    {% if g.rp_pr_positive %}
-                        {{ g.rp_pr }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
-                    {% else %}
-                        {{ g.rp_pr }} <span class="change_negative">({{ g.rp_pr_change }})</span>
-                    {% endif %}
-                </td>
-                <td>{{ g.winner }}</td>
-            </tr>
-            <tr class="collapse" id="more-info-{{forloop.counter}}">
-                <td colspan="6">
-                    <div class="panel panel-info">
-                        <div class="panel-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>{% trans "Game" %}</th>
-                                        <th>{% trans "Map" %}</th>
-                                        <th>{% trans "Score" %}</th>
-                                        <th>{% trans "Download" %}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for sg in g.subgames %}
-                                        <tr>
-                                            <td>Game {{ forloop.counter }}</td>
-                                            <td>{{ sg.0 }}</td>
-                                            <td>{{ sg.1 }} - {{ sg.2 }}</td>
-                                            <td>
-                                                {% if sg.3 %}
-                                                    <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% include 'index/includes/list_games.html' with games=games show_rp=True %}
 </div>
 {% endblock %}

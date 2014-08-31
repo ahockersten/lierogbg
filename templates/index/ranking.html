@@ -1,7 +1,4 @@
 {% extends "base.html" %}
-{# new url behaviour in Django 1.5 #}
-{% load url from future %}
-
 {% load i18n %}
 
 {% block title %}{% trans "LieroGBG" %}{% endblock %}
@@ -11,6 +8,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th></th>
                 <th>#</th>
                 <th>{% trans "Player" %}</th>
                 <th>{% trans "Ranking points" %}</th>
@@ -25,10 +23,11 @@
         <tbody>
         {% for p in players %}
             <tr>
+                <td style="background-color:{{ p.player.color }}"></td>
                 <td>{{ p.current_rank }}</td>
-                <td>{{ p.name }}</td>
-                <td>{{ p.ranking_points }}</td>
-                <td>{{ p.pool_points }}</td>
+                <td>{{ p.player.name }}</td>
+                <td>{{ p.player.ranking_points }}</td>
+                <td>{{ p.player.pool_points }}</td>
                 <td>{{ p.wins }}</td>
                 <td>{{ p.losses }}</td>
                 <td>{{ p.ties }}</td>

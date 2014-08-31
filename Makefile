@@ -13,18 +13,27 @@ TEMPLATEFILES = templates/*.html templates/*/*.html
 LESS_IMPORTS = less/variables.less
 LESS_FILES = $(filter-out $(LESS_IMPORTS),$(wildcard less/*.less))
 
-CSS_OUTPUT_DIR = less/compiled/css
+BUILD_DIR = build
+
+CSS_OUTPUT_DIR = $(BUILD_DIR)/css
 CSS_FILES = $(patsubst less/%.less,$(CSS_OUTPUT_DIR)/%.css,$(LESS_FILES))
 
-FONTS_OUTPUT_DIR = static/fonts
-JS_OUTPUT_DIR = static/js
+JS_OUTPUT_DIR = $(BUILD_DIR)/js
+JS_INPUT_FILES = $(wildcard js/*.js)
+JS_FILES = $(patsubst js/%.js,$(JS_OUTPUT_DIR)/%.js,$(JS_INPUT_FILES))
 
-all: bootstrap django-prepare-translations django-compile-translations $(CSS_FILES)
+all: bootstrap django-prepare-translations django-compile-translations $(CSS_FILES) $(JS_FILES)
 
 $(CSS_FILES): $(LESS_FILES) $(LESS_IMPORTS)
 
+$(JS_FILES): $(JS_INPUT_FILES)
+
+$(JS_OUTPUT_DIR)/%.js: js/%.js
+	@mkdir -p $(JS_OUTPUT_DIR)
+	cp $< $@
+
 $(CSS_OUTPUT_DIR)/%.css: less/%.less
-	mkdir -p $(CSS_OUTPUT_DIR)
+	@mkdir -p $(CSS_OUTPUT_DIR)
 	lessc $< > $@
 
 django-compile-translations: $(MOFILES)
@@ -45,5 +54,9 @@ clean:
 	@-rm -rf static
 	@echo Deleting compiled CSS
 	@-rm -rf $(CSS_OUTPUT_DIR)
+	@echo Deleting compiled JS
+	@-rm -rf $(JS_OUTPUT_DIR)
+	@echo Deleting compile folder
+	@-rm -rf $(BUILD_DIR)
 	@echo Deleting compiled locale
 	@-rm -rf $(MOFILES)

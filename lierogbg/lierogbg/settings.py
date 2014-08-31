@@ -71,7 +71,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     here('..', '..', 'bootstrap/dist'),
     here('..', '..', 'jquery'),
-    here('..', '..', 'less/compiled'),
+    here('..', '..', 'build'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

@@ -5,12 +5,15 @@
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
+from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
-from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm, SubgameFormSet
+from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
+from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte
+from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAnteFormSet
+from index.models import TournamentCreateForm, TournamentEditForm
 
 def ranking(request):
     context = Context({
@@ -25,10 +28,8 @@ def create_player_table():
     current_rank = 1
     for p in player_list:
         tmp = {}
+        tmp["player"] = p
         tmp["current_rank"] = current_rank
-        tmp["name"] = p.name
-        tmp["ranking_points"] = p.ranking_points
-        tmp["pool_points"] = p.pool_points
         games = PlayedGame.objects.all().filter(Q(player_left=p) |
                                                 Q(player_right=p))
         tmp["games"] = len(games)
@@ -52,25 +53,20 @@ def create_player_table():
     return players
 
 def games(request):
+    all_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()
     context = Context({
-        'games' : create_games_table()
+        'games' : create_games_table(all_games_by_date)
     })
-
     return render(request, 'index/games.html', context)
 
-def create_games_table():
-    games_list = PlayedGame.objects.all().order_by('start_time').reverse()
+def create_games_table(games_list):
     games = []
     for g in games_list:
         tmp = {}
-        tmp["start_time"] = g.start_time
-        tmp["player_left"] = g.player_left
-        tmp["player_right"] = g.player_right
+        tmp["game"] = g
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
-        tmp["rp_pl"] = g.rp_pl_after
         tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
         tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
-        tmp["rp_pr"] = g.rp_pr_after
         tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
         tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
         subgames = Subgame.objects.all().filter(parent=g)
@@ -81,6 +77,143 @@ def create_games_table():
         tmp["subgames"] = subgames_tmp
         games.append(tmp)
     return games
+
+def create_tournament_table():
+    tournaments_list = Tournament.objects.all().order_by('start_time').reverse()
+    tournaments = []
+    for t in tournaments_list:
+        tmp = {}
+        tmp["pk"] = t.pk
+        tmp["start_time"] = t.start_time
+        tmp["name"] = t.name
+        tmp["winner"] = TournamentPlacingAnte.objects.all().filter(tournament=t).filter(placing=1)[0].player
+        tmp["players"] = len(t.players.all())
+        tmp["games"] = len(PlayedGame.objects.all().filter(tournament=t))
+        tmp["ante"] = t.ante
+        tmp["total_ante"] = t.total_ante
+        tmp["finished"] = t.finished
+        tournaments.append(tmp)
+    return tournaments
+
+def tournaments(request):
+    context = Context({
+        'tournaments' : create_tournament_table()
+    })
+    return render(request, 'index/tournaments.html', context)
+
+@login_required
+def add_tournament(request):
+    tournament_form = TournamentCreateForm()
+    tournament_placing_ante_formset = TournamentPlacingAnteFormSet(instance=Tournament())
+
+    context = Context({
+        'tournament_form'                 : tournament_form,
+        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
+    })
+    return render(request, 'index/add_tournament.html', context)
+
+@login_required
+def submit_tournament(request):
+    tournament_form = TournamentCreateForm(request.POST)
+
+    if tournament_form.is_valid():
+        tournament = tournament_form.save(commit = False)
+        tournament_placing_ante_formset = TournamentPlacingAnteFormSet(request.POST,
+                                                                       instance=tournament)
+
+        # FIXME this is not valid here, since the tournament for each has not
+        # been setup yet
+        #if not tournament_placing_ante_formset.is_valid():
+        #    return redirect('index.views.error')
+
+        # FIXME need to validate that the total_ante calculated
+        # is the same as the sum of all placings' antes. The
+        # javascript should ensure that this is always true,
+        # but I don't trust it
+        tournament.total_ante = 0
+        tournament.save()
+        tournament_form.save_m2m()
+        total_ante = 0
+        print "a"
+        for player in tournament.players.all():
+            # FIXME this should be reused for update_total_ante
+            if (player.pool_points != 0):
+                player.ranking_points = player.ranking_points + min(player.pool_points, tournament.pool_points)
+            player_ante = int(round(player.ranking_points * tournament.ante * 0.01))
+            if player_ante == 0 and player.ranking_points != 0:
+                player_ante = 1
+            player.ranking_points = player.ranking_points - player_ante
+            player.save()
+            total_ante = total_ante + player_ante
+        tournament.total_ante = total_ante
+        tournament.save()
+        tournament_form.save_m2m()
+
+        for form in tournament_placing_ante_formset.forms:
+            tpa = form.save(commit = False)
+            tpa.tournament = tournament
+            tpa.save()
+            form.save_m2m()
+
+        return redirect('index.views.edit_tournament', tournament.pk)
+    else:
+        return redirect('index.views.error')
+
+@login_required
+def edit_tournament(request, tournament_id):
+    instance = get_object_or_404(Tournament, pk=tournament_id)
+    tournament_form = TournamentEditForm(instance=instance)
+    played_game_form = PlayedGameForm(initial={'tournament' : instance})
+    subgame_formset = SubgameFormSet(instance=PlayedGame())
+
+    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
+    tournament_extra_data = {}
+    tournament_extra_data["tournament_pk"] = tournament_id
+    tournament_extra_data["players"] = instance.players.all()
+    all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=instance).order_by('start_time').reverse()
+    tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
+    context = Context({
+        'played_game_form'                : played_game_form,
+        'subgame_formset'                 : subgame_formset,
+        'tournament_form'                 : tournament_form,
+        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
+        'tournament_extra_data'           : tournament_extra_data,
+    })
+    return render(request, 'index/edit_tournament.html', context)
+
+@login_required
+def save_tournament(request, tournament_id):
+    instance = get_object_or_404(Tournament, id=tournament_id)
+    tournament_form = TournamentEditForm(request.POST, instance=instance)
+
+    if tournament_form.is_valid():
+        tournament = tournament_form.save(commit = False)
+        tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(request.POST,
+                                               instance=tournament)
+
+        if not tournament_placing_ante_formset.is_valid():
+            return redirect('index.views.error')
+
+        tournament.save()
+        tournament_form.save_m2m()
+
+        for form in tournament_placing_ante_formset.forms:
+            tpa = form.save(commit = False)
+            tpa.tournament = tournament
+            tpa.save()
+            form.save_m2m()
+
+        # tournament finished. Hand out points
+        if tournament.finished:
+            tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+            for tpa in tpas:
+                tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
+                tpa.player.save()
+
+        return redirect('index.views.tournaments')
+    else:
+        return redirect('index.views.error')
 
 @login_required
 def add_game(request):
@@ -95,11 +228,19 @@ def add_game(request):
     return render(request, 'index/add_game.html', context)
 
 @login_required
-def submit_game(request):
+def submit_game_ajax(request):
+    pass
+
+@login_required
+def submit_game(request, tournament_id=None, ranked='True'):
+    tournament = None
+    if tournament_id != None:
+        tournament = get_object_or_404(Tournament, id=tournament_id)
     played_game_form = PlayedGameForm(request.POST)
 
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
+        played_game.tournament = tournament
         subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
 
         if not subgame_formset.is_valid():
@@ -116,32 +257,58 @@ def submit_game(request):
         played_game.pp_pl_before = pl.pool_points
         played_game.pp_pr_before = pr.pool_points
 
-        ante_multiplier = 0.02
-        if (pl.pool_points != 0):
-            pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
-            pl.pool_points = pl.pool_points - min(pl.pool_points, 40)
-        if (pr.pool_points != 0):
-            pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
-            pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
+        subgames = []
+        for form in subgame_formset.forms:
+            subgames.append(form.save(commit=False))
 
-        if winner == None:
-            pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            ante = (pl_ante + pr_ante) / 2
-            pl.ranking_points = pl.ranking_points - pl_ante + ante
-            pr.ranking_points = pr.ranking_points - pr_ante + ante
-        else:
-            loser = pl if winner == pr else pr
-            # the line below is needed due to winner and (pl|pr) not actually
-            # pointing to the same thing somehow, which messes up ranking points
-            # and pool points
-            winner = pl if winner == pl else pr
+        if ranked == 'True':
+            ante_multiplier = 0.02
+            if (pl.pool_points != 0):
+                pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
+                pl.pool_points = pl.pool_points - min(pl.pool_points, 40)
+            if (pr.pool_points != 0):
+                pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
+                pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
 
-            loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            if loser_ante == 0:
-                loser_ante = 1
-            winner.ranking_points = winner.ranking_points + loser_ante
-            loser.ranking_points = loser.ranking_points - loser_ante
+            if winner == None:
+                # if there is no winner, each player gets half of the ante
+                # if this is not an even sum, give the remainder to the player
+                # who had the most lives left in the match. If both are equal,
+                # give it to the player with the fewest ranking points. If both
+                # are still equal, give it to the left player
+                pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                ante = (pl_ante + pr_ante) / 2
+                ante_rem = (pl_ante + pr_ante) % 2
+                pl.ranking_points = pl.ranking_points - pl_ante + ante
+                pr.ranking_points = pr.ranking_points - pr_ante + ante
+                if ante_rem != 0:
+                    pl_lives = 0
+                    pr_lives = 0
+                    for subgame in subgames:
+                        pl_lives = pl_lives + subgame.pl_lives
+                        pr_lives = pr_lives + subgame.pr_lives
+                    if pl_lives == pr_lives:
+                        if pl.ranking_points >= pr.ranking_points:
+                            pl.ranking_points = pl.ranking_points + 1
+                        else:
+                            pr.ranking_points = pr.ranking_points + 1
+                    elif pl_lives > pr_lives:
+                        pl.ranking_points = pl.ranking_points + 1
+                    else:
+                        pr.ranking_points = pr.ranking_points + 1
+            else:
+                loser = pl if winner == pr else pr
+                # the line below is needed due to winner and (pl|pr) not actually
+                # pointing to the same thing somehow, which messes up ranking points
+                # and pool points
+                winner = pl if winner == pl else pr
+
+                loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                if loser_ante == 0 and loser.ranking_points != 0:
+                    loser_ante = 1
+                winner.ranking_points = winner.ranking_points + loser_ante
+                loser.ranking_points = loser.ranking_points - loser_ante
 
         played_game.rp_pl_after = pl.ranking_points
         played_game.rp_pr_after = pr.ranking_points
@@ -153,15 +320,51 @@ def submit_game(request):
         played_game.save()
         played_game_form.save_m2m()
 
-        for form in subgame_formset.forms:
-            subgame = form.save(commit=False)
+        for subgame in subgames:
             subgame.parent = played_game
             subgame.save()
+        for form in subgame_formset.forms:
             form.save_m2m()
 
-        return redirect('index.views.ranking')
+        if request.is_ajax():
+            return HttpResponse()
+        else:
+            return redirect('index.views.ranking')
     else:
         return redirect('index.views.error')
+
+@login_required
+def update_total_ante(request):
+    if request.is_ajax():
+        try:
+            players_id = request.POST.getlist( 'players')
+            players = Player.objects.all().filter(pk__in = players_id)
+            ante = int(request.POST['ante']) * 0.01
+            pool_points = int(request.POST['pool_points'])
+            total_ante = 0
+            for player in players:
+                if (player.pool_points != 0):
+                    player.ranking_points = player.ranking_points + min(player.pool_points, pool_points)
+                player_ante = round(player.ranking_points * ante)
+                if player_ante == 0 and player.ranking_points != 0:
+                    player_ante = 1
+                total_ante = total_ante + player_ante
+            return HttpResponse(str(total_ante))
+        except ValueError:
+            return HttpResponse('Error') # incorrect post
+    else:
+        raise Http404
+
+def get_games_list(request, tournament_id):
+    if request.is_ajax():
+        tournament = get_object_or_404(Tournament, id=tournament_id)
+        all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=tournament).order_by('start_time').reverse()
+        context = Context({
+            'games' : create_games_table(all_games_in_tournament_by_date)
+        })
+        return render(request, 'index/includes/list_games.html', context)
+    else:
+        raise Http404
 
 def error(request):
     context = Context({})

@@ -1,153 +1,19 @@
 {% extends "base.html" %}
-{# new url behaviour in Django 1.5 #}
-{% load url from future %}
-
 {% load i18n %}
-{% load myfilters %}
 
 {% block title %}{% trans "LieroGBG" %}{% endblock %}
 {% block custom_css %}{{ played_game_form.media.css }}{% endblock %}
 
 {% block content %}
-<div>
-</div>
-<div>
-    <form action="{% url 'index.views.submit_game' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
-        {% csrf_token %}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                {% trans "Match info" %}
-            </div>
-            <div class="panel-body">
-                {% for field in played_game_form.visible_fields %}
-                    <div class="form-group">
-                        <div class="col-xs-3">
-                            {{ field.label_tag }}
-                        </div>
-                        <div class="col-xs-9">
-                            {{ field|addcss:'form-control' }}
-                        </div>
-                    </div>
-                    {% for field in played_game_form.hidden_fields %}
-                        <div style="display:none;">{{ field }}</div>
-                    {% endfor %}
-                {% endfor %}
-            </div>
-        </div>
-        {{ subgame_formset.management_form }}
-        {% for form in subgame_formset %}
-        <div class="panel panel-info subgame_item">
-            <div class="panel-heading">
-                {% trans "Subgame info" %}
-            </div>
-            <div class="panel-body">
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        <div class="col-xs-3">
-                            {{ field.label_tag }}
-                        </div>
-                        <div class="col-xs-9">
-                            {{ field|addcss:'form-control' }}
-                        </div>
-                    </div>
-                {% endfor %}
-                {% for field in form.hidden_fields %}
-                    <div style="display:none;">{{ field }}</div>
-                {% endfor %}
-                <div>
-                    <a class="btn btn-default delete_form" href="">{% trans "Delete subgame" %}</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        <div>
-            <a class="btn btn-default" id="add_form" href="">{% trans "Add subgame" %}</a>
-        </div>
-
-        <div class="well">
-            <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
-        </div>
-    </form>
-</div>
+<form action="{% url 'index.views.submit_game' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+    {% csrf_token %}
+    {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset %}
+    <div class="well">
+        <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
+    </div>
+</form>
 {% endblock %}
 
 {% block custom_scripts %}
-<script type="text/javascript">
-$(document).ready(function () {
-    function updateElementIndex(el, prefix, ndx) {
-        var id_regex = new RegExp('(' + prefix + '-\\d+-)');
-        var replacement = prefix + '-' + ndx + '-';
-        if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex,
-        replacement));
-        if (el.id) el.id = el.id.replace(id_regex, replacement);
-        if (el.name) el.name = el.name.replace(id_regex, replacement);
-    }
-
-    function deleteForm(btn, prefix) {
-        var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        if (formCount > 1) {
-            // Delete the item/form
-            $(btn).parents('.subgame_item').remove();
-            var forms = $('.subgame_item'); // Get all the forms
-            // Update the total number of forms (1 less than before)
-            $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-            formCount = forms.length;
-            // Go through the forms and set their indices, names and IDs
-            for (var i = 0; i < formCount; i++) {
-                $(forms.get(i)).find("*").each(function () {
-                    updateElementIndex(this, prefix, i);
-                });
-            }
-        } // End if
-        else {
-            alert("{% trans "You have to enter at least one subgame!" %}");
-        }
-        return false;
-    }
-
-    function addForm(btn, prefix) {
-        var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        // You can only submit a maximum of 10 subgames
-        if (formCount < 10) {
-            // Clone a form (without event handlers) from the first form
-            var row = $(".subgame_item:first").clone(false).get(0);
-            // Insert it after the last form
-            $(row).removeAttr('id').hide().insertAfter(".subgame_item:last").slideDown(300);
-
-            // Remove the bits we don't want in the new row/form
-            // e.g. error messages
-            $(".errorlist", row).remove();
-            $(row).children().removeClass("error");
-
-            // Relabel or rename all the relevant bits
-            $(row).find("*").each(function () {
-                updateElementIndex(this, prefix, formCount);
-                $(this).val("");
-            });
-
-            // Add an event handler for the delete item/form link
-            $(row).find(".delete_form").click(function () {
-                return deleteForm(this, prefix);
-            });
-
-            // Update the total form count
-            $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
-        } // End if
-        else {
-            alert("{% trans "Sorry, you can only enter a maximum of ten subgames." %}");
-        }
-        return false;
-    }
-
-    // Register the click event handlers
-    $("#add_form").click(function () {
-        return addForm(this, "subgame_set");
-    });
-
-    $(".delete_form").click(function () {
-        return deleteForm(this, "subgame_set");
-    });
-});
-</script>
 {{ played_game_form.media.js }}
 {% endblock %}
