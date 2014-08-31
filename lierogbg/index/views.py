@@ -225,7 +225,7 @@ def submit_game_ajax(request):
     pass
 
 @login_required
-def submit_game(request, tournament_id=None):
+def submit_game(request, tournament_id=None, ranked='True'):
     tournament = None
     if tournament_id != None:
         tournament = get_object_or_404(Tournament, id=tournament_id)
@@ -250,57 +250,58 @@ def submit_game(request, tournament_id=None):
         played_game.pp_pl_before = pl.pool_points
         played_game.pp_pr_before = pr.pool_points
 
-        ante_multiplier = 0.02
-        if (pl.pool_points != 0):
-            pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
-            pl.pool_points = pl.pool_points - min(pl.pool_points, 40)
-        if (pr.pool_points != 0):
-            pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
-            pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
-
         subgames = []
         for form in subgame_formset.forms:
             subgames.append(form.save(commit=False))
 
-        if winner == None:
-            # if there is no winner, each player gets half of the ante
-            # if this is not an even sum, give the remainder to the player
-            # who had the most lives left in the match. If both are equal,
-            # give it to the player with the fewest ranking points. If both
-            # are still equal, give it to the left player
-            pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            ante = (pl_ante + pr_ante) / 2
-            ante_rem = (pl_ante + pr_ante) % 2
-            pl.ranking_points = pl.ranking_points - pl_ante + ante
-            pr.ranking_points = pr.ranking_points - pr_ante + ante
-            if ante_rem != 0:
-                pl_lives = 0
-                pr_lives = 0
-                for subgame in subgames:
-                    pl_lives = pl_lives + subgame.pl_lives
-                    pr_lives = pr_lives + subgame.pr_lives
-                if pl_lives == pr_lives:
-                    if pl.ranking_points >= pr.ranking_points:
+        if ranked == 'True':
+            ante_multiplier = 0.02
+            if (pl.pool_points != 0):
+                pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
+                pl.pool_points = pl.pool_points - min(pl.pool_points, 40)
+            if (pr.pool_points != 0):
+                pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
+                pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
+
+            if winner == None:
+                # if there is no winner, each player gets half of the ante
+                # if this is not an even sum, give the remainder to the player
+                # who had the most lives left in the match. If both are equal,
+                # give it to the player with the fewest ranking points. If both
+                # are still equal, give it to the left player
+                pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                ante = (pl_ante + pr_ante) / 2
+                ante_rem = (pl_ante + pr_ante) % 2
+                pl.ranking_points = pl.ranking_points - pl_ante + ante
+                pr.ranking_points = pr.ranking_points - pr_ante + ante
+                if ante_rem != 0:
+                    pl_lives = 0
+                    pr_lives = 0
+                    for subgame in subgames:
+                        pl_lives = pl_lives + subgame.pl_lives
+                        pr_lives = pr_lives + subgame.pr_lives
+                    if pl_lives == pr_lives:
+                        if pl.ranking_points >= pr.ranking_points:
+                            pl.ranking_points = pl.ranking_points + 1
+                        else:
+                            pr.ranking_points = pr.ranking_points + 1
+                    elif pl_lives > pr_lives:
                         pl.ranking_points = pl.ranking_points + 1
                     else:
                         pr.ranking_points = pr.ranking_points + 1
-                elif pl_lives > pr_lives:
-                    pl.ranking_points = pl.ranking_points + 1
-                else:
-                    pr.ranking_points = pr.ranking_points + 1
-        else:
-            loser = pl if winner == pr else pr
-            # the line below is needed due to winner and (pl|pr) not actually
-            # pointing to the same thing somehow, which messes up ranking points
-            # and pool points
-            winner = pl if winner == pl else pr
+            else:
+                loser = pl if winner == pr else pr
+                # the line below is needed due to winner and (pl|pr) not actually
+                # pointing to the same thing somehow, which messes up ranking points
+                # and pool points
+                winner = pl if winner == pl else pr
 
-            loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
-            if loser_ante == 0 and loser.ranking_points != 0:
-                loser_ante = 1
-            winner.ranking_points = winner.ranking_points + loser_ante
-            loser.ranking_points = loser.ranking_points - loser_ante
+                loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                if loser_ante == 0 and loser.ranking_points != 0:
+                    loser_ante = 1
+                winner.ranking_points = winner.ranking_points + loser_ante
+                loser.ranking_points = loser.ranking_points - loser_ante
 
         played_game.rp_pl_after = pl.ranking_points
         played_game.rp_pr_after = pr.ranking_points
