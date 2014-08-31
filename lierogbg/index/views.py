@@ -66,9 +66,7 @@ def create_games_table(games_list):
         tmp["game"] = g
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
         tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
-        tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
         tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
-        tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
         subgames = Subgame.objects.all().filter(parent=g)
         subgames_tmp = []
         for subgame in subgames:
