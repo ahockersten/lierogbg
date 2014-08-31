@@ -1,0 +1,56 @@
+{% load i18n %}
+
+{% for g in games %}
+    <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' %}">
+        <td>{{ g.game.start_time }}</td>
+        <td>{{ g.game.player_left }}</td>
+        <td>
+            {% if g.rp_pl_positive %}
+                {{ g.game.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
+            {% else %}
+                {{ g.game.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
+            {% endif %}
+        </td>
+        <td>{{ g.game.player_right }}</td>
+        <td>
+            {% if g.rp_pr_positive %}
+                {{ g.game.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
+            {% else %}
+                {{ g.game.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
+            {% endif %}
+        </td>
+        <td>{{ g.game.winner }}</td>
+    </tr>
+    <tr class="collapse" id="more-info-{{forloop.counter}}">
+        <td colspan="6">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Game" %}</th>
+                                <th>{% trans "Map" %}</th>
+                                <th>{% trans "Score" %}</th>
+                                <th>{% trans "Download" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sg in g.subgames %}
+                                <tr>
+                                    <td>Game {{ forloop.counter }}</td>
+                                    <td>{{ sg.0 }}</td>
+                                    <td>{{ sg.1 }} - {{ sg.2 }}</td>
+                                    <td>
+                                        {% if sg.3 %}
+                                            <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% endfor %}
