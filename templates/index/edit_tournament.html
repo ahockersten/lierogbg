@@ -3,15 +3,46 @@
 {% load url from future %}
 
 {% load i18n %}
+{% load myfilters %}
 
-{% block title %}{% trans "LieroGBG" %} {% trans "Error" %}{% endblock %}
+{% block title %}{% trans "LieroGBG" %}{% endblock %}
+{% block custom_css %}{{ tournament_form.media.css }}{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>Not implemented</h1>
-</div>
+<form action="{% url 'index.views.submit_tournament' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+    {% csrf_token %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {% trans "Tournament info" %}
+        </div>
+        <div class="panel-body">
+            {% for field in tournament_form.visible_fields %}
+                <div class="form-group">
+                    <div class="col-xs-3">
+                        {{ field.label_tag }}
+                    </div>
+                    <div class="col-xs-9">
+                        {{ field|addcss:'form-control' }}
+                    </div>
+                </div>
+                {% for field in tournament_form.hidden_fields %}
+                    <div style="display:none;">{{ field }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="well">
+        <button id="id_save_tournament_btn" type="submit" class="btn btn-success">{% trans "Save tournament" %}</button>
+    </div>
+</form>
+{% endblock %}
 
-<div class="alert alert-danger">
-    <strong>Not implemented! :(</strong>
-</div>
+{% block custom_scripts %}
+{{ tournament_form.media.js }}
+<script type="text/javascript">
+$(document).ready(function () {
+    'use strict';
+    $("#id_total_ante").attr('readonly', true);
+});
+</script>
 {% endblock %}

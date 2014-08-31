@@ -47,6 +47,16 @@ class Tournament(models.Model):
     # the calculated total ante
     total_ante = models.IntegerField()
 
+    def __unicode__(self):
+        return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
+                                       self.ante, self.pool_points, self.total_ante)
+
+    def clean(self):
+        pass
+
+    class Meta:
+        pass
+
 # used for creating a new tournament
 class TournamentCreateForm(ModelForm):
     class Meta:

@@ -151,6 +151,27 @@ $(document).ready(function () {
         $("#id_ante, #id_players, #id_pool_points, .placing_ante").change(function() {
             update_add_tournament_btn();
         });
+
+        $("#id_ante, #id_players, #id_pool_points .placing_ante").change(function() {
+            $.ajax({
+                type: "POST",
+                url: {% url 'index.views.update_total_ante' %},
+                traditional: true,
+                data: {
+                    csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                    players: $('#id_players').val(),
+                    ante: $('#id_ante').val(),
+                    pool_points: $('#id_pool_points').val(),
+                },
+                success: function(data) {
+                    $("#id_total_ante").val(parseInt(data));
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Please report this error: " + errorThrown + xhr.status +
+                          xhr.responseText);
+                }
+            });
+        });
     }
 
     $("#id_players").change(function() {
@@ -159,30 +180,7 @@ $(document).ready(function () {
 
     update_add_tournament_btn();
     update_placing_boxes();
-
-    $("#id_ante, #id_players, #id_pool_points").change(function() {
-        $.ajax({
-            type: "POST",
-            url: {% url 'index.views.update_total_ante' %},
-            traditional: true,
-            data: {
-                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-                players: $('#id_players').val(),
-                ante: $('#id_ante').val(),
-                pool_points: $('#id_pool_points').val(),
-            },
-            success: function(data) {
-                $("#id_total_ante").val(parseInt(data));
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert("Please report this error: " + errorThrown + xhr.status +
-                      xhr.responseText);
-            }
-        });
-    });
-
     update_change_handlers();
-
     update_ante_boxes();
 });
 </script>

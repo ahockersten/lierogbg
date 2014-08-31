@@ -54,7 +54,6 @@ def games(request):
     context = Context({
         'games' : create_games_table()
     })
-
     return render(request, 'index/games.html', context)
 
 def create_games_table():
@@ -81,7 +80,6 @@ def tournaments(request):
     context = Context({
         'tournaments' : create_games_table()
     })
-
     return render(request, 'index/tournaments.html', context)
 
 @login_required
@@ -97,7 +95,8 @@ def add_tournament(request):
 
 @login_required
 def edit_tournament(request, tournament):
-    tournament_form = TournamentEditForm()
+    instance = get_object_or_404(Tournament, pk=tournament)
+    tournament_form = TournamentEditForm(instance=instance)
     context = Context({
         'tournament_form' : tournament_form,
     })
@@ -109,16 +108,20 @@ def submit_tournament(request):
 
     if tournament_form.is_valid():
         tournament = tournament_form.save(commit = False)
+        # FIXME need to validate that the total_ante calculated
+        # is the same as the sum of all placings' antes. The
+        # javascript should ensure that this is always true,
+        # but I don't trust it
         tournament.total_ante = 0
         tournament.save()
         tournament_form.save_m2m()
         total_ante = 0
 
         for player in tournament.players.all():
-            # FIXME this can be reused for update_total_ante
+            # FIXME this should be reused for update_total_ante
             if (player.pool_points != 0):
                 player.ranking_points = player.ranking_points + min(player.pool_points, tournament.pool_points)
-            player_ante = round(player.ranking_points * tournament.ante * 0.01)
+            player_ante = int(round(player.ranking_points * tournament.ante * 0.01))
             if player_ante == 0 and player.ranking_points != 0:
                 player_ante = 1
             player.ranking_points = player.ranking_points - player_ante
@@ -127,7 +130,7 @@ def submit_tournament(request):
         tournament.total_ante = total_ante
         tournament.save()
         tournament_form.save_m2m()
-        return redirect('index.views.edit_tournament', tournament)
+        return redirect('index.views.edit_tournament', tournament.pk)
     else:
         return redirect('index.views.error')
 
