@@ -8,7 +8,7 @@ function updateElementIndex(el, prefix, ndx) {
     if (el.name) el.name = el.name.replace(id_regex, replacement);
 }
 
-function deleteForm(btn, prefix) {
+function deleteSubgameForm(btn, prefix) {
     var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
     if (formCount > 1) {
         // Delete the item/form
@@ -27,7 +27,7 @@ function deleteForm(btn, prefix) {
     return false;
 }
 
-function addForm(btn, prefix) {
+function addSubgameForm(btn, prefix) {
     var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
     // You can only submit a maximum of 10 subgames
     if (formCount < 10) {
@@ -49,7 +49,7 @@ function addForm(btn, prefix) {
 
         // Add an event handler for the delete item/form link
         $(row).find(".delete_subgame_form").click(function () {
-            return deleteForm(this, prefix);
+            return deleteSubgameForm(this, prefix);
         });
 
         // Update the total form count
@@ -61,10 +61,10 @@ function addForm(btn, prefix) {
 $(document).ready(function () {
     // Register the click event handlers
     $("#add_subgame_form").click(function () {
-        return addForm(this, "subgame_set");
+        return addSubgameForm(this, "subgame_set");
     });
 
     $(".delete_subgame_form").click(function () {
-        return deleteForm(this, "subgame_set");
+        return deleteSubgameForm(this, "subgame_set");
     });
 });

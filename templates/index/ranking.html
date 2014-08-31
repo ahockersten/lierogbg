@@ -32,10 +32,12 @@
                 <td>{{ p.losses }}</td>
                 <td>{{ p.ties }}</td>
                 <td>{{ p.games }}</td>
-                {% if p.lives_positive %}
+                {% if p.lives > 0 %}
                     <td><span class="change_positive">+{{ p.lives }}</span></td>
-                {% else %}
+                {% elif p.lives < 0 %}
                     <td><span class="change_negative">{{ p.lives }}</span></td>
+                {% else %}
+                    <td>{{ p.lives }}</td>
                 {% endif %}
             </tr>
         {% endfor %}

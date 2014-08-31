@@ -151,18 +151,17 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, Tournamen
                                         extra = 0, can_delete = False,
                                         form = TournamentPlacingAnteSubmitForm)
 
-
 # records a played game
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
-    tournament = models.ForeignKey(Tournament, null=True)
+    tournament = models.ForeignKey(Tournament, null = True)
     # the start time of the game
     start_time = models.DateTimeField()
     # the left player
     player_left = models.ForeignKey(Player, related_name="playedgame_player_left")
     # the right player
     player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
-    winner = models.ForeignKey(Player, related_name="winner", blank=True, null=True)
+    winner = models.ForeignKey(Player, related_name="winner", blank = True, null = True)
     # ranking points for left player, before match
     rp_pl_before = models.IntegerField()
     # ranking points for right player, before match

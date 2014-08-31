@@ -1,10 +1,11 @@
 import re
 from django import forms
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 class ColorFormField(forms.IntegerField):
     default_error_messages = {
-        'invalid': 'Enter a valid Color value: e.g. "#ff0022"',
+        'invalid': _('Enter a valid Color value: e.g. "#ff0022"'),
     }
 
     def __init__(self, *args, **kwargs):
@@ -19,8 +20,9 @@ class ColorFormField(forms.IntegerField):
         super(ColorFormField, self).clean(value)
         return value
 
+# used to enter a color as a hex value
 class ColorField(models.PositiveIntegerField):
-    description = "HEX value for a Color"
+    description = _("Hex value for a color")
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 6
@@ -35,7 +37,7 @@ class ColorField(models.PositiveIntegerField):
             if string == "0":
                 string = "000000"
 
-            return "#"+string.upper()
+            return "#" + string.upper()
         except TypeError:
             return None
 

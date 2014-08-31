@@ -47,7 +47,6 @@ def create_player_table():
                     lives = lives - s.pl_lives
                     lives = lives + s.pr_lives
         tmp["lives"] = lives
-        tmp["lives_positive"] = True if lives >= 0 else False
         players.append(tmp)
         current_rank = current_rank + 1
     return players
@@ -159,60 +158,46 @@ def submit_tournament(request):
     else:
         return redirect('index.views.error')
 
+def prepare_tournament_context(tournament_id):
+    instance = get_object_or_404(Tournament, pk=tournament_id)
+    tournament_form = TournamentEditForm(instance=instance)
+    played_game_form = PlayedGameForm(initial={'tournament' : instance})
+    subgame_formset = SubgameFormSet(instance=PlayedGame())
+
+    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
+    tournament_extra_data = {}
+    tournament_extra_data["tournament_pk"] = tournament_id
+    tournament_extra_data["players"] = instance.players.all()
+    all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=instance).order_by('start_time').reverse()
+    tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
+    context = Context({
+        'played_game_form'                : played_game_form,
+        'subgame_formset'                 : subgame_formset,
+        'tournament_form'                 : tournament_form,
+        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
+        'tournament_extra_data'           : tournament_extra_data,
+    })
+    return context
+
 @login_required
 def edit_tournament(request, tournament_id):
-    instance = get_object_or_404(Tournament, pk=tournament_id)
-    tournament_form = TournamentEditForm(instance=instance)
-    played_game_form = PlayedGameForm(initial={'tournament' : instance})
-    subgame_formset = SubgameFormSet(instance=PlayedGame())
-
-    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
-    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
-    tournament_extra_data = {}
-    tournament_extra_data["tournament_pk"] = tournament_id
-    tournament_extra_data["players"] = instance.players.all()
-    all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=instance).order_by('start_time').reverse()
-    tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
-    context = Context({
-        'played_game_form'                : played_game_form,
-        'subgame_formset'                 : subgame_formset,
-        'tournament_form'                 : tournament_form,
-        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
-        'tournament_extra_data'           : tournament_extra_data,
-    })
-    return render(request, 'index/edit_tournament.html', context)
+    return render(request, 'index/edit_tournament.html',
+                  prepare_tournament_context(tournament_id))
 
 def view_tournament(request, tournament_id):
-    instance = get_object_or_404(Tournament, pk=tournament_id)
-    tournament_form = TournamentEditForm(instance=instance)
-    played_game_form = PlayedGameForm(initial={'tournament' : instance})
-    subgame_formset = SubgameFormSet(instance=PlayedGame())
-
-    tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
-    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
-    tournament_extra_data = {}
-    tournament_extra_data["tournament_pk"] = tournament_id
-    tournament_extra_data["players"] = instance.players.all()
-    all_games_in_tournament_by_date = PlayedGame.objects.all().filter(tournament=instance).order_by('start_time').reverse()
-    tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
-    context = Context({
-        'played_game_form'                : played_game_form,
-        'subgame_formset'                 : subgame_formset,
-        'tournament_form'                 : tournament_form,
-        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
-        'tournament_extra_data'           : tournament_extra_data,
-    })
-    return render(request, 'index/view_tournament.html', context)
+    return render(request, 'index/view_tournament.html',
+                  prepare_tournament_context(tournament_id))
 
 @login_required
 def save_tournament(request, tournament_id):
     instance = get_object_or_404(Tournament, id=tournament_id)
-    tournament_form = TournamentEditForm(request.POST, instance=instance)
+    tournament_form = TournamentEditForm(request.POST, instance = instance)
 
     if tournament_form.is_valid():
         tournament = tournament_form.save(commit = False)
         tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(request.POST,
-                                               instance=tournament)
+                                               instance = tournament)
 
         if not tournament_placing_ante_formset.is_valid():
             return redirect('index.views.error')
@@ -228,7 +213,7 @@ def save_tournament(request, tournament_id):
 
         # tournament finished. Hand out points
         if tournament.finished:
-            tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+            tpas = TournamentPlacingAnte.objects.all().filter(tournament = instance)
             for tpa in tpas:
                 tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
                 tpa.player.save()
