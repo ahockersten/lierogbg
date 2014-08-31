@@ -150,7 +150,7 @@ $(document).ready(function () {
             update_add_tournament_btn();
         });
 
-        $("#id_ante, #id_players, #id_pool_points .placing_ante").change(function() {
+        $("#id_ante, #id_players, #id_pool_points, .placing_ante").change(function() {
             $.ajax({
                 type: "POST",
                 url: {% url 'index.views.update_total_ante' %},
