@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-31 17:44+0200\n"
+"POT-Creation-Date: 2014-08-31 18:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lierogbg/accounts/views.py:28
+#: lierogbg/accounts/views.py:27
 msgid "User disabled"
 msgstr "Användaren avstängd"
 
-#: lierogbg/accounts/views.py:34
+#: lierogbg/accounts/views.py:33
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
@@ -267,18 +267,30 @@ msgstr "Vänster spelares RP"
 msgid "Right player RP"
 msgstr "Höger spelares RP"
 
+#: templates/index/includes/list_games.html:17
+msgid "Game type"
+msgstr "Speltyp"
+
+#: templates/index/includes/list_games.html:49
+msgid "Tournament"
+msgstr "Turnering"
+
 #: templates/index/includes/list_games.html:51
+msgid "Ranked"
+msgstr "Rankad"
+
+#: templates/index/includes/list_games.html:63
 msgid "Game"
 msgstr "Match"
 
-#: templates/index/includes/list_games.html:52
+#: templates/index/includes/list_games.html:64
 msgid "Map"
 msgstr "Karta"
 
-#: templates/index/includes/list_games.html:53
+#: templates/index/includes/list_games.html:65
 msgid "Score"
 msgstr "Slutställning"
 
-#: templates/index/includes/list_games.html:54
+#: templates/index/includes/list_games.html:66
 msgid "Download"
 msgstr "Ladda ner"

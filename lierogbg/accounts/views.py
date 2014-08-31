@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 # try to authenticate
 #
 def authenticate(request):
-    print request.POST
     username = request.POST['username']
     password = request.POST['password']
 

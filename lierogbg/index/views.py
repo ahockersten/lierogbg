@@ -66,9 +66,7 @@ def create_games_table(games_list):
         tmp["game"] = g
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
         tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
-        tmp["rp_pl_positive"] = True if g.rp_pl_after - g.rp_pl_before >= 0 else False
         tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
-        tmp["rp_pr_positive"] = True if g.rp_pr_after - g.rp_pr_before >= 0 else False
         subgames = Subgame.objects.all().filter(parent=g)
         subgames_tmp = []
         for subgame in subgames:
@@ -121,7 +119,7 @@ def submit_tournament(request):
         tournament_placing_ante_formset = TournamentPlacingAnteFormSet(request.POST,
                                                                        instance=tournament)
 
-        # FIXME this is not valid here, since the tournament for each has not
+        # FIXME this is not valid here, since the tournament for each tpa has not
         # been setup yet
         #if not tournament_placing_ante_formset.is_valid():
         #    return redirect('index.views.error')
@@ -134,7 +132,6 @@ def submit_tournament(request):
         tournament.save()
         tournament_form.save_m2m()
         total_ante = 0
-        print "a"
         for player in tournament.players.all():
             # FIXME this should be reused for update_total_ante
             if (player.pool_points != 0):
