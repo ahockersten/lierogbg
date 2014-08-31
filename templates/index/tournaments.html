@@ -20,7 +20,11 @@
         </thead>
         <tbody>
         {% for t in tournaments %}
-            <tr class="tournament_link" id="id_tournament_{{ t.pk }}">
+            {% if t.finished %}
+                <tr>
+            {% else %}
+                <tr class="tournament_link" id="id_tournament_{{ t.pk }}">
+            {% endif %}
                 <td>{{ t.start_time }}</td>
                 <td>{{ t.name }}</td>
                 <td>{{ t.winner }}</td>

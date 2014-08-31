@@ -204,6 +204,13 @@ def save_tournament(request, tournament_id):
             tpa.save()
             form.save_m2m()
 
+        # tournament finished. Hand out points
+        if tournament.finished:
+            tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
+            for tpa in tpas:
+                tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
+                tpa.player.save()
+
         return redirect('index.views.tournaments')
     else:
         return redirect('index.views.error')
