@@ -117,21 +117,18 @@ def submit_tournament(request):
         tournament = tournament_form.save(commit = False)
         tournament_placing_ante_formset = TournamentPlacingAnteFormSet(request.POST,
                                                                        instance=tournament)
-
         # FIXME this is not valid here, since the tournament for each tpa has not
         # been setup yet
         #if not tournament_placing_ante_formset.is_valid():
         #    return redirect('index.views.error')
 
-        # FIXME need to validate that the total_ante calculated
-        # is the same as the sum of all placings' antes. The
-        # javascript should ensure that this is always true,
-        # but I don't trust it
         tournament.total_ante = 0
         tournament.save()
         tournament_form.save_m2m()
+
         total_ante = 0
-        for player in tournament.players.all():
+        players = tournament.players.all()
+        for player in players:
             # FIXME this should be reused for update_total_ante, except for the
             # part where this saves changed pool points and ranking points
             if (player.pool_points != 0):
@@ -142,8 +139,19 @@ def submit_tournament(request):
             if player_ante == 0 and player.ranking_points != 0:
                 player_ante = 1
             player.ranking_points = player.ranking_points - player_ante
-            player.save()
             total_ante = total_ante + player_ante
+
+        total_placing_ante = 0
+        for form in tournament_placing_ante_formset.forms:
+            tpa = form.save(commit = False)
+            total_placing_ante = total_placing_ante + tpa.ante
+
+        if total_ante != total_placing_ante:
+            tournament.delete()
+            return redirect('index.views.error')
+
+        for player in players:
+            player.save()
         tournament.total_ante = total_ante
         tournament.save()
         tournament_form.save_m2m()
