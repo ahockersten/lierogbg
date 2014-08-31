@@ -47,7 +47,6 @@ def create_player_table():
                     lives = lives - s.pl_lives
                     lives = lives + s.pr_lives
         tmp["lives"] = lives
-        tmp["lives_positive"] = True if lives >= 0 else False
         players.append(tmp)
         current_rank = current_rank + 1
     return players
