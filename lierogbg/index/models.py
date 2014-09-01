@@ -18,6 +18,8 @@ class Player(models.Model):
     ranking_points = models.IntegerField(default = 1000)
     # current pool points
     pool_points = models.IntegerField(default = 0)
+    # a written comment for this player
+    comment = models.CharField(blank = True, max_length = 100000)
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -46,6 +48,8 @@ class Tournament(models.Model):
     pool_points = models.IntegerField(default = 0)
     # the calculated total ante
     total_ante = models.IntegerField()
+    # a written comment for this tournament
+    comment = models.CharField(blank = True, max_length = 100000)
 
     def __unicode__(self):
         return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
@@ -166,6 +170,8 @@ class PlayedGame(models.Model):
     player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
     # winner of this game
     winner = models.ForeignKey(Player, related_name="winner", blank = True, null = True)
+    # a written comment for this game
+    comment = models.CharField(blank = True, max_length = 100000)
 
     def __unicode__(self):
         return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)
@@ -272,26 +278,3 @@ class PointsChanged(models.Model):
 
     class Meta:
         pass
-
-class PointsChangedForm(ModelForm):
-    class Meta:
-        model = PointsChanged
-        fields = (
-            'player',
-            'tournament',
-            'game',
-            'rp_before',
-            'rp_after',
-            'pp_before',
-            'pp_after',
-        )
-
-        labels = {
-            'player' : _('Player'),
-            'tournament' : _('Tournament'),
-            'game'       : _('Game'),
-            'rp_before'  : _('RP before'),
-            'rp_after'   : _('RP after'),
-            'pp_before'  : _('PP before'),
-            'pp_after'   : _('PP after'),
-        }
