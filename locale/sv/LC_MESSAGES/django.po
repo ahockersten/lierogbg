@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-01 16:00+0200\n"
+"POT-Creation-Date: 2014-09-01 17:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
 msgid "Hex value for a color"
 msgstr "Hex-värde för en färg"
 
-#: lierogbg/index/models.py:72 lierogbg/index/models.py:204
+#: lierogbg/index/models.py:72 lierogbg/index/models.py:190
 msgid "Start time"
 msgstr "Starttid"
 
@@ -71,42 +71,67 @@ msgstr "Placering"
 msgid "Received ante"
 msgstr "Mottagen ante"
 
-#: lierogbg/index/models.py:147 templates/index/ranking.html:12
+#: lierogbg/index/models.py:147 lierogbg/index/models.py:290
+#: templates/index/ranking.html:12
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:205 templates/index/includes/list_games.html:7
+#: lierogbg/index/models.py:191 templates/index/includes/list_games.html:7
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:206 templates/index/includes/list_games.html:11
+#: lierogbg/index/models.py:192 templates/index/includes/list_games.html:11
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:207 templates/index/tournaments.html:13
+#: lierogbg/index/models.py:193 templates/index/tournaments.html:13
 #: templates/index/includes/list_games.html:15
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:208 templates/index/includes/list_games.html:61
+#: lierogbg/index/models.py:194 templates/index/includes/list_games.html:61
 msgid "Ranked"
 msgstr "Rankad"
 
-#: lierogbg/index/models.py:250
+#: lierogbg/index/models.py:236
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/index/models.py:251
+#: lierogbg/index/models.py:237
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:252
+#: lierogbg/index/models.py:238
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/index/models.py:253
+#: lierogbg/index/models.py:239
 msgid "Replay file"
 msgstr "Replay-fil"
+
+#: lierogbg/index/models.py:291 templates/index/includes/list_games.html:59
+msgid "Tournament"
+msgstr "Turnering"
+
+#: lierogbg/index/models.py:292 templates/index/includes/list_games.html:75
+msgid "Game"
+msgstr "Match"
+
+#: lierogbg/index/models.py:293
+msgid "RP before"
+msgstr "RP före"
+
+#: lierogbg/index/models.py:294
+msgid "RP after"
+msgstr "RP efter"
+
+#: lierogbg/index/models.py:295
+msgid "PP before"
+msgstr "PP före"
+
+#: lierogbg/index/models.py:296
+msgid "PP after"
+msgstr "PP efter"
 
 #: lierogbg/index/views.py:66
 msgid "Tied"
@@ -315,17 +340,9 @@ msgstr "Höger spelares RP"
 msgid "Game type"
 msgstr "Speltyp"
 
-#: templates/index/includes/list_games.html:59
-msgid "Tournament"
-msgstr "Turnering"
-
 #: templates/index/includes/list_games.html:63
 msgid "Unranked"
 msgstr "Orankad"
-
-#: templates/index/includes/list_games.html:75
-msgid "Game"
-msgstr "Match"
 
 #: templates/index/includes/list_games.html:76
 msgid "Map"
