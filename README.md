@@ -25,3 +25,13 @@ How to test developer builds
 ============
 python manage.py runserver
 
+Stuff to add
+==================
+- sorting matches
+- sorting ranking
+- filtering on matches
+
+Stuff to add that requires database changes
+=====================
+- RP before/after for each player in tournament
+- unranked matches
