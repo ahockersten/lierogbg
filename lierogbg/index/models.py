@@ -18,6 +18,9 @@ class Player(models.Model):
     ranking_points = models.IntegerField(default = 1000)
     # current pool points
     pool_points = models.IntegerField(default = 0)
+    # if the player is not active, it is not visible in the ranking table etc
+    active = models.BooleanField(default = True)
+
     # a written comment for this player
     comment = models.CharField(blank = True, max_length = 100000)
 
@@ -248,7 +251,7 @@ class SubgameForm(ModelForm):
 SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num = 10, extra = 1,
                                        can_delete = False, form = SubgameForm)
 
-# Keeps track of how ranking points etc was changed for a player.
+# Keeps track of how ranking points etc was chaqnged for a player.
 # Used to keep track of before/after for games and tournaments
 class PointsChanged(models.Model):
     # the player this belongs to
