@@ -57,8 +57,10 @@
                     <td>
                         {% if g.game.tournament %}
                             {% trans "Tournament" %}
-                        {% else %}
+                        {% elif g.game.ranked %}
                             {% trans "Ranked" %}
+                        {% else %}
+                            {% trans "Unranked" %}
                         {% endif %}
                     </td>
                 {% endif %}

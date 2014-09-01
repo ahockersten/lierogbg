@@ -247,7 +247,7 @@ def submit_game_ajax(request):
     pass
 
 @login_required
-def submit_game(request, tournament_id=None, ranked='True'):
+def submit_game(request, tournament_id=None):
     tournament = None
     if tournament_id != None:
         tournament = get_object_or_404(Tournament, id=tournament_id)
@@ -256,6 +256,8 @@ def submit_game(request, tournament_id=None, ranked='True'):
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
         played_game.tournament = tournament
+        if (tournament != None):
+            played_game.ranked = False
         subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
 
         if not subgame_formset.is_valid():
@@ -276,7 +278,7 @@ def submit_game(request, tournament_id=None, ranked='True'):
         for form in subgame_formset.forms:
             subgames.append(form.save(commit=False))
 
-        if ranked == 'True':
+        if played_game.ranked:
             ante_multiplier = 0.02
             if (pl.pool_points != 0):
                 pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)

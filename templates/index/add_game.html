@@ -7,7 +7,7 @@
 {% block content %}
 <form action="{% url 'index.views.submit_game' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
     {% csrf_token %}
-    {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset %}
+    {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=True %}
     <div class="well">
         <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
     </div>

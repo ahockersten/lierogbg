@@ -155,6 +155,8 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, Tournamen
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
     tournament = models.ForeignKey(Tournament, null = True)
+    # keeps track of whether this is a ranked game or not
+    ranked = models.BooleanField(default=True)
     # the start time of the game
     start_time = models.DateTimeField()
     # the left player
@@ -196,12 +198,14 @@ class PlayedGameForm(ModelForm):
             'player_left',
             'player_right',
             'winner',
+            'ranked'
         )
         labels = {
             'start_time'   : _('Start time'),
             'player_left'  : _('Left player'),
             'player_right' : _('Right player'),
             'winner'       : _('Winner'),
+            'ranked'       : _('Ranked'),
         }
         widgets = {
             'start_time' : DateTimeWidget(usel10n = True,
