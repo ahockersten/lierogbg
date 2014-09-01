@@ -22,7 +22,10 @@
         {% for g in games %}
             <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' %}">
                 <td>{{ g.game.start_time }}</td>
-                <td>{{ g.game.player_left }}</td>
+                <td>
+                    <img id={{ g.game.player_left.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                    {{ g.game.player_left }}
+                </td>
                 {% if full %}
                     <td>
                         {% if g.rp_pl_change > 0 %}
@@ -34,7 +37,10 @@
                         {% endif %}
                     </td>
                 {% endif %}
-                <td>{{ g.game.player_right }}</td>
+                <td>
+                    <img id={{ g.game.player_right.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                    {{ g.game.player_right }}
+                </td>
                 {% if full %}
                     <td>
                         {% if g.rp_pr_change > 0 %}
@@ -75,7 +81,11 @@
                                         <tr>
                                             <td>Game {{ forloop.counter }}</td>
                                             <td>{{ sg.0 }}</td>
-                                            <td>{{ sg.1 }} - {{ sg.2 }}</td>
+                                            <td>
+                                                <img id={{ g.game.player_left.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                                                {{ sg.1 }} - {{ sg.2 }}
+                                                <img id={{ g.game.player_right.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
+                                            </td>
                                             <td>
                                                 {% if sg.3 %}
                                                     <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a>
