@@ -30,7 +30,7 @@ Stuff to add
 - sorting matches
 - sorting ranking
 - filtering on matches
+- display RP before/after for each player in tournament (data is in database)
 
 Stuff to add that requires database changes
 =====================
-- RP before/after for each player in tournament
