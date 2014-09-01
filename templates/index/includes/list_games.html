@@ -29,11 +29,11 @@
                 {% if full %}
                     <td>
                         {% if g.rp_pl_change > 0 %}
-                            {{ g.game.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
+                            {{ g.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
                         {% elif g.rp_pl_change < 0 %}
-                            {{ g.game.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
+                            {{ g.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
                         {% else %}
-                            {{ g.game.rp_pl_after }} (-)
+                            {{ g.rp_pl_after }} (-)
                         {% endif %}
                     </td>
                 {% endif %}
@@ -44,11 +44,11 @@
                 {% if full %}
                     <td>
                         {% if g.rp_pr_change > 0 %}
-                            {{ g.game.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
+                            {{ g.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
                         {% elif g.rp_pr_change < 0%}
-                            {{ g.game.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
+                            {{ g.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
                         {% else %}
-                            {{ g.game.rp_pr_after }} (-)
+                            {{ g.rp_pr_after }} (-)
                         {% endif %}
                     </td>
                 {% endif %}

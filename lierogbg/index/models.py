@@ -155,31 +155,17 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, Tournamen
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
     tournament = models.ForeignKey(Tournament, null = True)
-    # keeps track of whether this is a ranked game or not
-    ranked = models.BooleanField(default=True)
+    # keeps track of whether this is a ranked game or not.
+    # If tournament is not None, this should always be False
+    ranked = models.BooleanField(default = True)
     # the start time of the game
     start_time = models.DateTimeField()
     # the left player
     player_left = models.ForeignKey(Player, related_name="playedgame_player_left")
     # the right player
     player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
+    # winner of this game
     winner = models.ForeignKey(Player, related_name="winner", blank = True, null = True)
-    # ranking points for left player, before match
-    rp_pl_before = models.IntegerField()
-    # ranking points for right player, before match
-    rp_pr_before = models.IntegerField()
-    # ranking points for left player, after match
-    rp_pl_after = models.IntegerField()
-    # ranking points for right player, after match
-    rp_pr_after = models.IntegerField()
-    # pool points for left player, before match
-    pp_pl_before = models.IntegerField()
-    # pool points for right player, before match
-    pp_pr_before = models.IntegerField()
-    # pool points for left player, after match
-    pp_pl_after = models.IntegerField()
-    # pool points for right player, after match
-    pp_pr_after = models.IntegerField()
 
     def __unicode__(self):
         return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)
@@ -255,3 +241,57 @@ class SubgameForm(ModelForm):
 
 SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num = 10, extra = 1,
                                        can_delete = False, form = SubgameForm)
+
+# Keeps track of how ranking points etc was changed for a player.
+# Used to keep track of before/after for games and tournaments
+class PointsChanged(models.Model):
+    # the player this belongs to
+    player = models.ForeignKey(Player)
+    # the tournament this belongs to. Both this and game may
+    # not both be set (or both be null)
+    tournament = models.ForeignKey(Tournament, blank = True, null = True)
+    # the game this belongs to. Both this and tournament may
+    # not both be set (or both be null)
+    game = models.ForeignKey(PlayedGame, blank = True, null = True)
+    # ranking points before match
+    rp_before = models.IntegerField()
+    # ranking points after match
+    rp_after = models.IntegerField()
+    # pool points before match
+    pp_before = models.IntegerField()
+    # pool points after match
+    pp_after = models.IntegerField()
+
+    def __unicode__(self):
+        return u'%s_%s_%s_%s_%s_%s_%s' % (self.player, self.tournament,
+                                          self.game, self.rp_before,
+                                          self.rp_after, self.pp_before,
+                                          self.pp_after)
+    def clean(self):
+        pass
+
+    class Meta:
+        pass
+
+class PointsChangedForm(ModelForm):
+    class Meta:
+        model = PointsChanged
+        fields = (
+            'player',
+            'tournament',
+            'game',
+            'rp_before',
+            'rp_after',
+            'pp_before',
+            'pp_after',
+        )
+
+        labels = {
+            'player' : _('Player'),
+            'tournament' : _('Tournament'),
+            'game'       : _('Game'),
+            'rp_before'  : _('RP before'),
+            'rp_after'   : _('RP after'),
+            'pp_before'  : _('PP before'),
+            'pp_after'   : _('PP after'),
+        }
