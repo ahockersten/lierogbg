@@ -107,9 +107,9 @@
         {% trans "Add game" %}
     </div>
     <div class="panel-body collapse" id="add_game_body">
-        <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk False %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
+        <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
             {% csrf_token %}
-            {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset %}
+            {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=False %}
             <div class="well">
                 <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add game" %}</button>
             </div>
@@ -151,7 +151,7 @@ $(document).ready(function () {
     $("#id_add_game_btn").click(function() {
         $.ajax({
             type: "POST",
-            url: "{% url 'index.views.submit_game' tournament_extra_data.tournament_pk False %}",
+            url: "{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}",
             traditional: true,
             data: $("#id_add_game_form").serialize(),
             success: function(data) {

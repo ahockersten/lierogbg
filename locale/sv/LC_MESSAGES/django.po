@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-31 23:32+0200\n"
+"POT-Creation-Date: 2014-09-01 16:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
 msgid "Hex value for a color"
 msgstr "Hex-värde för en färg"
 
-#: lierogbg/index/models.py:72 lierogbg/index/models.py:201
+#: lierogbg/index/models.py:72 lierogbg/index/models.py:204
 msgid "Start time"
 msgstr "Starttid"
 
@@ -71,36 +71,40 @@ msgstr "Placering"
 msgid "Received ante"
 msgstr "Mottagen ante"
 
-#: lierogbg/index/models.py:147 templates/index/ranking.html:13
+#: lierogbg/index/models.py:147 templates/index/ranking.html:12
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:202 templates/index/includes/list_games.html:7
+#: lierogbg/index/models.py:205 templates/index/includes/list_games.html:7
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:203 templates/index/includes/list_games.html:11
+#: lierogbg/index/models.py:206 templates/index/includes/list_games.html:11
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:204 templates/index/tournaments.html:13
+#: lierogbg/index/models.py:207 templates/index/tournaments.html:13
 #: templates/index/includes/list_games.html:15
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:246
+#: lierogbg/index/models.py:208 templates/index/includes/list_games.html:61
+msgid "Ranked"
+msgstr "Rankad"
+
+#: lierogbg/index/models.py:250
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/index/models.py:247
+#: lierogbg/index/models.py:251
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:248
+#: lierogbg/index/models.py:252
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/index/models.py:249
+#: lierogbg/index/models.py:253
 msgid "Replay file"
 msgstr "Replay-fil"
 
@@ -139,7 +143,7 @@ msgstr "Lägg till turnering"
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/base.html:57 templates/index/ranking.html:19
+#: templates/base.html:57 templates/index/ranking.html:18
 msgid "Games"
 msgstr "Matcher"
 
@@ -231,27 +235,27 @@ msgstr "matcher"
 msgid "ranking"
 msgstr "ranking"
 
-#: templates/index/ranking.html:14
+#: templates/index/ranking.html:13
 msgid "Ranking points"
 msgstr "Ranking-poäng"
 
-#: templates/index/ranking.html:15
+#: templates/index/ranking.html:14
 msgid "Pool points"
 msgstr "Pool-poäng"
 
-#: templates/index/ranking.html:16
+#: templates/index/ranking.html:15
 msgid "Wins"
 msgstr "Vinster"
 
-#: templates/index/ranking.html:17
+#: templates/index/ranking.html:16
 msgid "Losses"
 msgstr "Förluster"
 
-#: templates/index/ranking.html:18
+#: templates/index/ranking.html:17
 msgid "Ties"
 msgstr "Oavgjorda"
 
-#: templates/index/ranking.html:20
+#: templates/index/ranking.html:19
 msgid "Lives"
 msgstr "Liv"
 
@@ -283,15 +287,15 @@ msgstr "visa turnering"
 msgid "Match info"
 msgstr "Match-info"
 
-#: templates/index/includes/add_game_form_contents.html:28
+#: templates/index/includes/add_game_form_contents.html:60
 msgid "Subgame info"
 msgstr "Undermatch-info"
 
-#: templates/index/includes/add_game_form_contents.html:45
+#: templates/index/includes/add_game_form_contents.html:77
 msgid "Delete subgame"
 msgstr "Ta bort under-match"
 
-#: templates/index/includes/add_game_form_contents.html:51
+#: templates/index/includes/add_game_form_contents.html:83
 msgid "Add subgame"
 msgstr "Lägg till under-match"
 
@@ -311,26 +315,26 @@ msgstr "Höger spelares RP"
 msgid "Game type"
 msgstr "Speltyp"
 
-#: templates/index/includes/list_games.html:53
+#: templates/index/includes/list_games.html:59
 msgid "Tournament"
 msgstr "Turnering"
 
-#: templates/index/includes/list_games.html:55
-msgid "Ranked"
-msgstr "Rankad"
+#: templates/index/includes/list_games.html:63
+msgid "Unranked"
+msgstr "Orankad"
 
-#: templates/index/includes/list_games.html:67
+#: templates/index/includes/list_games.html:75
 msgid "Game"
 msgstr "Match"
 
-#: templates/index/includes/list_games.html:68
+#: templates/index/includes/list_games.html:76
 msgid "Map"
 msgstr "Karta"
 
-#: templates/index/includes/list_games.html:69
+#: templates/index/includes/list_games.html:77
 msgid "Score"
 msgstr "Slutställning"
 
-#: templates/index/includes/list_games.html:70
+#: templates/index/includes/list_games.html:78
 msgid "Download"
 msgstr "Ladda ner"

@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
-from index.models import Player, PlayedGameForm, PlayedGame, Subgame, SubgameForm
+from index.models import Player, PlayedGameForm, PlayedGame, PointsChanged, Subgame, SubgameForm
 from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte
 from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAnteFormSet
 from index.models import TournamentCreateForm, TournamentEditForm
@@ -64,8 +64,12 @@ def create_games_table(games_list):
         tmp = {}
         tmp["game"] = g
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
-        tmp["rp_pl_change"] = g.rp_pl_after - g.rp_pl_before
-        tmp["rp_pr_change"] = g.rp_pr_after - g.rp_pr_before
+        points_changed_pl = PointsChanged.objects.all().filter(game=g).filter(player=g.player_left)
+        tmp["rp_pl_after"] = points_changed_pl[0].rp_after
+        tmp["rp_pl_change"] = points_changed_pl[0].rp_after - points_changed_pl[0].rp_before
+        points_changed_pr = PointsChanged.objects.all().filter(game=g).filter(player=g.player_right)
+        tmp["rp_pr_after"] = points_changed_pr[0].rp_after
+        tmp["rp_pr_change"] = points_changed_pr[0].rp_after - points_changed_pr[0].rp_before
         subgames = Subgame.objects.all().filter(parent=g)
         subgames_tmp = []
         for subgame in subgames:
@@ -127,8 +131,16 @@ def submit_tournament(request):
         tournament_form.save_m2m()
 
         total_ante = 0
+        points_changed_list = []
         players = tournament.players.all()
         for player in players:
+            points_changed = PointsChanged()
+            points_changed.player = player
+            points_changed.tournament = tournament
+            points_changed.game = None
+            points_changed.rp_before = player.ranking_points
+            points_changed.pp_before = player.pool_points
+
             # FIXME this should be reused for update_total_ante, except for the
             # part where this saves changed pool points and ranking points
             if (player.pool_points != 0):
@@ -139,7 +151,12 @@ def submit_tournament(request):
             if player_ante == 0 and player.ranking_points != 0:
                 player_ante = 1
             player.ranking_points = player.ranking_points - player_ante
+            # this will be set to a correct value when the tournament
+            # is saved
+            points_changed.rp_after = player.ranking_points
+            points_changed.pp_after = player.pool_points
             total_ante = total_ante + player_ante
+            points_changed_list.append(points_changed)
 
         total_placing_ante = 0
         for form in tournament_placing_ante_formset.forms:
@@ -152,6 +169,8 @@ def submit_tournament(request):
 
         for player in players:
             player.save()
+        for points_changed in points_changed_list:
+            points_changed.save()
         tournament.total_ante = total_ante
         tournament.save()
         tournament_form.save_m2m()
@@ -166,9 +185,9 @@ def submit_tournament(request):
     else:
         return redirect('index.views.error')
 
-def prepare_tournament_context(tournament_id):
+def prepare_tournament_context(tournament_id, form):
     instance = get_object_or_404(Tournament, pk=tournament_id)
-    tournament_form = TournamentEditForm(instance=instance)
+    tournament_form = form(instance=instance)
     played_game_form = PlayedGameForm(initial={'tournament' : instance})
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
@@ -191,11 +210,13 @@ def prepare_tournament_context(tournament_id):
 @login_required
 def edit_tournament(request, tournament_id):
     return render(request, 'index/edit_tournament.html',
-                  prepare_tournament_context(tournament_id))
+                  prepare_tournament_context(tournament_id,
+                                             TournamentEditForm))
 
 def view_tournament(request, tournament_id):
     return render(request, 'index/view_tournament.html',
-                  prepare_tournament_context(tournament_id))
+                  prepare_tournament_context(tournament_id,
+                                             TournamentEditForm))
 
 @login_required
 def save_tournament(request, tournament_id):
@@ -225,6 +246,9 @@ def save_tournament(request, tournament_id):
             for tpa in tpas:
                 tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
                 tpa.player.save()
+                points_changed = PointsChanged.objects.all().filter(tournament=tournament,player=tpa.player)[0]
+                points_changed.rp_after = tpa.player.ranking_points
+                points_changed.save()
 
         return redirect('index.views.tournaments')
     else:
@@ -247,7 +271,7 @@ def submit_game_ajax(request):
     pass
 
 @login_required
-def submit_game(request, tournament_id=None, ranked='True'):
+def submit_game(request, tournament_id=None):
     tournament = None
     if tournament_id != None:
         tournament = get_object_or_404(Tournament, id=tournament_id)
@@ -256,6 +280,8 @@ def submit_game(request, tournament_id=None, ranked='True'):
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
         played_game.tournament = tournament
+        if (tournament != None):
+            played_game.ranked = False
         subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
 
         if not subgame_formset.is_valid():
@@ -267,16 +293,23 @@ def submit_game(request, tournament_id=None, ranked='True'):
         if (pl == pr or (winner != pl and winner != pr and winner != None)):
             return redirect('index.views.error')
 
-        played_game.rp_pl_before = pl.ranking_points
-        played_game.rp_pr_before = pr.ranking_points
-        played_game.pp_pl_before = pl.pool_points
-        played_game.pp_pr_before = pr.pool_points
-
         subgames = []
         for form in subgame_formset.forms:
             subgames.append(form.save(commit=False))
 
-        if ranked == 'True':
+        points_changed_pl = PointsChanged()
+        points_changed_pl.player = pl
+        points_changed_pl.tournament = None
+        points_changed_pl.rp_before = pl.ranking_points
+        points_changed_pl.pp_before = pl.pool_points
+
+        points_changed_pr = PointsChanged()
+        points_changed_pr.player = pr
+        points_changed_pr.tournament = None
+        points_changed_pr.rp_before = pr.ranking_points
+        points_changed_pr.pp_before = pr.pool_points
+
+        if played_game.ranked:
             ante_multiplier = 0.02
             if (pl.pool_points != 0):
                 pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
@@ -325,15 +358,20 @@ def submit_game(request, tournament_id=None, ranked='True'):
                 winner.ranking_points = winner.ranking_points + loser_ante
                 loser.ranking_points = loser.ranking_points - loser_ante
 
-        played_game.rp_pl_after = pl.ranking_points
-        played_game.rp_pr_after = pr.ranking_points
-        played_game.pp_pl_after = pl.pool_points
-        played_game.pp_pr_after = pr.pool_points
+        points_changed_pl.pp_after = pl.pool_points
+        points_changed_pl.rp_after = pl.ranking_points
+        points_changed_pr.pp_after = pr.pool_points
+        points_changed_pr.rp_after = pr.ranking_points
 
         pl.save()
         pr.save()
         played_game.save()
         played_game_form.save_m2m()
+
+        points_changed_pl.game = played_game
+        points_changed_pr.game = played_game
+        points_changed_pl.save()
+        points_changed_pr.save()
 
         for subgame in subgames:
             subgame.parent = played_game

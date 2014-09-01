@@ -6,18 +6,50 @@
         {% trans "Match info" %}
     </div>
     <div class="panel-body">
-        {% for field in played_game_form.visible_fields %}
+        <div class="form-group">
+            <div class="col-xs-3">
+                {{ played_game_form.start_time.label_tag }}
+            </div>
+            <div class="col-xs-9">
+                {{ played_game_form.start_time|addcss:'form-control' }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                {{ played_game_form.player_left.label_tag }}
+            </div>
+            <div class="col-xs-9">
+                {{ played_game_form.player_left|addcss:'form-control' }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                {{ played_game_form.player_right.label_tag }}
+            </div>
+            <div class="col-xs-9">
+                {{ played_game_form.player_right|addcss:'form-control' }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                {{ played_game_form.winner.label_tag }}
+            </div>
+            <div class="col-xs-9">
+                {{ played_game_form.winner|addcss:'form-control' }}
+            </div>
+        </div>
+        {% if show_ranked %}
             <div class="form-group">
                 <div class="col-xs-3">
-                    {{ field.label_tag }}
+                    {{ played_game_form.ranked.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ field|addcss:'form-control' }}
+                    {{ played_game_form.ranked|addcss:'form-control' }}
                 </div>
             </div>
-            {% for field in played_game_form.hidden_fields %}
-                <div style="display:none;">{{ field }}</div>
-            {% endfor %}
+        {% endif %}
+        {% for field in played_game_form.hidden_fields %}
+            <div style="display:none;">{{ field }}</div>
         {% endfor %}
     </div>
 </div>
