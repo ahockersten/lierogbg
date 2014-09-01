@@ -278,26 +278,3 @@ class PointsChanged(models.Model):
 
     class Meta:
         pass
-
-class PointsChangedForm(ModelForm):
-    class Meta:
-        model = PointsChanged
-        fields = (
-            'player',
-            'tournament',
-            'game',
-            'rp_before',
-            'rp_after',
-            'pp_before',
-            'pp_after',
-        )
-
-        labels = {
-            'player' : _('Player'),
-            'tournament' : _('Tournament'),
-            'game'       : _('Game'),
-            'rp_before'  : _('RP before'),
-            'rp_after'   : _('RP after'),
-            'pp_before'  : _('PP before'),
-            'pp_after'   : _('PP after'),
-        }
