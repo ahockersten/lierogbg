@@ -185,9 +185,9 @@ def submit_tournament(request):
     else:
         return redirect('index.views.error')
 
-def prepare_tournament_context(tournament_id):
+def prepare_tournament_context(tournament_id, form):
     instance = get_object_or_404(Tournament, pk=tournament_id)
-    tournament_form = TournamentEditForm(instance=instance)
+    tournament_form = form(instance=instance)
     played_game_form = PlayedGameForm(initial={'tournament' : instance})
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
@@ -210,11 +210,13 @@ def prepare_tournament_context(tournament_id):
 @login_required
 def edit_tournament(request, tournament_id):
     return render(request, 'index/edit_tournament.html',
-                  prepare_tournament_context(tournament_id))
+                  prepare_tournament_context(tournament_id,
+                                             TournamentEditForm))
 
 def view_tournament(request, tournament_id):
     return render(request, 'index/view_tournament.html',
-                  prepare_tournament_context(tournament_id))
+                  prepare_tournament_context(tournament_id,
+                                             TournamentEditForm))
 
 @login_required
 def save_tournament(request, tournament_id):
@@ -244,8 +246,8 @@ def save_tournament(request, tournament_id):
             for tpa in tpas:
                 tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
                 tpa.player.save()
-                points_changed = PointsChanged.objects.all().filter(tournament=tournament,player=tpa.player)
-                points_changed.rp_after = player.ranking_points
+                points_changed = PointsChanged.objects.all().filter(tournament=tournament,player=tpa.player)[0]
+                points_changed.rp_after = tpa.player.ranking_points
                 points_changed.save()
 
         return redirect('index.views.tournaments')
