@@ -46,7 +46,7 @@ class Tournament(models.Model):
     # name of the tournament. May be left blank
     name = models.CharField(max_length = 100, blank = True)
     # players participating in this tournament
-    players = models.ManyToManyField(Player, related_name="tournament_players")
+    players = models.ManyToManyField(Player, related_name = "tournament_players")
     # ante from each player, in percent
     ante = models.IntegerField()
     # the number of points to take from the point pool for each player
@@ -174,7 +174,7 @@ class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
     tournament = models.ForeignKey(Tournament, null = True)
     # keeps track of whether this is a ranked game or not.
-    # If tournament is not None, this should always be False
+    # when tournament is not None, this should be False
     ranked = models.BooleanField(default = True)
     # the start time of the game
     start_time = models.DateTimeField()
