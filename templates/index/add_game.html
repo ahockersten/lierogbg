@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "LieroGBG" %} {% trans "add game" %}{% endblock %}
+{% block title %}{% trans "LieroGBG" %} {% trans "add match" %}{% endblock %}
 {% block custom_css %}{{ played_game_form.media.css }}{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
     {% csrf_token %}
     {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=True %}
     <div class="well">
-        <button type="submit" class="btn btn-success">{% trans "Add game" %}</button>
+        <button type="submit" class="btn btn-success">{% trans "Add match" %}</button>
     </div>
 </form>
 {% endblock %}
