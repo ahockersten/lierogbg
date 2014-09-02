@@ -69,46 +69,62 @@ function blendColors(c0, c1, p) {
 }
 
 function update_images() {
-    $('img.svg').each(function(){
-        var img = $(this);
-        var imgID = img.attr('id');
-        var imgClass = img.attr('class');
-        var imgURL = img.attr('src');
+    var lieroworm_left = "/static/img/lieroworm_pointing_left.svg"
+    var lieroworm_right = "/static/img/lieroworm_pointing_right.svg"
+    $.get(lieroworm_left, function(data) {
+        // Get the SVG tag, ignore the rest
+        var svg = $(data).find('svg');
+        // Remove any invalid XML tags as per http://validator.w3.org
+        svg = svg.removeAttr('xmlns:a');
+        $(".lieroworm_left").each(function(index) {
+            var img = $(this);
+            var imgID = img.attr('id');
+            var imgClass = img.attr('class');
+            var imgURL = img.attr('src');
 
-        $.get(imgURL, function(data) {
-            // Get the SVG tag, ignore the rest
-            var svg = $(data).find('svg');
-
-            // Add replaced image's ID to the new SVG
-            if (typeof imgID !== 'undefined') {
-                svg = svg.attr('id', imgID);
-            }
-            // Add replaced image's classes to the new SVG
-            if (typeof imgClass !== 'undefined') {
-                svg = svg.attr('class', imgClass + ' replaced-svg');
-            }
-
-            // Remove any invalid XML tags as per http://validator.w3.org
-            svg = svg.removeAttr('xmlns:a');
-
+            var clone = svg.clone();
             // Replace image with new SVG
-            img.replaceWith(svg);
+            img.replaceWith(clone);
 
-            // FIXME this is inefficient. we need only do it for the last svg loaded
-            $(".lieroworm").each(function(index) {
-                var color = $(this).attr('id');
-                $(this).find("#svg_light_color").each(function(index) {
-                    $(this).css({'fill' : shadeColor(color, -0.2)});
-                });
-                $(this).find("#svg_medium_color").each(function(index) {
-                    $(this).css({'fill' : color});
-                });
-                $(this).find("#svg_dark_color").each(function(index) {
-                    $(this).css({'fill' : shadeColor(color, 0.2)});
-                });
+            var color = $(this).attr('id');
+            clone.find("#svg_light_color").each(function(index) {
+                $(this).css({'fill' : shadeColor(color, -0.2)});
             });
-        }, 'xml');
-    });
+            clone.find("#svg_medium_color").each(function(index) {
+                $(this).css({'fill' : color});
+            });
+            clone.find("#svg_dark_color").each(function(index) {
+                $(this).css({'fill' : shadeColor(color, 0.2)});
+            });
+        });
+    }, 'xml');
+    $.get(lieroworm_right, function(data) {
+        // Get the SVG tag, ignore the rest
+        var svg = $(data).find('svg');
+        // Remove any invalid XML tags as per http://validator.w3.org
+        svg = svg.removeAttr('xmlns:a');
+        $(".lieroworm_right").each(function(index) {
+            var img = $(this);
+            var imgID = img.attr('id');
+            var imgClass = img.attr('class');
+            var imgURL = img.attr('src');
+
+            var clone = svg.clone();
+            // Replace image with new SVG
+            img.replaceWith(clone);
+
+            var color = $(this).attr('id');
+            clone.find("#svg_light_color").each(function(index) {
+                $(this).css({'fill' : shadeColor(color, -0.2)});
+            });
+            clone.find("#svg_medium_color").each(function(index) {
+                $(this).css({'fill' : color});
+            });
+            clone.find("#svg_dark_color").each(function(index) {
+                $(this).css({'fill' : shadeColor(color, 0.2)});
+            });
+        });
+    }, 'xml');
 }
 
 $(document).ready(function () {

@@ -23,7 +23,7 @@
             <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
                 <td>{{ g.game.start_time }}</td>
                 <td>
-                    <img id={{ g.game.player_left.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                    <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ g.game.player_left }}
                 </td>
                 {% if full %}
@@ -38,7 +38,7 @@
                     </td>
                 {% endif %}
                 <td>
-                    <img id={{ g.game.player_right.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                    <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ g.game.player_right }}
                 </td>
                 {% if full %}
@@ -84,9 +84,9 @@
                                             <td>{% trans "Round" %} {{ forloop.counter }}</td>
                                             <td>{{ sg.0 }}</td>
                                             <td>
-                                                <img id={{ g.game.player_left.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                                                <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                                                 {{ sg.1 }} - {{ sg.2 }}
-                                                <img id={{ g.game.player_right.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
+                                                <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
                                             </td>
                                             <td>
                                                 {% if sg.3 %}
