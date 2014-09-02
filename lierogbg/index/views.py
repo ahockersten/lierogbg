@@ -31,15 +31,16 @@ def create_player_table():
         tmp = {}
         tmp["player"] = p
         tmp["current_rank"] = current_rank
-        games = PlayedGame.objects.all().filter(Q(player_left=p) |
-                                                Q(player_right=p))
+        all_games_with_this_player = PlayedGame.objects.all().filter(Q(player_left = p) |
+                                                                     Q(player_right = p))
+        ranked_and_tournament_games = all_games_with_this_player.exclude(Q(ranked=False) & Q(tournament=None))
         tmp["round_wins"] = 0
         tmp["round_losses"] = 0
         tmp["round_ties"] = 0
         tmp["rounds"] = 0
-        tmp["games"] = len(games)
+        tmp["games"] = len(ranked_and_tournament_games)
         lives = 0
-        for g in games:
+        for g in ranked_and_tournament_games:
             subgames = Subgame.objects.all().filter(parent=g)
             for s in subgames:
                 if g.player_left == p:
