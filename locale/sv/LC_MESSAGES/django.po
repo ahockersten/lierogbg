@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 08:31+0200\n"
+"POT-Creation-Date: 2014-09-02 12:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,82 +33,82 @@ msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
 msgid "Hex value for a color"
 msgstr "Hex-värde för en färg"
 
-#: lierogbg/index/models.py:79 lierogbg/index/models.py:199
+#: lierogbg/index/models.py:81 lierogbg/index/models.py:210
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:80 lierogbg/index/models.py:102
+#: lierogbg/index/models.py:82 lierogbg/index/models.py:107
 #: templates/index/tournaments.html:12
 msgid "Name"
 msgstr "Namn"
 
-#: lierogbg/index/models.py:81 templates/index/edit_tournament.html:29
+#: lierogbg/index/models.py:83 templates/index/edit_tournament.html:29
 #: templates/index/view_tournament.html:29
 msgid "Players"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:82
+#: lierogbg/index/models.py:84
 msgid "Ante (in %)"
 msgstr "Ante (i %)"
 
-#: lierogbg/index/models.py:83
+#: lierogbg/index/models.py:85
 msgid "Pool points unlocked"
 msgstr "Pool-poäng upplåsta"
 
-#: lierogbg/index/models.py:103 templates/index/tournaments.html:17
+#: lierogbg/index/models.py:108 templates/index/tournaments.html:17
 msgid "Total ante"
 msgstr "Total ante"
 
-#: lierogbg/index/models.py:104 templates/index/tournaments.html:18
+#: lierogbg/index/models.py:109 templates/index/tournaments.html:18
 msgid "Finished"
 msgstr "Slutförd"
 
-#: lierogbg/index/models.py:135 lierogbg/index/models.py:152
+#: lierogbg/index/models.py:140 lierogbg/index/models.py:157
 msgid "Placing"
 msgstr "Placering"
 
-#: lierogbg/index/models.py:136 lierogbg/index/models.py:153
+#: lierogbg/index/models.py:141 lierogbg/index/models.py:158
 msgid "Received ante"
 msgstr "Mottagen ante"
 
-#: lierogbg/index/models.py:154 templates/index/ranking.html:12
+#: lierogbg/index/models.py:159 templates/index/ranking.html:12
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:200 templates/index/includes/list_games.html:7
+#: lierogbg/index/models.py:211 templates/index/includes/list_games.html:7
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:201 templates/index/includes/list_games.html:11
+#: lierogbg/index/models.py:212 templates/index/includes/list_games.html:11
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:202 templates/index/tournaments.html:13
+#: lierogbg/index/models.py:213 templates/index/tournaments.html:13
 #: templates/index/includes/list_games.html:15
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:203 templates/index/includes/list_games.html:61
+#: lierogbg/index/models.py:214 templates/index/includes/list_games.html:61
 msgid "Ranked"
 msgstr "Rankad"
 
-#: lierogbg/index/models.py:245
+#: lierogbg/index/models.py:263
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/index/models.py:246
+#: lierogbg/index/models.py:264
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:247
+#: lierogbg/index/models.py:265
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/index/models.py:248
+#: lierogbg/index/models.py:266
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:66
+#: lierogbg/index/views.py:84
 msgid "Tied"
 msgstr "Oavgjort"
 
@@ -129,37 +129,37 @@ msgstr "Engelska"
 msgid "LieroGBG"
 msgstr "LieroGBG"
 
-#: templates/base.html:44 templates/index/add_game.html:12
+#: templates/base.html:45 templates/index/add_game.html:12
 #: templates/index/edit_tournament.html:107
 #: templates/index/edit_tournament.html:114
 msgid "Add match"
 msgstr "Lägg till match"
 
-#: templates/base.html:47 templates/index/add_tournament.html:70
+#: templates/base.html:48 templates/index/add_tournament.html:70
 msgid "Add tournament"
 msgstr "Lägg till turnering"
 
-#: templates/base.html:54
+#: templates/base.html:55
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/base.html:57 templates/index/ranking.html:18
+#: templates/base.html:58 templates/index/ranking.html:17
 msgid "Matches"
 msgstr "Matcher"
 
-#: templates/base.html:60
+#: templates/base.html:61
 msgid "Tournaments"
 msgstr "Turneringar"
 
-#: templates/base.html:64
+#: templates/base.html:65
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:67
+#: templates/base.html:68
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:71 templates/accounts/login.html:4
+#: templates/base.html:72 templates/accounts/login.html:4
 msgid "Login"
 msgstr "Logga in"
 
@@ -240,22 +240,34 @@ msgid "Ranking points"
 msgstr "Ranking-poäng"
 
 #: templates/index/ranking.html:14
-msgid "Pool points"
-msgstr "Pool-poäng"
-
-#: templates/index/ranking.html:15
 msgid "Wins"
 msgstr "Vinster"
 
-#: templates/index/ranking.html:16
+#: templates/index/ranking.html:15
 msgid "Losses"
 msgstr "Förluster"
 
-#: templates/index/ranking.html:17
+#: templates/index/ranking.html:16
 msgid "Ties"
 msgstr "Oavgjorda"
 
+#: templates/index/ranking.html:18
+msgid "Rounds won"
+msgstr "Vunna rundor"
+
 #: templates/index/ranking.html:19
+msgid "Rounds lost"
+msgstr "Förlorade rundor"
+
+#: templates/index/ranking.html:20
+msgid "Rounds tied"
+msgstr "Oavgjorda rundor"
+
+#: templates/index/ranking.html:21
+msgid "Rounds"
+msgstr "Rundor"
+
+#: templates/index/ranking.html:22
 msgid "Lives"
 msgstr "Liv"
 
@@ -339,6 +351,9 @@ msgstr "Slutställning"
 #: templates/index/includes/list_games.html:78
 msgid "Download"
 msgstr "Ladda ner"
+
+#~ msgid "Pool points"
+#~ msgstr "Pool-poäng"
 
 #~ msgid "games"
 #~ msgstr "matcher"

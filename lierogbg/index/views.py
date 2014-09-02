@@ -37,6 +37,10 @@ def create_player_table():
         tmp["wins"] = len(games.filter(winner=p))
         tmp["ties"] = len(games.filter(winner=None))
         tmp["losses"] = tmp["games"] - tmp["wins"] - tmp["ties"]
+        tmp["round_wins"] = 0
+        tmp["round_losses"] = 0
+        tmp["round_ties"] = 0
+        tmp["rounds"] = 0
         lives = 0
         for g in games:
             subgames = Subgame.objects.all().filter(parent=g)
@@ -44,9 +48,22 @@ def create_player_table():
                 if g.player_left == p:
                     lives = lives + s.pl_lives
                     lives = lives - s.pr_lives
+                    if s.pl_lives > s.pr_lives:
+                        tmp["round_wins"] = tmp["round_wins"] + 1
+                    elif s.pl_lives < s.pr_lives:
+                        tmp["round_losses"] = tmp["round_losses"] + 1
+                    else:
+                        tmp["round_ties"] = tmp["round_ties"] + 1
                 else:
                     lives = lives - s.pl_lives
                     lives = lives + s.pr_lives
+                    if s.pr_lives > s.pl_lives:
+                        tmp["round_wins"] = tmp["round_wins"] + 1
+                    elif s.pr_lives < s.pl_lives:
+                        tmp["round_losses"] = tmp["round_losses"] + 1
+                    else:
+                        tmp["round_ties"] = tmp["round_ties"] + 1
+                tmp["rounds"] = tmp["rounds"] + 1
         tmp["lives"] = lives
         players.append(tmp)
         current_rank = current_rank + 1
