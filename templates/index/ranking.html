@@ -11,11 +11,14 @@
                 <th>#</th>
                 <th>{% trans "Player" %}</th>
                 <th>{% trans "Ranking points" %}</th>
-                <th>{% trans "Pool points" %}</th>
                 <th>{% trans "Wins" %}</th>
                 <th>{% trans "Losses" %}</th>
                 <th>{% trans "Ties" %}</th>
                 <th>{% trans "Matches" %}</th>
+                <th>{% trans "Rounds won" %}</th>
+                <th>{% trans "Rounds lost" %}</th>
+                <th>{% trans "Rounds tied" %}</th>
+                <th>{% trans "Rounds" %}</th>
                 <th>{% trans "Lives" %}</th>
             </tr>
         </thead>
@@ -27,12 +30,21 @@
                     <img id={{ p.player.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ p.player.name }}
                 </td>
-                <td>{{ p.player.ranking_points }}</td>
-                <td>{{ p.player.pool_points }}</td>
+                <td>
+                    {{ p.player.ranking_points }}
+                    {% if p.player.pool_points > 0 %}
+                        <span class="pool_points_remaining">(+{{ p.player.pool_points }} pool)</span>
+                    {% endif %}
+                </td>
+                </td>
                 <td>{{ p.wins }}</td>
                 <td>{{ p.losses }}</td>
                 <td>{{ p.ties }}</td>
                 <td>{{ p.games }}</td>
+                <td>{{ p.round_wins }}</td>
+                <td>{{ p.round_losses }}</td>
+                <td>{{ p.round_ties }}</td>
+                <td>{{ p.rounds }}</td>
                 {% if p.lives > 0 %}
                     <td><span class="change_positive">+{{ p.lives }}</span></td>
                 {% elif p.lives < 0 %}
