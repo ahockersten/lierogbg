@@ -33,10 +33,6 @@ def create_player_table():
         tmp["current_rank"] = current_rank
         games = PlayedGame.objects.all().filter(Q(player_left=p) |
                                                 Q(player_right=p))
-        tmp["games"] = len(games)
-        tmp["wins"] = len(games.filter(winner=p))
-        tmp["ties"] = len(games.filter(winner=None))
-        tmp["losses"] = tmp["games"] - tmp["wins"] - tmp["ties"]
         tmp["round_wins"] = 0
         tmp["round_losses"] = 0
         tmp["round_ties"] = 0
