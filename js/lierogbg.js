@@ -68,16 +68,7 @@ function blendColors(c0, c1, p) {
     return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
 }
 
-$(document).ready(function () {
-    // Register the click event handlers
-    $("#add_subgame_form").click(function () {
-        return addSubgameForm(this, "subgame_set");
-    });
-
-    $(".delete_subgame_form").click(function () {
-        return deleteSubgameForm(this, "subgame_set");
-    });
-
+function update_images() {
     $('img.svg').each(function(){
         var img = $(this);
         var imgID = img.attr('id');
@@ -118,4 +109,17 @@ $(document).ready(function () {
             });
         }, 'xml');
     });
+}
+
+$(document).ready(function () {
+    // Register the click event handlers
+    $("#add_subgame_form").click(function () {
+        return addSubgameForm(this, "subgame_set");
+    });
+
+    $(".delete_subgame_form").click(function () {
+        return deleteSubgameForm(this, "subgame_set");
+    });
+
+    update_images();
 });
