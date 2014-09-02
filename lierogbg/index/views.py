@@ -37,6 +37,7 @@ def create_player_table():
         tmp["round_losses"] = 0
         tmp["round_ties"] = 0
         tmp["rounds"] = 0
+        tmp["games"] = len(games)
         lives = 0
         for g in games:
             subgames = Subgame.objects.all().filter(parent=g)

@@ -14,6 +14,7 @@
                 <th>{% trans "Wins" %}</th>
                 <th>{% trans "Losses" %}</th>
                 <th>{% trans "Ties" %}</th>
+                <th>{% trans "Matches" %}</th>
                 <th>{% trans "Lives" %}</th>
             </tr>
         </thead>
@@ -35,6 +36,7 @@
                 <td>{{ p.round_wins }}</td>
                 <td>{{ p.round_losses }}</td>
                 <td>{{ p.round_ties }}</td>
+                <td>{{ p.games }}</td>
                 {% if p.lives > 0 %}
                     <td><span class="change_positive">+{{ p.lives }}</span></td>
                 {% elif p.lives < 0 %}
