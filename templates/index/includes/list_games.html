@@ -20,7 +20,7 @@
     </thead>
     <tbody>
         {% for g in games %}
-            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}" class="{% cycle 'striped' '' %}">
+            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
                 <td>{{ g.game.start_time }}</td>
                 <td>
                     <img id={{ g.game.player_left.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
