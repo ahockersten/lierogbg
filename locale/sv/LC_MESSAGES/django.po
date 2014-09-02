@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 12:46+0200\n"
+"POT-Creation-Date: 2014-09-02 16:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Antal liv kvar för höger spelare"
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:80
+#: lierogbg/index/views.py:81
 msgid "Tied"
 msgstr "Oavgjort"
 
@@ -143,7 +143,7 @@ msgstr "Lägg till turnering"
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/base.html:58
+#: templates/base.html:58 templates/index/ranking.html:17
 msgid "Matches"
 msgstr "Matcher"
 
@@ -250,10 +250,6 @@ msgstr "Förluster"
 #: templates/index/ranking.html:16
 msgid "Ties"
 msgstr "Oavgjorda"
-
-#: templates/index/ranking.html:17
-msgid "Rounds"
-msgstr "Rundor"
 
 #: templates/index/ranking.html:18
 msgid "Lives"
