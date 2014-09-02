@@ -56,7 +56,7 @@
     </div>
     <div class="panel panel-warning">
         <div class="panel-heading">
-            {% trans "Games played" %}
+            {% trans "Matches played" %}
         </div>
         <div class="panel-body">
             {% include 'index/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
@@ -104,14 +104,14 @@
 
 <div class="panel panel-info">
     <div class="panel-heading" data-toggle="collapse" data-target="#add_game_body">
-        {% trans "Add game" %}
+        {% trans "Add match" %}
     </div>
     <div class="panel-body collapse" id="add_game_body">
         <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
             {% csrf_token %}
             {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=False %}
             <div class="well">
-                <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add game" %}</button>
+                <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add match" %}</button>
             </div>
         </form>
     </div>

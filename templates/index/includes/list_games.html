@@ -14,7 +14,7 @@
             {% endif %}
             <th>{% trans "Winner" %}</th>
             {% if full %}
-                <th>{% trans "Game type" %}</th>
+                <th>{% trans "Match type" %}</th>
             {% endif %}
         </tr>
     </thead>
@@ -72,7 +72,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>{% trans "Game" %}</th>
+                                        <th>{% trans "Round" %}</th>
                                         <th>{% trans "Map" %}</th>
                                         <th>{% trans "Score" %}</th>
                                         <th>{% trans "Download" %}</th>
@@ -81,7 +81,7 @@
                                 <tbody>
                                     {% for sg in g.subgames %}
                                         <tr>
-                                            <td>Game {{ forloop.counter }}</td>
+                                            <td>{% trans "Round" %} {{ forloop.counter }}</td>
                                             <td>{{ sg.0 }}</td>
                                             <td>
                                                 <img id={{ g.game.player_left.color }} class="svg lieroworm" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>

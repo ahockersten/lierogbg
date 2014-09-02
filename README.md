@@ -32,6 +32,9 @@ Stuff to add
 - filtering on matches
 - display RP before/after for each player in tournament (data is in database)
 - display comment field for players, matches and tournaments (data is in database)
+- hide inactive players
 
 Stuff to add that requires database changes
 =====================
+- rename all "game"-related variables/database fields to "match"
+- rename all "subgame"-related variables/database fields to "round"
