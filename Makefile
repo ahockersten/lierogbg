@@ -19,8 +19,9 @@ CSS_OUTPUT_DIR = $(BUILD_DIR)/css
 CSS_FILES = $(patsubst less/%.less,$(CSS_OUTPUT_DIR)/%.css,$(LESS_FILES))
 
 IMG_OUTPUT_DIR = $(BUILD_DIR)/img
-IMG_INPUT_FILES = $(wildcard img/*.svg)
-IMG_FILES = $(patsubst img/%.svg,$(IMG_OUTPUT_DIR)/%.svg,$(IMG_INPUT_FILES))
+IMG_INPUT_FILES =  $(wildcard img/*.svg) $(wildcard img/*.ico)
+IMG_FILES = $(patsubst img/%.svg,$(IMG_OUTPUT_DIR)/%.svg,$(wildcard img/*.svg)) \
+    $(patsubst img/%.ico,$(IMG_OUTPUT_DIR)/%.ico,$(wildcard img/*.ico))
 
 JS_OUTPUT_DIR = $(BUILD_DIR)/js
 JS_INPUT_FILES = $(wildcard js/*.js)
@@ -33,6 +34,10 @@ $(CSS_FILES): $(LESS_FILES) $(LESS_IMPORTS)
 $(IMG_FILES): $(IMG_INPUT_FILES)
 
 $(JS_FILES): $(JS_INPUT_FILES)
+
+$(IMG_OUTPUT_DIR)/%.ico: img/%.ico
+	@mkdir -p $(IMG_OUTPUT_DIR)
+	cp $< $@
 
 $(IMG_OUTPUT_DIR)/%.svg: img/%.svg
 	@mkdir -p $(IMG_OUTPUT_DIR)
