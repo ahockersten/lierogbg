@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 12:09+0200\n"
+"POT-Creation-Date: 2014-09-02 12:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Antal liv kvar för höger spelare"
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:84
+#: lierogbg/index/views.py:80
 msgid "Tied"
 msgstr "Oavgjort"
 
@@ -143,7 +143,7 @@ msgstr "Lägg till turnering"
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/base.html:58 templates/index/ranking.html:17
+#: templates/base.html:58
 msgid "Matches"
 msgstr "Matcher"
 
@@ -251,23 +251,11 @@ msgstr "Förluster"
 msgid "Ties"
 msgstr "Oavgjorda"
 
-#: templates/index/ranking.html:18
-msgid "Rounds won"
-msgstr "Vunna rundor"
-
-#: templates/index/ranking.html:19
-msgid "Rounds lost"
-msgstr "Förlorade rundor"
-
-#: templates/index/ranking.html:20
-msgid "Rounds tied"
-msgstr "Oavgjorda rundor"
-
-#: templates/index/ranking.html:21
+#: templates/index/ranking.html:17
 msgid "Rounds"
 msgstr "Rundor"
 
-#: templates/index/ranking.html:22
+#: templates/index/ranking.html:18
 msgid "Lives"
 msgstr "Liv"
 
@@ -351,9 +339,3 @@ msgstr "Slutställning"
 #: templates/index/includes/list_games.html:78
 msgid "Download"
 msgstr "Ladda ner"
-
-#~ msgid "Pool points"
-#~ msgstr "Pool-poäng"
-
-#~ msgid "games"
-#~ msgstr "matcher"
