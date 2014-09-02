@@ -20,7 +20,6 @@ class Player(models.Model):
     pool_points = models.IntegerField(default = 0)
     # if the player is not active, it is not visible in the ranking table etc
     active = models.BooleanField(default = True)
-
     # a written comment for this player
     comment = models.CharField(blank = True, max_length = 100000)
 
@@ -29,6 +28,9 @@ class Player(models.Model):
 
     def clean(self):
         pass
+
+    def active_players(self):
+        return Player.objects.all().filter(active=True)
 
     class Meta:
         pass
@@ -88,6 +90,9 @@ class TournamentCreateForm(ModelForm):
                                           options = {'format' : 'yyyy-mm-dd hh:ii',
                                                      'weekStart' : '1'})
         }
+    def __init__(self, *args, **kwargs):
+        super(ModelForm, self).__init__(*args, **kwargs)
+        self.fields['players'].queryset = Player().active_players()
 
 # used for editing a tournament
 class TournamentEditForm(ModelForm):
@@ -153,6 +158,12 @@ class TournamentPlacingAnteSubmitForm(ModelForm):
             'ante'    : _('Received ante'),
             'player'  : _('Player'),
         }
+    def __init__(self, *args, **kwargs):
+        available_players = kwargs.pop('available_players', None)
+        super(ModelForm, self).__init__(*args, **kwargs)
+
+        if available_players:
+            self.fields['player'].queryset = available_players
 
 TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
                                         extra = 0, can_delete = False,
@@ -208,6 +219,13 @@ class PlayedGameForm(ModelForm):
                                           options = {'format' : 'yyyy-mm-dd hh:ii',
                                                     'weekStart' : '1'})
         }
+    def __init__(self, *args, **kwargs):
+        available_players = kwargs.pop('available_players', None)
+        super(ModelForm, self).__init__(*args, **kwargs)
+
+        if available_players:
+            self.fields['player_left'].queryset = available_players
+            self.fields['player_right'].queryset = available_players
 
 # a subgame to a game that has been played
 class Subgame(models.Model):

@@ -10,8 +10,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
+from functools import partial, wraps
 from index.models import Player, PlayedGameForm, PlayedGame, PointsChanged, Subgame, SubgameForm
-from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte
+from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte, TournamentPlacingAnteSubmitForm
 from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAnteFormSet
 from index.models import TournamentCreateForm, TournamentEditForm
 
@@ -23,7 +24,7 @@ def ranking(request):
     return render(request, 'index/ranking.html', context)
 
 def create_player_table():
-    player_list = Player.objects.all().order_by('ranking_points').reverse()
+    player_list = Player().active_players().order_by('ranking_points').reverse()
     players = []
     current_rank = 1
     for p in player_list:
@@ -188,11 +189,13 @@ def submit_tournament(request):
 def prepare_tournament_context(tournament_id, form):
     instance = get_object_or_404(Tournament, pk=tournament_id)
     tournament_form = form(instance=instance)
-    played_game_form = PlayedGameForm(initial={'tournament' : instance})
+    played_game_form = PlayedGameForm(initial={'tournament' : instance},
+                                      available_players=instance.players.all())
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
     tpas = TournamentPlacingAnte.objects.all().filter(tournament=instance)
     tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
+    tournament_placing_ante_formset.form = wraps(TournamentPlacingAnteSubmitForm)(partial(TournamentPlacingAnteSubmitForm, available_players=instance.players.all()))
     tournament_extra_data = {}
     tournament_extra_data["tournament_pk"] = tournament_id
     tournament_extra_data["players"] = instance.players.all()
@@ -256,7 +259,7 @@ def save_tournament(request, tournament_id):
 
 @login_required
 def add_game(request):
-    played_game_form = PlayedGameForm()
+    played_game_form = PlayedGameForm(available_players=Player().active_players())
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
     context = Context({
