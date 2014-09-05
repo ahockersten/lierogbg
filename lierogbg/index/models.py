@@ -24,7 +24,7 @@ class Player(models.Model):
     comment = models.CharField(blank = True, max_length = 100000)
 
     # calculates the ante for a ranked match for this player
-    # returns a tuple consisting of the ante, the new rp and
+    # returns a dictionary consisting of the ante, the new rp and
     # the new pp
     def calculate_ranked_ante(self):
         ante_multiplier = 0.02
@@ -36,7 +36,11 @@ class Player(models.Model):
         ante = round(((rp) ** 2) * 0.001 * ante_multiplier)
         if ante == 0 and rp != 0:
             ante = 1
-        return (int(ante), rp, pp)
+        tmp = {}
+        tmp["ante"] = int(ante)
+        tmp["rp"] = rp
+        tmp["pp"] = pp
+        return tmp
 
     def __unicode__(self):
         return u'%s' % (self.name)

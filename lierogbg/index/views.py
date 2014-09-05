@@ -337,30 +337,21 @@ def submit_game(request, tournament_id=None):
         points_changed_pr.pp_before = pr.pool_points
 
         if played_game.ranked:
-            ante_multiplier = 0.02
-            if (pl.pool_points != 0):
-                pl.ranking_points = pl.ranking_points + min(pl.pool_points, 40)
-                pl.pool_points = pl.pool_points - min(pl.pool_points, 40)
-            if (pr.pool_points != 0):
-                pr.ranking_points = pr.ranking_points + min(pr.pool_points, 40)
-                pr.pool_points = pr.pool_points - min(pr.pool_points, 40)
-
             if winner == None:
                 # if there is no winner, each player gets half of the ante
                 # if this is not an even sum, give the remainder to the player
                 # who had the most lives left in the match. If both are equal,
                 # give it to the player with the fewest ranking points. If both
                 # are still equal, give it to the left player
-                pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
-                if pl_ante == 0 and pl.ranking_points != 0:
-                    pl_ante = 1
-                pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
-                if pr_ante == 0 and pr.ranking_points != 0:
-                    pr_ante = 1
-                ante = (pl_ante + pr_ante) / 2
-                ante_rem = (pl_ante + pr_ante) % 2
-                pl.ranking_points = pl.ranking_points - pl_ante + ante
-                pr.ranking_points = pr.ranking_points - pr_ante + ante
+                pl_ante = pl.calculate_ranked_ante()
+                pr_ante = pr.calculate_ranked_ante()
+                pl.pool_points = pl_ante["pp"]
+                pr.pool_points = pr_ante["pp"]
+
+                ante = (pl_ante["ante"] + pr_ante["ante"]) / 2
+                ante_rem = (pl_ante["ante"] + pr_ante["ante"]) % 2
+                pl.ranking_points = pl_ante["rp"] - pl_ante["ante"] + ante
+                pr.ranking_points = pr_ante["rp"] - pr_ante["ante"] + ante
                 if ante_rem != 0:
                     pl_lives = 0
                     pr_lives = 0
@@ -383,11 +374,13 @@ def submit_game(request, tournament_id=None):
                 # and pool points
                 winner = pl if winner == pl else pr
 
-                loser_ante = round(((loser.ranking_points) ** 2) * 0.001 * ante_multiplier)
-                if loser_ante == 0 and loser.ranking_points != 0:
-                    loser_ante = 1
-                winner.ranking_points = winner.ranking_points + loser_ante
-                loser.ranking_points = loser.ranking_points - loser_ante
+                winner_ante = winner.calculate_ranked_ante()
+                loser_ante = loser.calculate_ranked_ante()
+                winner.pool_points = winner_ante["pp"]
+                loser.pool_points = loser_ante["pp"]
+
+                winner.ranking_points = winner_ante["rp"] + loser_ante["ante"]
+                loser.ranking_points = loser_ante["rp"] - loser_ante["ante"]
 
         points_changed_pl.pp_after = pl.pool_points
         points_changed_pl.rp_after = pl.ranking_points
