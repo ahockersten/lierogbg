@@ -30,7 +30,7 @@ class Player(models.Model):
         ante_multiplier = 0.02
         rp = self.ranking_points
         pp = self.pool_points
-        if (pp != 0):
+        if pp != 0:
             rp = rp + min(pp, 40)
             pp = pp - min(pp, 40)
         ante = round(((rp) ** 2) * 0.001 * ante_multiplier)
