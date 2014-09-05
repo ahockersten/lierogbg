@@ -29,7 +29,7 @@
                     {{ p.player.name }}
                 </td>
                 <td>
-                    {{ p.player.ranking_points }}
+                    <span class="rp_text">{{ p.player.ranking_points }}</span>
                     {% if p.player.pool_points > 0 %}
                         <span class="pool_points_remaining">(+{{ p.player.pool_points }} pool)</span>
                     {% endif %}
@@ -46,7 +46,9 @@
                 {% else %}
                     <td>{{ p.lives }}</td>
                 {% endif %}
-                <td>{{ p.player.calculate_ranked_ante.ante }}</td>
+                <td>
+                    <span class="rp_text">{{ p.player.calculate_ranked_ante.ante }}</span>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
