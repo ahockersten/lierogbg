@@ -352,7 +352,11 @@ def submit_game(request, tournament_id=None):
                 # give it to the player with the fewest ranking points. If both
                 # are still equal, give it to the left player
                 pl_ante = round(((pl.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                if pl_ante == 0 and pl.ranking_points != 0:
+                    pl_ante = 1
                 pr_ante = round(((pr.ranking_points) ** 2) * 0.001 * ante_multiplier)
+                if pr_ante == 0 and pr.ranking_points != 0:
+                    pr_ante = 1
                 ante = (pl_ante + pr_ante) / 2
                 ante_rem = (pl_ante + pr_ante) % 2
                 pl.ranking_points = pl.ranking_points - pl_ante + ante
