@@ -28,11 +28,9 @@ python manage.py runserver
 Stuff to add
 ==================
 - sorting matches
-- sorting ranking
 - filtering on matches
 - display RP before/after for each player in tournament (data is in database)
 - display comment field for players, matches and tournaments (data is in database)
-- hide inactive players
 - a little "show/hide" button for match results on the "matches" view
 
 Stuff to add that requires database changes

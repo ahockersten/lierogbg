@@ -17,6 +17,7 @@
                 <th>{% trans "Ties" %}</th>
                 <th>{% trans "Matches" %}</th>
                 <th>{% trans "Lives" %}</th>
+                <th>{% trans "Ante" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +46,7 @@
                 {% else %}
                     <td>{{ p.lives }}</td>
                 {% endif %}
+                <td>{{ p.player.calculate_ranked_ante.0 }}</td>
             </tr>
         {% endfor %}
         </tbody>
