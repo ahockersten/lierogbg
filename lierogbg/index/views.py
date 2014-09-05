@@ -17,8 +17,13 @@ from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAn
 from index.models import TournamentCreateForm, TournamentEditForm
 
 def ranking(request):
+    last_game = PlayedGame.objects.all().order_by('start_time').reverse().first()
+    last_game_time = None
+    if last_game != None:
+        last_game_time = last_game.start_time.isoformat()
     context = Context({
-        'players' : create_player_table()
+        'players' : create_player_table(),
+        'last_game_time' : last_game_time,
     })
 
     return render(request, 'index/ranking.html', context)
@@ -69,8 +74,12 @@ def create_player_table():
 
 def games(request):
     all_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()
+    last_game_time = None
+    if all_games_by_date.first() != None:
+        last_game_time = all_games_by_date.first().start_time.isoformat()
     context = Context({
-        'games' : create_games_table(all_games_by_date)
+        'games' : create_games_table(all_games_by_date),
+        'last_game_time' : last_game_time,
     })
     return render(request, 'index/games.html', context)
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-02 16:33+0200\n"
+"POT-Creation-Date: 2014-09-05 12:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Antal liv kvar för höger spelare"
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:81
+#: lierogbg/index/views.py:91
 msgid "Tied"
 msgstr "Oavgjort"
 
@@ -124,42 +124,42 @@ msgstr "Engelska"
 #: templates/accounts/login.html:4 templates/index/add_game.html:4
 #: templates/index/add_tournament.html:6
 #: templates/index/edit_tournament.html:5 templates/index/error.html:4
-#: templates/index/games.html:4 templates/index/ranking.html:4
+#: templates/index/games.html:5 templates/index/ranking.html:4
 #: templates/index/tournaments.html:4 templates/index/view_tournament.html:5
 msgid "LieroGBG"
 msgstr "LieroGBG"
 
-#: templates/base.html:45 templates/index/add_game.html:12
+#: templates/base.html:41 templates/index/add_game.html:12
 #: templates/index/edit_tournament.html:107
 #: templates/index/edit_tournament.html:114
 msgid "Add match"
 msgstr "Lägg till match"
 
-#: templates/base.html:48 templates/index/add_tournament.html:70
+#: templates/base.html:44 templates/index/add_tournament.html:70
 msgid "Add tournament"
 msgstr "Lägg till turnering"
 
-#: templates/base.html:55
+#: templates/base.html:51
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/base.html:58 templates/index/ranking.html:17
+#: templates/base.html:54 templates/index/ranking.html:17
 msgid "Matches"
 msgstr "Matcher"
 
-#: templates/base.html:61
+#: templates/base.html:57
 msgid "Tournaments"
 msgstr "Turneringar"
 
-#: templates/base.html:65
+#: templates/base.html:61
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:68
+#: templates/base.html:64
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:72 templates/accounts/login.html:4
+#: templates/base.html:68 templates/accounts/login.html:4
 msgid "Login"
 msgstr "Logga in"
 
@@ -227,9 +227,13 @@ msgstr "Slutplacering"
 msgid "Save tournament"
 msgstr "Spara turnering"
 
-#: templates/index/games.html:4
+#: templates/index/games.html:5
 msgid "matches"
 msgstr "matcher"
+
+#: templates/index/games.html:12 templates/index/ranking.html:53
+msgid "The last match was played "
+msgstr "Den senaste matchen spelades "
 
 #: templates/index/ranking.html:4
 msgid "ranking"
