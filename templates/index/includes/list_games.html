@@ -4,11 +4,11 @@
     <thead>
         <tr>
             <th>{% trans "Time" %}</th>
-            <th>{% trans "Left player" %}</th>
+            <th class="align_left">{% trans "Left player" %}</th>
             {% if full %}
                 <th>{% trans "Left player RP" %}</th>
             {% endif %}
-            <th>{% trans "Right player" %}</th>
+            <th class="align_left">{% trans "Right player" %}</th>
             {% if full %}
                 <th>{% trans "Right player RP" %}</th>
             {% endif %}
@@ -22,7 +22,7 @@
         {% for g in games %}
             <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
                 <td>{{ g.game.start_time }}</td>
-                <td>
+                <td class="align_left">
                     <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ g.game.player_left }}
                 </td>
@@ -37,7 +37,7 @@
                         {% endif %}
                     </td>
                 {% endif %}
-                <td>
+                <td class="align_left">
                     <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ g.game.player_right }}
                 </td>

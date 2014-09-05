@@ -10,7 +10,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>{% trans "Player" %}</th>
+                <th class="align_left">{% trans "Player" %}</th>
                 <th>{% trans "Ranking points" %}</th>
                 <th>{% trans "Wins" %}</th>
                 <th>{% trans "Losses" %}</th>
@@ -24,12 +24,12 @@
         {% for p in players %}
             <tr>
                 <td>{{ p.current_rank }}</td>
-                <td>
+                <td class="align_left">
                     <img id={{ p.player.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ p.player.name }}
                 </td>
                 <td>
-                    {{ p.player.ranking_points }}
+                    <span class="rp_text">{{ p.player.ranking_points }}</span>
                     {% if p.player.pool_points > 0 %}
                         <span class="pool_points_remaining">(+{{ p.player.pool_points }} pool)</span>
                     {% endif %}
@@ -46,7 +46,9 @@
                 {% else %}
                     <td>{{ p.lives }}</td>
                 {% endif %}
-                <td>{{ p.player.calculate_ranked_ante.ante }}</td>
+                <td>
+                    <span class="rp_text">{{ p.player.calculate_ranked_ante.ante }}</span>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
