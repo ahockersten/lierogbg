@@ -51,7 +51,7 @@
     </table>
 </div>
 <div class="well">
-    {% trans 'The last match was played ' %}<span class="timeago" title="{{ last_game_time }}"></span>
+    {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
 </div>
 {% endblock %}
 
