@@ -10,7 +10,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>{% trans "Player" %}</th>
+                <th class="align_left">{% trans "Player" %}</th>
                 <th>{% trans "Ranking points" %}</th>
                 <th>{% trans "Wins" %}</th>
                 <th>{% trans "Losses" %}</th>
@@ -24,7 +24,7 @@
         {% for p in players %}
             <tr>
                 <td>{{ p.current_rank }}</td>
-                <td>
+                <td class="align_left">
                     <img id={{ p.player.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                     {{ p.player.name }}
                 </td>
