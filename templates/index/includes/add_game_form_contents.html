@@ -60,25 +60,46 @@
             {% trans "Round info" %}
         </div>
         <div class="panel-body">
-            {% for field in form.visible_fields %}
-                <div class="form-group">
-                    <div class="col-xs-3">
-                        {{ field.label_tag }}
-                    </div>
-                    <div class="col-xs-9">
-                        {{ field|addcss:'form-control' }}
-                    </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ form.map_played.label_tag }}
                 </div>
-            {% endfor %}
+                <div class="col-xs-9">
+                    {{ form.map_played|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ form.pl_lives.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ form.pl_lives|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ form.pr_lives.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ form.pr_lives|addcss:'form-control' }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    {{ form.replay_file.label_tag }}
+                </div>
+                <div class="col-xs-9">
+                    {{ form.replay_file|addcss:'form-control' }}
+                </div>
+            </div>
             {% for field in form.hidden_fields %}
                 <div style="display:none;">{{ field }}</div>
             {% endfor %}
-            <div>
-                <a class="btn btn-default delete_subgame_form" href="">{% trans "Delete round" %}</a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default add_subgame_form" href="">{% trans "Add round" %}</button>
+                <button type="button" class="btn btn-warning delete_subgame_form" href="">{% trans "Delete round" %}</a>
             </div>
         </div>
     </div>
 {% endfor %}
-<div>
-    <a class="btn btn-default" id="add_subgame_form" href="">{% trans "Add round" %}</a>
-</div>
+

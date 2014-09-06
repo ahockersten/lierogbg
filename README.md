@@ -15,7 +15,7 @@ sudo apt-get install python-django python-pip nodejs
 sudo npm install -g less
 sudo pip install django-datetime-widget
 
-Install instructions
+Deployment instructions
 ===================
 make
 cd lierogbg

@@ -72,6 +72,7 @@ STATICFILES_DIRS = (
     here('..', '..', 'bootstrap/dist'),
     here('..', '..', 'jquery'),
     here('..', '..', 'build'),
+    here('..', '..', 'custom_static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -194,4 +195,3 @@ LOGGING = {
 ALLOWED_HOSTS = [
     '.maskinskrift.com',
 ]
-
