@@ -54,6 +54,9 @@ function addSubgameForm(btn, prefix) {
 
         // Update the total form count
         $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+
+        // scroll to the top of the new form
+        $('html, body').animate({scrollTop: $(row).offset().top});
     }
     return false;
 }
