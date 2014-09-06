@@ -24,6 +24,7 @@ function deleteSubgameForm(btn, prefix) {
             });
         }
     }
+    $(".add_subgame_form:last").show()
     return false;
 }
 
@@ -47,6 +48,11 @@ function addSubgameForm(btn, prefix) {
             $(this).val("");
         });
 
+        // Add an event handler for the add item/form link
+        $(row).find(".add_subgame_form").click(function () {
+            return addSubgameForm(this, prefix);
+        });
+
         // Add an event handler for the delete item/form link
         $(row).find(".delete_subgame_form").click(function () {
             return deleteSubgameForm(this, prefix);
@@ -57,6 +63,10 @@ function addSubgameForm(btn, prefix) {
 
         // scroll to the top of the new form
         $('html, body').animate({scrollTop: $(row).offset().top});
+        $(".add_subgame_form").each(function(index) {
+            $(this).hide();
+        });
+        $(".add_subgame_form:last").show()
     }
     return false;
 }
@@ -132,7 +142,7 @@ function update_images() {
 
 $(document).ready(function () {
     // Register the click event handlers
-    $("#add_subgame_form").click(function () {
+    $(".add_subgame_form").click(function () {
         return addSubgameForm(this, "subgame_set");
     });
 
