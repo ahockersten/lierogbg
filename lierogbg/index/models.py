@@ -91,6 +91,33 @@ class Tournament(models.Model):
     # a written comment for this tournament
     comment = models.CharField(blank = True, max_length = 100000)
 
+    # distributes points to all players in this tournament. It is an error to call this
+    # without finished being set to true
+    def distribute_points(self):
+        # not allowed to distribute points for unfinished tournaments
+        if not self.finished:
+            raise ValueError
+        tpas = self.tournament_placing_antes()
+        for tpa in tpas:
+            tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
+            tpa.player.save()
+            points_changed = PointsChanged.objects.all().filter(tournament=self,
+                                                                player=tpa.player)[0]
+            points_changed.rp_after = tpa.player.ranking_points
+            points_changed.save()
+
+    def games(self):
+        return PlayedGame.objects.all().filter(tournament=self)
+
+    def winner(self):
+        try:
+            return TournamentPlacingAnte.objects.all().filter(tournament=self).filter(placing=1)[0].player
+        except:
+            return None
+
+    def tournament_placing_antes(self):
+        return TournamentPlacingAnte.objects.all().filter(tournament=self)
+
     def __unicode__(self):
         return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
                                        self.ante, self.pool_points, self.total_ante)
@@ -127,7 +154,7 @@ class TournamentCreateForm(ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(ModelForm, self).__init__(*args, **kwargs)
-        self.fields['players'].queryset = Player().active_players()
+        self.fields['players'].queryset = Player.objects.active_players()
 
 # used for editing a tournament
 class TournamentEditForm(ModelForm):
