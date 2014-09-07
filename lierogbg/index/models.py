@@ -1,9 +1,14 @@
 from datetimewidget.widgets import DateTimeWidget
 from django.db import models
+from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from index import fields
+
+class PlayerManager(models.Manager):
+    def active_players(self):
+        return Player.objects.all().filter(active=True)
 
 # Describes a player. This is separate from the authentication
 # system
@@ -22,6 +27,24 @@ class Player(models.Model):
     active = models.BooleanField(default = True)
     # a written comment for this player
     comment = models.CharField(blank = True, max_length = 100000)
+
+    objects = PlayerManager()
+
+    # calculates the ante for a match that has a specific ante
+    def calculate_ante_percentage(self, percentage, pool_points):
+        rp = self.ranking_points
+        pp = self.pool_points
+        if (pp != 0):
+            rp = self.ranking_points + min(self.pool_points, pool_points)
+            pp = pp - min(pp, pool_points)
+        player_ante = round(rp * (0.01 * percentage))
+        if player_ante == 0 and rp != 0:
+            player_ante = 1
+        tmp = {}
+        tmp["ante"] = int(player_ante)
+        tmp["rp"] = rp
+        tmp["pp"] = pp
+        return tmp
 
     # calculates the ante for a ranked match for this player
     # returns a dictionary consisting of the ante, the new rp and
@@ -42,14 +65,22 @@ class Player(models.Model):
         tmp["pp"] = pp
         return tmp
 
+    # returns all games that the Player p participated in
+    def all_games(self):
+        return PlayedGame.objects.all().filter(Q(player_left = self) |
+                                               Q(player_right = self))
+
+    # returns all games with this player that earned or lost them ranking points,
+    # in other words: ranked and tournament games, but not unranked games
+    def ranked_and_tournament_games(self):
+        return self.all_games().exclude(Q(ranked=False) &
+                                        Q(tournament=None))
+
     def __unicode__(self):
         return u'%s' % (self.name)
 
     def clean(self):
         pass
-
-    def active_players(self):
-        return Player.objects.all().filter(active=True)
 
     class Meta:
         ordering = ['name']
@@ -75,6 +106,33 @@ class Tournament(models.Model):
     total_ante = models.IntegerField()
     # a written comment for this tournament
     comment = models.CharField(blank = True, max_length = 100000)
+
+    # distributes points to all players in this tournament. It is an error to call this
+    # without finished being set to true
+    def distribute_points(self):
+        # not allowed to distribute points for unfinished tournaments
+        if not self.finished:
+            raise ValueError
+        tpas = self.tournament_placing_antes()
+        for tpa in tpas:
+            tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
+            tpa.player.save()
+            points_changed = PointsChanged.objects.all().filter(tournament=self,
+                                                                player=tpa.player)[0]
+            points_changed.rp_after = tpa.player.ranking_points
+            points_changed.save()
+
+    def games(self):
+        return PlayedGame.objects.all().filter(tournament=self)
+
+    def winner(self):
+        try:
+            return TournamentPlacingAnte.objects.all().filter(tournament=self).filter(placing=1)[0].player
+        except:
+            return None
+
+    def tournament_placing_antes(self):
+        return TournamentPlacingAnte.objects.all().filter(tournament=self)
 
     def __unicode__(self):
         return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
@@ -112,7 +170,7 @@ class TournamentCreateForm(ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(ModelForm, self).__init__(*args, **kwargs)
-        self.fields['players'].queryset = Player().active_players()
+        self.fields['players'].queryset = Player.objects.active_players()
 
 # used for editing a tournament
 class TournamentEditForm(ModelForm):
@@ -189,6 +247,11 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, Tournamen
                                         extra = 0, can_delete = False,
                                         form = TournamentPlacingAnteSubmitForm)
 
+class PlayedGameManager(models.Manager):
+    # the last game that was played
+    def last_game(self):
+        return PlayedGame.objects.all().order_by('start_time').reverse().first()
+
 # records a played game
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
@@ -206,6 +269,12 @@ class PlayedGame(models.Model):
     winner = models.ForeignKey(Player, related_name="winner", blank = True, null = True)
     # a written comment for this game
     comment = models.CharField(blank = True, max_length = 100000)
+
+    objects = PlayedGameManager()
+
+    # returns all subgames played as a part of this game
+    def subgames(self):
+        return Subgame.objects.all().filter(parent=self)
 
     def __unicode__(self):
         return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)
@@ -239,6 +308,7 @@ class PlayedGameForm(ModelForm):
                                           options = {'format' : 'yyyy-mm-dd hh:ii',
                                                     'weekStart' : '1'})
         }
+
     def __init__(self, *args, **kwargs):
         available_players = kwargs.pop('available_players', None)
         super(ModelForm, self).__init__(*args, **kwargs)
@@ -289,7 +359,7 @@ class SubgameForm(ModelForm):
 SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num = 10, extra = 1,
                                        can_delete = False, form = SubgameForm)
 
-# Keeps track of how ranking points etc was chaqnged for a player.
+# Keeps track of how ranking points etc was changed for a player.
 # Used to keep track of before/after for games and tournaments
 class PointsChanged(models.Model):
     # the player this belongs to

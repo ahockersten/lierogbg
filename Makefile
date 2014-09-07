@@ -35,7 +35,6 @@ django-prepare-translations: $(POFILES)
 
 $(POFILES): $(PYFILES) $(TEMPLATEFILES)
 	django-admin makemessages -l sv
-	@echo Don\'t forget to run \"make django-compile-translations\" after editing the new translations
 
 clean:
 	@echo Deleting all .pyc files

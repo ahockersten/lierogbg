@@ -82,15 +82,15 @@
                                     {% for sg in g.subgames %}
                                         <tr>
                                             <td>{% trans "Round" %} {{ forloop.counter }}</td>
-                                            <td>{{ sg.0 }}</td>
+                                            <td>{{ sg.map_played }}</td>
                                             <td>
                                                 <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                                                {{ sg.1 }} - {{ sg.2 }}
+                                                {{ sg.pl_lives }} - {{ sg.pr_lives }}
                                                 <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
                                             </td>
                                             <td>
-                                                {% if sg.3 %}
-                                                    <a href="{{ sg.3.url }}"><span class="glyphicon glyphicon-save"></span></a>
+                                                {% if sg.replay_file %}
+                                                    <a href="{{ sg.replay_file.url }}"><span class="glyphicon glyphicon-save"></span></a>
                                                 {% endif %}
                                             </td>
                                         </tr>
