@@ -159,6 +159,7 @@ def submit_tournament(request):
             calculated_ante = player.calculate_ante_percentage(tournament.ante,
                                                                tournament.pool_points)
             player.ranking_points = calculated_ante["rp"] - calculated_ante["ante"]
+            player.pool_points = calculated_ante["pp"]
             # this will be set to a correct value when the tournament
             # is saved
             points_changed.rp_after = calculated_ante["rp"]
