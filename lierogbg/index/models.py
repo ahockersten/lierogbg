@@ -31,6 +31,8 @@ class Player(models.Model):
     objects = PlayerManager()
 
     # calculates the ante for a match that has a specific ante
+    # returns a dictionary consisting of the ante, the new rp (without removing
+    # the ante) and the new pp
     def calculate_ante_percentage(self, percentage, pool_points):
         rp = self.ranking_points
         pp = self.pool_points
@@ -47,8 +49,8 @@ class Player(models.Model):
         return tmp
 
     # calculates the ante for a ranked match for this player
-    # returns a dictionary consisting of the ante, the new rp and
-    # the new pp
+    # returns a dictionary consisting of the ante, the new rp (without removing
+    # the ante) and the new pp
     def calculate_ranked_ante(self):
         ante_multiplier = 0.02
         rp = self.ranking_points
