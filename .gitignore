@@ -1,7 +1,6 @@
 *.pyc
 *~
 *.mo
-bootstrap/bootstrap
 *.sqlite3
 build
 lierogbg/replays
