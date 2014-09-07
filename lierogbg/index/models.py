@@ -14,19 +14,19 @@ class PlayerManager(models.Manager):
 # system
 class Player(models.Model):
     # displayed name
-    name = models.CharField(max_length = 100)
+    name = models.CharField(max_length=100)
     # color used for the worm in the game
     color = fields.ColorField()
     # real name, optional
-    real_name = models.CharField(max_length = 100, blank = True)
+    real_name = models.CharField(max_length=100, blank=True)
     # current ranking points
-    ranking_points = models.IntegerField(default = 1000)
+    ranking_points = models.IntegerField(default=1000)
     # current pool points
-    pool_points = models.IntegerField(default = 0)
+    pool_points = models.IntegerField(default=0)
     # if the player is not active, it is not visible in the ranking table etc
-    active = models.BooleanField(default = True)
+    active = models.BooleanField(default=True)
     # a written comment for this player
-    comment = models.CharField(blank = True, max_length = 100000)
+    comment = models.CharField(blank=True, max_length=100000)
 
     objects = PlayerManager()
 
@@ -91,21 +91,21 @@ class Player(models.Model):
 # is set to True and it hands out the ante to the winners.
 class Tournament(models.Model):
     # when True, this tournament has ended and points from it have been recorded
-    finished = models.BooleanField(default = False)
+    finished = models.BooleanField(default=False)
     # time and date when the tournament started
     start_time = models.DateTimeField()
     # name of the tournament. May be left blank
-    name = models.CharField(max_length = 100, blank = True)
+    name = models.CharField(max_length=100, blank=True)
     # players participating in this tournament
-    players = models.ManyToManyField(Player, related_name = "tournament_players")
+    players = models.ManyToManyField(Player, related_name="tournament_players")
     # ante from each player, in percent
     ante = models.IntegerField()
     # the number of points to take from the point pool for each player
-    pool_points = models.IntegerField(default = 0)
+    pool_points = models.IntegerField(default=0)
     # the calculated total ante
     total_ante = models.IntegerField()
     # a written comment for this tournament
-    comment = models.CharField(blank = True, max_length = 100000)
+    comment = models.CharField(blank=True, max_length=100000)
 
     # distributes points to all players in this tournament. It is an error to call this
     # without finished being set to true
@@ -163,10 +163,10 @@ class TournamentCreateForm(ModelForm):
             'pool_points'  : _('Pool points unlocked'),
         }
         widgets = {
-            'start_time' : DateTimeWidget(usel10n = True,
-                                          bootstrap_version = 3,
-                                          options = {'format' : 'yyyy-mm-dd hh:ii',
-                                                     'weekStart' : '1'})
+            'start_time' : DateTimeWidget(usel10n=True,
+                                          bootstrap_version=3,
+                                          options={'format' : 'yyyy-mm-dd hh:ii',
+                                                   'weekStart' : '1'})
         }
     def __init__(self, *args, **kwargs):
         super(ModelForm, self).__init__(*args, **kwargs)
@@ -196,7 +196,7 @@ class TournamentPlacingAnte(models.Model):
     # the ante this placing receives
     ante = models.IntegerField()
     # the player that got this placing
-    player = models.ForeignKey(Player, null = True, blank = True)
+    player = models.ForeignKey(Player, null=True, blank=True)
 
     def __unicode__(self):
         return u'%s %s %s %s' % (self.tournament, self.placing, self.ante, self.player)
@@ -220,8 +220,8 @@ class TournamentPlacingAnteForm(ModelForm):
         }
 
 TournamentPlacingAnteFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
-                                                       extra = 1, can_delete = False,
-                                                       form = TournamentPlacingAnteForm)
+                                                       extra=1, can_delete=False,
+                                                       form=TournamentPlacingAnteForm)
 
 class TournamentPlacingAnteSubmitForm(ModelForm):
     class Meta:
@@ -244,8 +244,8 @@ class TournamentPlacingAnteSubmitForm(ModelForm):
             self.fields['player'].queryset = available_players
 
 TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
-                                        extra = 0, can_delete = False,
-                                        form = TournamentPlacingAnteSubmitForm)
+                                        extra=0, can_delete=False,
+                                        form=TournamentPlacingAnteSubmitForm)
 
 class PlayedGameManager(models.Manager):
     # the last game that was played
@@ -255,10 +255,10 @@ class PlayedGameManager(models.Manager):
 # records a played game
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
-    tournament = models.ForeignKey(Tournament, null = True)
+    tournament = models.ForeignKey(Tournament, null=True)
     # keeps track of whether this is a ranked game or not.
     # when tournament is not None, this should be False
-    ranked = models.BooleanField(default = True)
+    ranked = models.BooleanField(default=True)
     # the start time of the game
     start_time = models.DateTimeField()
     # the left player
@@ -266,9 +266,9 @@ class PlayedGame(models.Model):
     # the right player
     player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
     # winner of this game
-    winner = models.ForeignKey(Player, related_name="winner", blank = True, null = True)
+    winner = models.ForeignKey(Player, related_name="winner", blank=True, null=True)
     # a written comment for this game
-    comment = models.CharField(blank = True, max_length = 100000)
+    comment = models.CharField(blank=True, max_length=100000)
 
     objects = PlayedGameManager()
 
@@ -303,10 +303,10 @@ class PlayedGameForm(ModelForm):
             'ranked'       : _('Ranked'),
         }
         widgets = {
-            'start_time' : DateTimeWidget(usel10n = True,
-                                          bootstrap_version = 3,
-                                          options = {'format' : 'yyyy-mm-dd hh:ii',
-                                                    'weekStart' : '1'})
+            'start_time' : DateTimeWidget(usel10n=True,
+                                          bootstrap_version=3,
+                                          options={'format' : 'yyyy-mm-dd hh:ii',
+                                                   'weekStart' : '1'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -322,7 +322,7 @@ class Subgame(models.Model):
     # the game this belongs to
     parent = models.ForeignKey(PlayedGame)
     # the map that was played.
-    map_played = models.CharField(max_length = 100, blank = True)
+    map_played = models.CharField(max_length=100, blank=True)
     # the lives left for the left player at the end of the match
     pl_lives = models.IntegerField()
     # the lives left for the right player at the end of the match
@@ -356,8 +356,8 @@ class SubgameForm(ModelForm):
             'replay_file'  : _('Replay file')
         }
 
-SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num = 10, extra = 1,
-                                       can_delete = False, form = SubgameForm)
+SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1,
+                                       can_delete=False, form=SubgameForm)
 
 # Keeps track of how ranking points etc was changed for a player.
 # Used to keep track of before/after for games and tournaments
@@ -366,10 +366,10 @@ class PointsChanged(models.Model):
     player = models.ForeignKey(Player)
     # the tournament this belongs to. Both this and game may
     # not both be set (or both be null)
-    tournament = models.ForeignKey(Tournament, blank = True, null = True)
+    tournament = models.ForeignKey(Tournament, blank=True, null=True)
     # the game this belongs to. Both this and tournament may
     # not both be set (or both be null)
-    game = models.ForeignKey(PlayedGame, blank = True, null = True)
+    game = models.ForeignKey(PlayedGame, blank=True, null=True)
     # ranking points before match
     rp_before = models.IntegerField()
     # ranking points after match
