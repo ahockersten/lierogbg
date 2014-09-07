@@ -92,12 +92,7 @@ def create_games_table(games_list):
         points_changed_pr = PointsChanged.objects.all().filter(game=g).filter(player=g.player_right)
         tmp["rp_pr_after"] = points_changed_pr[0].rp_after
         tmp["rp_pr_change"] = points_changed_pr[0].rp_after - points_changed_pr[0].rp_before
-        # FIXME We can send "subgames" in a better way here
-        subgames_tmp = []
-        for subgame in g.subgames():
-            subgames_tmp.append((subgame.map_played, subgame.pl_lives,
-                                 subgame.pr_lives, subgame.replay_file))
-        tmp["subgames"] = subgames_tmp
+        tmp["subgames"] = g.subgames()
         games.append(tmp)
     return games
 
