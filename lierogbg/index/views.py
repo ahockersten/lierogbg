@@ -29,7 +29,7 @@ def ranking(request):
     return render(request, 'index/ranking.html', context)
 
 def create_player_table():
-    player_list = Player().active_players().order_by('ranking_points').reverse()
+    player_list = Player.objects.active_players().order_by('ranking_points').reverse()
     players = []
     current_rank = 1
     for p in player_list:
@@ -283,7 +283,7 @@ def save_tournament(request, tournament_id):
 
 @login_required
 def add_game(request):
-    played_game_form = PlayedGameForm(available_players=Player().active_players())
+    played_game_form = PlayedGameForm(available_players=Player.objects.active_players())
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
     context = Context({

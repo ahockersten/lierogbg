@@ -5,6 +5,10 @@ from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from index import fields
 
+class PlayerManager(models.Manager):
+    def active_players(self):
+        return Player.objects.all().filter(active=True)
+
 # Describes a player. This is separate from the authentication
 # system
 class Player(models.Model):
@@ -22,6 +26,8 @@ class Player(models.Model):
     active = models.BooleanField(default = True)
     # a written comment for this player
     comment = models.CharField(blank = True, max_length = 100000)
+
+    objects = PlayerManager()
 
     # calculates the ante for a ranked match for this player
     # returns a dictionary consisting of the ante, the new rp and
@@ -47,9 +53,6 @@ class Player(models.Model):
 
     def clean(self):
         pass
-
-    def active_players(self):
-        return Player.objects.all().filter(active=True)
 
     class Meta:
         ordering = ['name']
