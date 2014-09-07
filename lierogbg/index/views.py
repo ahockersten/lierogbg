@@ -154,21 +154,14 @@ def submit_tournament(request):
             points_changed = PointsChanged(player=player, tournament=tournament,
                                            rp_before=player.ranking_points,
                                            pp_before=player.pool_points)
-            # FIXME this should be reused for update_total_ante, except for the
-            # part where this saves changed pool points and ranking points
-            if (player.pool_points != 0):
-                added_pool_points = min(player.pool_points, tournament.pool_points)
-                player.ranking_points = player.ranking_points + added_pool_points
-                player.pool_points = player.pool_points - added_pool_points
-            player_ante = int(round(player.ranking_points * tournament.ante * 0.01))
-            if player_ante == 0 and player.ranking_points != 0:
-                player_ante = 1
-            player.ranking_points = player.ranking_points - player_ante
+            calculated_ante = player.calculate_ante_percentage(tournament.ante,
+                                                               tournament.pool_points)
+            player.ranking_points = calculated_ante["rp"] - calculated_ante["ante"]
             # this will be set to a correct value when the tournament
             # is saved
-            points_changed.rp_after = player.ranking_points
-            points_changed.pp_after = player.pool_points
-            total_ante = total_ante + player_ante
+            points_changed.rp_after = calculated_ante["rp"]
+            points_changed.pp_after = calculated_ante["pp"]
+            total_ante = total_ante + calculated_ante["ante"]
             points_changed_list.append(points_changed)
 
         total_placing_ante = 0
@@ -390,16 +383,12 @@ def update_total_ante(request):
         try:
             players_id = request.POST.getlist( 'players')
             players = Player.objects.all().filter(pk__in = players_id)
-            ante = int(request.POST['ante']) * 0.01
+            ante_percentage = int(request.POST['ante'])
             pool_points = int(request.POST['pool_points'])
             total_ante = 0
             for player in players:
-                if (player.pool_points != 0):
-                    player.ranking_points = player.ranking_points + min(player.pool_points, pool_points)
-                player_ante = round(player.ranking_points * ante)
-                if player_ante == 0 and player.ranking_points != 0:
-                    player_ante = 1
-                total_ante = total_ante + player_ante
+                total_ante = total_ante + player.calculate_ante_percentage(ante_percentage,
+                                                                           pool_points)["ante"]
             return HttpResponse(str(total_ante))
         except ValueError:
             return HttpResponse('Error') # incorrect post
