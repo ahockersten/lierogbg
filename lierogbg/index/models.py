@@ -52,6 +52,7 @@ class Player(models.Model):
         return Player.objects.all().filter(active=True)
 
     class Meta:
+        ordering = ['name']
         pass
 
 # Describes a tournament. When initially created, it takes the ante from and
