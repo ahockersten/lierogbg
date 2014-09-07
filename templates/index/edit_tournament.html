@@ -137,6 +137,7 @@ $(document).ready(function () {
             traditional: true,
             success: function(data) {
                 $("#id_list_games_table").replaceWith(data);
+                update_images();
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Please report this error: " + errorThrown + xhr.status +
