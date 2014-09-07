@@ -10,10 +10,12 @@ from django.template import Context
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
 from functools import partial, wraps
-from index.models import Player, PlayedGameForm, PlayedGame, PointsChanged, Subgame, SubgameForm
-from index.models import SubgameFormSet, Tournament, TournamentPlacingAnte, TournamentPlacingAnteSubmitForm
-from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAnteFormSet
-from index.models import TournamentCreateForm, TournamentEditForm
+from index.models import PlayedGame, PlayedGameForm
+from index.models import Player
+from index.models import PointsChanged
+from index.models import SubgameFormSet
+from index.models import Tournament, TournamentCreateForm, TournamentEditForm
+from index.models import TournamentPlacingAnte, TournamentPlacingAnteFormSet, TournamentPlacingAnteSubmitForm, TournamentPlacingAnteSubmitFormSet
 
 def ranking(request):
     last_game_time = None
