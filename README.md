@@ -36,16 +36,3 @@ How to test developer builds
     make
     cd lierogbg
     python manage.py runserver
-
-Stuff to add
-==================
-- sorting matches
-- filtering on matches
-- display RP before/after for each player in tournament (data is in database)
-- display comment field for players, matches and tournaments (data is in database)
-- a little "show/hide" button for match results on the "matches" view
-
-Stuff to add that requires database changes
-=====================
-- rename all "game"-related variables/database fields to "match"
-- rename all "subgame"-related variables/database fields to "round"
