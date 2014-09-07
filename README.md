@@ -22,9 +22,14 @@ On Ubuntu:
 
 Deployment instructions
 ===================
+First, edit SECRET_KEY in lierogbg/lierogbg/settings.py and set it to something unique
+for your installation. Then, run these commands.
+
     make
     cd lierogbg
     python manage.py collectstatic
+
+LieroGBG is now ready to run as per normal django deployment instructions.
 
 How to test developer builds
 ============
