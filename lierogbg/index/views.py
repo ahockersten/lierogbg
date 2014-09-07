@@ -137,7 +137,7 @@ def submit_tournament(request):
     tournament_form = TournamentCreateForm(request.POST)
 
     if tournament_form.is_valid():
-        tournament = tournament_form.save(commit = False)
+        tournament = tournament_form.save(commit=False)
         tournament_placing_ante_formset = TournamentPlacingAnteFormSet(request.POST,
                                                                        instance=tournament)
         # FIXME this is not valid here, since the tournament for each tpa has not
@@ -232,7 +232,7 @@ def view_tournament(request, tournament_id):
 @login_required
 def save_tournament(request, tournament_id):
     instance = get_object_or_404(Tournament, id=tournament_id)
-    tournament_form = TournamentEditForm(request.POST, instance = instance)
+    tournament_form = TournamentEditForm(request.POST, instance=instance)
 
     if tournament_form.is_valid():
         tournament = tournament_form.save(commit = False)
@@ -246,7 +246,7 @@ def save_tournament(request, tournament_id):
         tournament_form.save_m2m()
 
         for form in tournament_placing_ante_formset.forms:
-            tpa = form.save(commit = False)
+            tpa = form.save(commit=False)
             tpa.tournament = tournament
             tpa.save()
             form.save_m2m()
@@ -385,7 +385,7 @@ def update_total_ante(request):
     if request.is_ajax():
         try:
             players_id = request.POST.getlist( 'players')
-            players = Player.objects.all().filter(pk__in = players_id)
+            players = Player.objects.all().filter(pk__in=players_id)
             ante_percentage = int(request.POST['ante'])
             pool_points = int(request.POST['pool_points'])
             total_ante = 0
