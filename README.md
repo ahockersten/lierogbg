@@ -1,7 +1,6 @@
 Things you will need
 ============
-- Django 1.4 for python
-- django-recaptcha 0.0.6 for python
+- Django 1.6 for python
 - LESS
 - A recent version of node.js (available via ppa:chris-lea/node.js) (needed for LESS)
 - nodejs and npm from above source (version in Ubuntu 12.10 won't work) (needed for LESS)
@@ -23,6 +22,8 @@ python manage.py collectstatic
 
 How to test developer builds
 ============
+make
+cd lierogbg
 python manage.py runserver
 
 Stuff to add
