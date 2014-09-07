@@ -1,5 +1,6 @@
 from datetimewidget.widgets import DateTimeWidget
 from django.db import models
+from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
@@ -47,6 +48,17 @@ class Player(models.Model):
         tmp["rp"] = rp
         tmp["pp"] = pp
         return tmp
+
+    # returns all games that the Player p participated in
+    def all_games(self):
+        return PlayedGame.objects.all().filter(Q(player_left = self) |
+                                               Q(player_right = self))
+
+    # returns all games with this player that earned or lost them ranking points,
+    # in other words: ranked and tournament games, but not unranked games
+    def ranked_and_tournament_games(self):
+        return self.all_games().exclude(Q(ranked=False) &
+                                        Q(tournament=None))
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -193,6 +205,7 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, Tournamen
                                         form = TournamentPlacingAnteSubmitForm)
 
 class PlayedGameManager(models.Manager):
+    # the last game that was played
     def last_game(self):
         return PlayedGame.objects.all().order_by('start_time').reverse().first()
 
@@ -215,6 +228,10 @@ class PlayedGame(models.Model):
     comment = models.CharField(blank = True, max_length = 100000)
 
     objects = PlayedGameManager()
+
+    # returns all subgames played as a part of this game
+    def subgames(self):
+        return Subgame.objects.all().filter(parent=self)
 
     def __unicode__(self):
         return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)

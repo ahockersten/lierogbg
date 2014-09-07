@@ -4,7 +4,6 @@
 #
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context
@@ -36,9 +35,7 @@ def create_player_table():
         tmp = {}
         tmp["player"] = p
         tmp["current_rank"] = current_rank
-        all_games_with_this_player = PlayedGame.objects.all().filter(Q(player_left = p) |
-                                                                     Q(player_right = p))
-        ranked_and_tournament_games = all_games_with_this_player.exclude(Q(ranked=False) & Q(tournament=None))
+        ranked_and_tournament_games = p.ranked_and_tournament_games()
         tmp["round_wins"] = 0
         tmp["round_losses"] = 0
         tmp["round_ties"] = 0
@@ -46,8 +43,7 @@ def create_player_table():
         tmp["games"] = len(ranked_and_tournament_games)
         lives = 0
         for g in ranked_and_tournament_games:
-            subgames = Subgame.objects.all().filter(parent=g)
-            for s in subgames:
+            for s in g.subgames():
                 if g.player_left == p:
                     lives = lives + s.pl_lives
                     lives = lives - s.pr_lives
