@@ -192,6 +192,10 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, Tournamen
                                         extra = 0, can_delete = False,
                                         form = TournamentPlacingAnteSubmitForm)
 
+class PlayedGameManager(models.Manager):
+    def last_game(self):
+        return PlayedGame.objects.all().order_by('start_time').reverse().first()
+
 # records a played game
 class PlayedGame(models.Model):
     # the tournament this played game belongs to, if any
@@ -209,6 +213,8 @@ class PlayedGame(models.Model):
     winner = models.ForeignKey(Player, related_name="winner", blank = True, null = True)
     # a written comment for this game
     comment = models.CharField(blank = True, max_length = 100000)
+
+    objects = PlayedGameManager()
 
     def __unicode__(self):
         return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)
@@ -242,6 +248,7 @@ class PlayedGameForm(ModelForm):
                                           options = {'format' : 'yyyy-mm-dd hh:ii',
                                                     'weekStart' : '1'})
         }
+
     def __init__(self, *args, **kwargs):
         available_players = kwargs.pop('available_players', None)
         super(ModelForm, self).__init__(*args, **kwargs)
@@ -292,7 +299,7 @@ class SubgameForm(ModelForm):
 SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num = 10, extra = 1,
                                        can_delete = False, form = SubgameForm)
 
-# Keeps track of how ranking points etc was chaqnged for a player.
+# Keeps track of how ranking points etc was changed for a player.
 # Used to keep track of before/after for games and tournaments
 class PointsChanged(models.Model):
     # the player this belongs to

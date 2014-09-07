@@ -17,8 +17,8 @@ from index.models import TournamentPlacingAnteSubmitFormSet, TournamentPlacingAn
 from index.models import TournamentCreateForm, TournamentEditForm
 
 def ranking(request):
-    last_game = PlayedGame.objects.all().order_by('start_time').reverse().first()
     last_game_time = None
+    last_game = PlayedGame.objects.last_game()
     if last_game != None:
         last_game_time = last_game.start_time.isoformat()
     context = Context({
