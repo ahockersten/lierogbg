@@ -4,45 +4,47 @@
 {% block title %}{% trans "LieroGBG" %} {% trans "tournaments" %}{% endblock %}
 
 {% block content %}
-<div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Winner" %}</th>
-                <th>{% trans "Number of players" %}</th>
-                <th>{% trans "Number of matches" %}</th>
-                <th>{% trans "Ante percentage" %}</th>
-                <th>{% trans "Total ante" %}</th>
-                <th>{% trans "Finished" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for t in tournaments %}
-            {% if t.finished %}
-                <tr class="tournament_view_link" id="id_tournament_{{ t.pk }}">
-            {% else %}
-                <tr class="tournament_edit_link" id="id_tournament_{{ t.pk }}">
-            {% endif %}
-                <td>{{ t.start_time }}</td>
-                <td>{{ t.name }}</td>
-                <td>{{ t.winner }}</td>
-                <td>{{ t.players }}</td>
-                <td>{{ t.games }}</td>
-                <td>{{ t.ante }}</td>
-                <td>{{ t.total_ante }}</td>
-                <td>
-                    {% if t.finished %}
-                        <span class="glyphicon glyphicon-ok"></span>
-                    {% else %}
-                        <span class="glyphicon glyphicon-remove"></span>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Winner" %}</th>
+                    <th>{% trans "Number of players" %}</th>
+                    <th>{% trans "Number of matches" %}</th>
+                    <th>{% trans "Ante percentage" %}</th>
+                    <th>{% trans "Total ante" %}</th>
+                    <th>{% trans "Finished" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for t in tournaments %}
+                {% if t.finished %}
+                    <tr class="tournament_view_link" id="id_tournament_{{ t.pk }}">
+                {% else %}
+                    <tr class="tournament_edit_link" id="id_tournament_{{ t.pk }}">
+                {% endif %}
+                    <td>{{ t.start_time }}</td>
+                    <td>{{ t.name }}</td>
+                    <td>{{ t.winner }}</td>
+                    <td>{{ t.players }}</td>
+                    <td>{{ t.games }}</td>
+                    <td>{{ t.ante }}</td>
+                    <td>{{ t.total_ante }}</td>
+                    <td>
+                        {% if t.finished %}
+                            <span class="glyphicon glyphicon-ok"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove"></span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
 {% block custom_scripts %}
