@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <title>{% block title %}{% trans "LieroGBG" %}{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
 
@@ -33,7 +33,7 @@
         {% block custom_scripts %}{% endblock %}
     </head>
     <body>
-        <div class="container-fluid">
+        <div class="container">
             <div class="navbar navbar-default" role="navigation">
                 {% if user.is_authenticated %}
                     <ul class="nav nav-pills navbar-left">
