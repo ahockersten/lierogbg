@@ -30,14 +30,17 @@ class Player(models.Model):
 
     objects = PlayerManager()
 
-    # calculates the ante for a match that has a specific ante
+    # calculates the ante according to the given formula for a certain
+    # ante percentage and a pool point unlock
+    # returns a dictionary consisting of the ante, the new rp (without removing
+    # the ante) and the new pp
     def calculate_ante_percentage(self, percentage, pool_points):
         rp = self.ranking_points
         pp = self.pool_points
         if (pp != 0):
             rp = self.ranking_points + min(self.pool_points, pool_points)
             pp = pp - min(pp, pool_points)
-        player_ante = round(rp * (0.01 * percentage))
+        player_ante = round((rp ** 2) * 0.001 * (percentage * 0.01))
         if player_ante == 0 and rp != 0:
             player_ante = 1
         tmp = {}
@@ -47,23 +50,10 @@ class Player(models.Model):
         return tmp
 
     # calculates the ante for a ranked match for this player
-    # returns a dictionary consisting of the ante, the new rp and
-    # the new pp
+    # returns a dictionary consisting of the ante, the new rp (without removing
+    # the ante) and the new pp
     def calculate_ranked_ante(self):
-        ante_multiplier = 0.02
-        rp = self.ranking_points
-        pp = self.pool_points
-        if pp != 0:
-            rp = rp + min(pp, 40)
-            pp = pp - min(pp, 40)
-        ante = round(((rp) ** 2) * 0.001 * ante_multiplier)
-        if ante == 0 and rp != 0:
-            ante = 1
-        tmp = {}
-        tmp["ante"] = int(ante)
-        tmp["rp"] = rp
-        tmp["pp"] = pp
-        return tmp
+        return self.calculate_ante_percentage(2, 40)
 
     # returns all games that the Player p participated in
     def all_games(self):
