@@ -5,11 +5,13 @@
 {% block title %}{% trans "LieroGBG" %} {% trans "matches" %}{% endblock %}
 
 {% block content %}
-<div>
+<div class="row">
+    <div class="col-xs-12">
     {% include 'index/includes/list_games.html' with games=games full=True %}
-</div>
-<div class="well">
-    {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
+    </div>
+    <div class="col-xs-12">
+        {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
+    </div>
 </div>
 {% endblock %}
 {% block custom_scripts %}

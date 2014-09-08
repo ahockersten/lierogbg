@@ -9,111 +9,122 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'index.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
-    {% csrf_token %}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            {% trans "Tournament info" %}
-        </div>
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="col-xs-3">
-                    {{ tournament_form.name.label_tag }}
+<div class="row">
+    <div class="col-xs-12">
+        <form action="{% url 'index.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+            {% csrf_token %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    {% trans "Tournament info" %}
                 </div>
-                <div class="col-xs-9">
-                    {{ tournament_form.name|addcss:'form-control' }}
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-3">
-                    <label for="id_players">{% trans "Players" %}</label>
-                </div>
-                <div class="col-xs-9">
-                    <span id="id_players" class="form-control" readonly>
-                        {% for player in tournament_extra_data.players %}
-                            {{ player }}
-                        {% endfor %}
-                    </span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-3">
-                    {{ tournament_form.total_ante.label_tag }}
-                </div>
-                <div class="col-xs-9">
-                    {{ tournament_form.total_ante|addcss:'form-control' }}
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-3">
-                    {{ tournament_form.finished.label_tag }}
-                </div>
-                <div class="col-xs-9">
-                    {{ tournament_form.finished|addcss:'form-control' }}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="panel panel-warning">
-        <div class="panel-heading">
-            {% trans "Matches played" %}
-        </div>
-        <div class="panel-body">
-            {% include 'index/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
-        </div>
-    </div>
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            {% trans "Final placings" %}
-        </div>
-        <div class="panel-body">
-            {{ tournament_placing_ante_formset.management_form }}
-            <div class="tournament_placing_ante_item">
-                {% for form in tournament_placing_ante_formset %}
+                <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-xs-1">
-                            {{ form.placing.label_tag }}
-                        </div>
                         <div class="col-xs-3">
-                            {{ form.placing|addcss:'form-control placing' }}
+                            {{ tournament_form.name.label_tag }}
                         </div>
-                        <div class="col-xs-1">
-                            {{ form.ante.label_tag }}
-                        </div>
-                        <div class="col-xs-3">
-                            {{ form.ante|addcss:'form-control placing_ante' }}
-                        </div>
-                        <div class="col-xs-1">
-                            {{ form.player.label_tag }}
-                        </div>
-                        <div class="col-xs-3">
-                            {{ form.player|addcss:'form-control' }}
+                        <div class="col-xs-9">
+                            {{ tournament_form.name|addcss:'form-control' }}
                         </div>
                     </div>
-                    {% for field in form.hidden_fields %}
-                        <div style="display:none;">{{ field }}</div>
-                    {% endfor %}
-                {% endfor %}
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            <label for="id_players">{% trans "Players" %}</label>
+                        </div>
+                        <div class="col-xs-9">
+                            <span id="id_players" class="form-control" readonly>
+                                {% for player in tournament_extra_data.players %}
+                                    {{ player }}
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            {{ tournament_form.total_ante.label_tag }}
+                        </div>
+                        <div class="col-xs-9">
+                            {{ tournament_form.total_ante|addcss:'form-control' }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            {{ tournament_form.finished.label_tag }}
+                        </div>
+                        <div class="col-xs-9">
+                            {{ tournament_form.finished|addcss:'form-control' }}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="well">
-        <button id="id_save_tournament_btn" type="submit" class="btn btn-success">{% trans "Save tournament" %}</button>
-    </div>
-</form>
-
-<div class="panel panel-info">
-    <div class="panel-heading" data-toggle="collapse" data-target="#add_game_body">
-        {% trans "Add match" %}
-    </div>
-    <div class="panel-body collapse" id="add_game_body">
-        <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
-            {% csrf_token %}
-            {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=False %}
-            <div class="well">
-                <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add match" %}</button>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    {% trans "Matches played" %}
+                </div>
+                <div class="panel-body">
+                    {% include 'index/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    {% trans "Final placings" %}
+                </div>
+                <div class="panel-body">
+                    {{ tournament_placing_ante_formset.management_form }}
+                    <div class="tournament_placing_ante_item">
+                        {% for form in tournament_placing_ante_formset %}
+                            <div class="form-group">
+                                <div class="col-xs-1">
+                                    {{ form.placing.label_tag }}
+                                </div>
+                                <div class="col-xs-3">
+                                    {{ form.placing|addcss:'form-control placing' }}
+                                </div>
+                                <div class="col-xs-1">
+                                    {{ form.ante.label_tag }}
+                                </div>
+                                <div class="col-xs-3">
+                                    {{ form.ante|addcss:'form-control placing_ante' }}
+                                </div>
+                                <div class="col-xs-1">
+                                    {{ form.player.label_tag }}
+                                </div>
+                                <div class="col-xs-3">
+                                    {{ form.player|addcss:'form-control' }}
+                                </div>
+                            </div>
+                            {% for field in form.hidden_fields %}
+                                <div style="display:none;">{{ field }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button id="id_save_tournament_btn" type="submit" class="btn btn-success">{% trans "Save tournament" %}</button>
+                </div>
             </div>
         </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" data-toggle="collapse" data-target="#add_game_body">
+                {% trans "Add match" %}
+            </div>
+            <div class="panel-body collapse" id="add_game_body">
+                <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
+                    {% csrf_token %}
+                    {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=False %}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add match" %}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
