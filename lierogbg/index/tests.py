@@ -34,14 +34,14 @@ class TestPlayer(TestCase):
     def test_calculate_ante_percentage_less_pp_1(self):
         # calculate ante for a player with less pool points than they have
         calculated_ante = Player.objects.get(name="Foo Bar").calculate_ante_percentage(10, 30)
-        self.assertEqual(calculated_ante["ante"], 53)
+        self.assertEqual(calculated_ante["ante"], 28)
         self.assertEqual(calculated_ante["rp"], 530)
         self.assertEqual(calculated_ante["pp"], 470)
 
     def test_calculate_ante_percentage_no_pp(self):
         # calculate ante for a player for a player with no pool points
         calculated_ante = Player.objects.get(name="Bar Baz").calculate_ante_percentage(10, 30)
-        self.assertEqual(calculated_ante["ante"], 150)
+        self.assertEqual(calculated_ante["ante"], 225)
         self.assertEqual(calculated_ante["rp"], 1500)
         self.assertEqual(calculated_ante["pp"], 0)
 
@@ -56,7 +56,7 @@ class TestPlayer(TestCase):
         # calculate ante for a player for a player with no pool points when the pool point
         # bonus is really large
         calculated_ante = Player.objects.get(name="Bar Baz").calculate_ante_percentage(10, 700)
-        self.assertEqual(calculated_ante["ante"], 150)
+        self.assertEqual(calculated_ante["ante"], 225)
         self.assertEqual(calculated_ante["rp"], 1500)
         self.assertEqual(calculated_ante["pp"], 0)
 
@@ -75,7 +75,7 @@ class TestPlayer(TestCase):
     def test_calculate_ante_percentage_no_rp_some_pp_means_ante(self):
         # no RP but some PP means at least 1 ante
         calculated_ante = Player.objects.get(name="No RP some PP").calculate_ante_percentage(10, 30)
-        self.assertEqual(calculated_ante["ante"], 3)
+        self.assertEqual(calculated_ante["ante"], 1)
         self.assertEqual(calculated_ante["rp"], 30)
         self.assertEqual(calculated_ante["pp"], 470)
 
