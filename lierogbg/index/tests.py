@@ -1,7 +1,41 @@
+from django.utils import timezone
 from django.test import TestCase
-from models import Player
+from models import Player, PlayedGame, Tournament
 
-class TestPlayer(TestCase):
+class TestPlayedGames(TestCase):
+    def setUp(self):
+        p1 = Player.objects.create(name="Foo Bar", color="#00FF00", real_name="",
+                                   ranking_points=500, pool_points=500, active=True,
+                                   comment="")
+        p2 = Player.objects.create(name="Bar Baz", color="#FF0000", real_name="",
+                                   ranking_points=1500, pool_points=0, active=True,
+                                   comment="")
+        t = Tournament.objects.create(finished=True, start_time=timezone.now(),
+                                      name="Tourney",
+                                      ante=0, pool_points=0, total_ante=0, comment="")
+        t.players.add(p1, p2)
+        PlayedGame.objects.create(tournament=None, ranked=True,
+                                  start_time=timezone.now(),
+                                  player_left=p1, player_right=p2,
+                                  winner=p1, comment="")
+        PlayedGame.objects.create(tournament=None, ranked=False,
+                                  start_time=timezone.now(),
+                                  player_left=p2, player_right=p1,
+                                  winner=p2, comment="")
+        PlayedGame.objects.create(tournament=t, ranked=False,
+                                  start_time=timezone.now(),
+                                  player_left=p2, player_right=p1,
+                                  winner=p2, comment="")
+
+    def test_player_all_games(self):
+        self.assertEqual(len(Player.objects.get(name="Foo Bar").all_games()),
+                         3)
+
+    def test_player_ranked_and_tournament_games(self):
+        self.assertEqual(len(Player.objects.get(name="Foo Bar").ranked_and_tournament_games()),
+                         2)
+
+class TestAnteCalculation(TestCase):
     def setUp(self):
         Player.objects.create(name="Foo Bar", color="#00FF00", real_name="",
                               ranking_points=500, pool_points=500, active=True,
