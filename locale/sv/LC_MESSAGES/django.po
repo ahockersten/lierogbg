@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-07 17:04+0200\n"
+"POT-Creation-Date: 2014-10-07 17:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,17 +130,16 @@ msgid "LieroGBG"
 msgstr "LieroGBG"
 
 #: templates/base.html:43
-#, fuzzy
 msgid "Rankings"
-msgstr "Ranking"
+msgstr "Rankingar"
 
 #: templates/base.html:46
 msgid "Rules"
-msgstr ""
+msgstr "Regler"
 
 #: templates/base.html:49
 msgid "Maps"
-msgstr ""
+msgstr "Kartor"
 
 #: templates/base.html:53
 msgid "Administration"
@@ -180,9 +179,8 @@ msgstr "Djangos administration"
 
 #: templates/index/about.html:5 templates/index/maps.html:5
 #: templates/index/rules.html:5
-#, fuzzy
 msgid "About LieroGBG"
-msgstr "LieroGBG"
+msgstr "Om LieroGBG"
 
 #: templates/index/add_game.html:4
 msgid "add match"
