@@ -34,7 +34,7 @@
     </head>
     <body>
         <div class="container">
-            <div class="navbar navbar-default" role="navigation">
+            <div id="main_menu" class="navbar navbar-default" role="navigation">
                 <ul class="nav nav-pills navbar-right">
                     <li id="about" >
                         <a href="{% url 'index.views.about' %}">{% trans "LieroGBG" %}</a>
@@ -62,7 +62,7 @@
                     {% endif %}
                 </ul>
             </div>
-            <div class="navbar" role="navigation">
+            <div id="sub_menu" class="navbar" role="navigation">
                 {% block submenu %}{% endblock %}
             </div>
             <div class="content">
