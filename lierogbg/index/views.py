@@ -17,6 +17,18 @@ from index.models import SubgameFormSet
 from index.models import Tournament, TournamentCreateForm, TournamentEditForm
 from index.models import TournamentPlacingAnte, TournamentPlacingAnteFormSet, TournamentPlacingAnteSubmitForm, TournamentPlacingAnteSubmitFormSet
 
+def about(request):
+    context = Context({ })
+    return render(request, 'index/about.html', context)
+
+def rules(request):
+    context = Context({ })
+    return render(request, 'index/rules.html', context)
+
+def maps(request):
+    context = Context({ })
+    return render(request, 'index/maps.html', context)
+
 def ranking(request):
     last_game_time = None
     last_game = PlayedGame.objects.last_game()

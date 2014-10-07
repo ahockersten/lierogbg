@@ -35,26 +35,18 @@
     <body>
         <div class="container">
             <div class="navbar navbar-default" role="navigation">
-                {% if user.is_authenticated %}
-                    <ul class="nav nav-pills navbar-left">
-                        <li id="add_game" >
-                            <a href="{% url 'index.views.add_game' %}">{% trans "Add match" %}</a>
-                        </li>
-                        <li id="add_tournament">
-                            <a href="{% url 'index.views.add_tournament' %}">{% trans "Add tournament" %}</a>
-                        </li>
-                    </ul>
-                {% endif %}
-
                 <ul class="nav nav-pills navbar-right">
-                    <li id="ranking" >
-                            <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+                    <li id="about" >
+                        <a href="{% url 'index.views.about' %}">{% trans "LieroGBG" %}</a>
                     </li>
-                    <li id="games" >
-                            <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
+                    <li id="rankings" >
+                        <a href="{% url 'index.views.ranking' %}">{% trans "Rankings" %}</a>
                     </li>
-                    <li id="tournaments" >
-                            <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
+                    <li id="rules" >
+                        <a href="{% url 'index.views.rules' %}">{% trans "Rules" %}</a>
+                    </li>
+                    <li id="maps" >
+                        <a href="{% url 'index.views.maps' %}">{% trans "Maps" %}</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li id="administration" >
@@ -69,6 +61,9 @@
                         </li>
                     {% endif %}
                 </ul>
+            </div>
+            <div class="navbar" role="navigation">
+                {% block submenu %}{% endblock %}
             </div>
             <div class="content">
                 {% block content %}{% endblock %}

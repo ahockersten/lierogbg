@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-05 22:35+0200\n"
+"POT-Creation-Date: 2014-10-07 16:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,137 +28,129 @@ msgstr "Användaren finns inte"
 #: lierogbg/index/fields.py:8
 msgid "Enter a valid Color value: e.g. \"#ff0022\""
 msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
+
 #: lierogbg/index/fields.py:25
 msgid "Hex value for a color"
 msgstr "Hex-värde för en färg"
 
-#: lierogbg/index/models.py:100 lierogbg/index/models.py:229
+#: lierogbg/index/models.py:149 lierogbg/index/models.py:289
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:101 lierogbg/index/models.py:126
-#: templates/index/tournaments.html:12
+#: lierogbg/index/models.py:150 lierogbg/index/models.py:175
+#: templates/index/tournaments.html:37
 msgid "Name"
 msgstr "Namn"
 
-#: lierogbg/index/models.py:102 templates/index/edit_tournament.html:29
+#: lierogbg/index/models.py:151 templates/index/edit_tournament.html:31
 #: templates/index/view_tournament.html:29
 msgid "Players"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:103
+#: lierogbg/index/models.py:152
 msgid "Ante (in %)"
 msgstr "Ante (i %)"
 
-#: lierogbg/index/models.py:104
+#: lierogbg/index/models.py:153
 msgid "Pool points unlocked"
 msgstr "Pool-poäng upplåsta"
 
-#: lierogbg/index/models.py:127 templates/index/tournaments.html:17
+#: lierogbg/index/models.py:176 templates/index/tournaments.html:42
 msgid "Total ante"
 msgstr "Total ante"
 
-#: lierogbg/index/models.py:128 templates/index/tournaments.html:18
+#: lierogbg/index/models.py:177 templates/index/tournaments.html:43
 msgid "Finished"
 msgstr "Slutförd"
 
-#: lierogbg/index/models.py:159 lierogbg/index/models.py:176
+#: lierogbg/index/models.py:208 lierogbg/index/models.py:225
 msgid "Placing"
 msgstr "Placering"
 
-#: lierogbg/index/models.py:160 lierogbg/index/models.py:177
+#: lierogbg/index/models.py:209 lierogbg/index/models.py:226
 msgid "Received ante"
 msgstr "Mottagen ante"
 
-#: lierogbg/index/models.py:178 templates/index/ranking.html:13
+#: lierogbg/index/models.py:227 templates/index/ranking.html:38
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:230 templates/index/includes/list_games.html:7
+#: lierogbg/index/models.py:290 templates/index/includes/list_games.html:7
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:231 templates/index/includes/list_games.html:11
+#: lierogbg/index/models.py:291 templates/index/includes/list_games.html:11
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:232 templates/index/tournaments.html:13
+#: lierogbg/index/models.py:292 templates/index/tournaments.html:38
 #: templates/index/includes/list_games.html:15
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:233 templates/index/includes/list_games.html:61
+#: lierogbg/index/models.py:293 templates/index/includes/list_games.html:61
 msgid "Ranked"
 msgstr "Rankad"
 
-#: lierogbg/index/models.py:282
+#: lierogbg/index/models.py:343
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/index/models.py:283
+#: lierogbg/index/models.py:344
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:284
+#: lierogbg/index/models.py:345
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/index/models.py:285
+#: lierogbg/index/models.py:346
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:91
+#: lierogbg/index/views.py:102
 msgid "Tied"
 msgstr "Oavgjort"
 
-#: lierogbg/lierogbg/settings.py:83
+#: lierogbg/lierogbg/settings.py:84
 msgid "Swedish"
 msgstr "Svenska"
 
-#: lierogbg/lierogbg/settings.py:84
+#: lierogbg/lierogbg/settings.py:85
 msgid "English"
 msgstr "Engelska"
 
-#: templates/base.html:7 templates/accounts/error.html:4
-#: templates/accounts/login.html:4 templates/index/add_game.html:4
-#: templates/index/add_tournament.html:6
+#: templates/base.html:7 templates/base.html.py:40
+#: templates/accounts/error.html:4 templates/accounts/login.html:4
+#: templates/index/add_game.html:4 templates/index/add_tournament.html:6
 #: templates/index/edit_tournament.html:5 templates/index/error.html:4
 #: templates/index/games.html:5 templates/index/ranking.html:5
 #: templates/index/tournaments.html:4 templates/index/view_tournament.html:5
 msgid "LieroGBG"
 msgstr "LieroGBG"
 
-#: templates/base.html:41 templates/index/add_game.html:12
-#: templates/index/edit_tournament.html:107
-#: templates/index/edit_tournament.html:114
-msgid "Add match"
-msgstr "Lägg till match"
-
-#: templates/base.html:44 templates/index/add_tournament.html:70
-msgid "Add tournament"
-msgstr "Lägg till turnering"
-
-#: templates/base.html:51
-msgid "Ranking"
+#: templates/base.html:43
+#, fuzzy
+msgid "Rankings"
 msgstr "Ranking"
 
-#: templates/base.html:54 templates/index/ranking.html:18
-msgid "Matches"
-msgstr "Matcher"
+#: templates/base.html:46
+msgid "Rules"
+msgstr ""
 
-#: templates/base.html:57
-msgid "Tournaments"
-msgstr "Turneringar"
+#: templates/base.html:49
+msgid "Maps"
+msgstr ""
 
-#: templates/base.html:61
+#: templates/base.html:53
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:64
+#: templates/base.html:56
 msgid "Logout"
 msgstr "Logga ut"
 
-#: templates/base.html:68 templates/accounts/login.html:4
+#: templates/base.html:60 templates/accounts/login.html:4
 msgid "Login"
 msgstr "Logga in"
 
@@ -186,43 +178,60 @@ msgstr "Logga in"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
+#: templates/index/about.html:5 templates/index/maps.html:5
+#: templates/index/rules.html:5
+#, fuzzy
+msgid "About LieroGBG"
+msgstr "LieroGBG"
+
 #: templates/index/add_game.html:4
 msgid "add match"
 msgstr "lägg till match"
+
+#: templates/index/add_game.html:15 templates/index/edit_tournament.html:114
+#: templates/index/edit_tournament.html:122 templates/index/games.html:11
+#: templates/index/ranking.html:11 templates/index/tournaments.html:10
+msgid "Add match"
+msgstr "Lägg till match"
 
 #: templates/index/add_tournament.html:6
 msgid "add tournament"
 msgstr "lägg till turnering"
 
-#: templates/index/add_tournament.html:14
-#: templates/index/edit_tournament.html:16
+#: templates/index/add_tournament.html:16
+#: templates/index/edit_tournament.html:18
 #: templates/index/view_tournament.html:16
 msgid "Tournament info"
 msgstr "Turnerings-info"
 
-#: templates/index/add_tournament.html:32
+#: templates/index/add_tournament.html:34
 msgid "Total Ante:"
 msgstr "Total Ante:"
 
-#: templates/index/add_tournament.html:42
+#: templates/index/add_tournament.html:44
 msgid "Ante per placing"
 msgstr "Ante per placering"
+
+#: templates/index/add_tournament.html:72 templates/index/games.html:14
+#: templates/index/ranking.html:14 templates/index/tournaments.html:13
+msgid "Add tournament"
+msgstr "Lägg till turnering"
 
 #: templates/index/edit_tournament.html:5
 msgid "edit tournament"
 msgstr "editera turnering"
 
-#: templates/index/edit_tournament.html:59
+#: templates/index/edit_tournament.html:61
 #: templates/index/view_tournament.html:59
 msgid "Matches played"
 msgstr "Spelade matcher"
 
-#: templates/index/edit_tournament.html:67
+#: templates/index/edit_tournament.html:69
 #: templates/index/view_tournament.html:67
 msgid "Final placings"
 msgstr "Slutplacering"
 
-#: templates/index/edit_tournament.html:101
+#: templates/index/edit_tournament.html:104
 msgid "Save tournament"
 msgstr "Spara turnering"
 
@@ -230,7 +239,22 @@ msgstr "Spara turnering"
 msgid "matches"
 msgstr "matcher"
 
-#: templates/index/games.html:12 templates/index/ranking.html:56
+#: templates/index/games.html:20 templates/index/ranking.html:20
+#: templates/index/tournaments.html:19
+msgid "Ranking"
+msgstr "Ranking"
+
+#: templates/index/games.html:23 templates/index/ranking.html:23
+#: templates/index/ranking.html.py:43 templates/index/tournaments.html:22
+msgid "Matches"
+msgstr "Matcher"
+
+#: templates/index/games.html:26 templates/index/ranking.html:26
+#: templates/index/tournaments.html:25
+msgid "Tournaments"
+msgstr "Turneringar"
+
+#: templates/index/games.html:37 templates/index/ranking.html:83
 msgid "The last match was played "
 msgstr "Den senaste matchen spelades "
 
@@ -238,27 +262,27 @@ msgstr "Den senaste matchen spelades "
 msgid "ranking"
 msgstr "ranking"
 
-#: templates/index/ranking.html:14
+#: templates/index/ranking.html:39
 msgid "Ranking points"
 msgstr "Ranking-poäng"
 
-#: templates/index/ranking.html:15
+#: templates/index/ranking.html:40
 msgid "Wins"
 msgstr "Vinster"
 
-#: templates/index/ranking.html:16
+#: templates/index/ranking.html:41
 msgid "Losses"
 msgstr "Förluster"
 
-#: templates/index/ranking.html:17
+#: templates/index/ranking.html:42
 msgid "Ties"
 msgstr "Oavgjorda"
 
-#: templates/index/ranking.html:19
+#: templates/index/ranking.html:44
 msgid "Lives"
 msgstr "Liv"
 
-#: templates/index/ranking.html:20
+#: templates/index/ranking.html:45
 msgid "Ante"
 msgstr "Ante"
 
@@ -266,19 +290,19 @@ msgstr "Ante"
 msgid "tournaments"
 msgstr "turneringar"
 
-#: templates/index/tournaments.html:11
+#: templates/index/tournaments.html:36
 msgid "Date"
 msgstr "Datum"
 
-#: templates/index/tournaments.html:14
+#: templates/index/tournaments.html:39
 msgid "Number of players"
 msgstr "Antal spelare"
 
-#: templates/index/tournaments.html:15
+#: templates/index/tournaments.html:40
 msgid "Number of matches"
 msgstr "Antal matcher"
 
-#: templates/index/tournaments.html:16
+#: templates/index/tournaments.html:41
 msgid "Ante percentage"
 msgstr "Ante i procent"
 
@@ -294,13 +318,13 @@ msgstr "Match-info"
 msgid "Round info"
 msgstr "Info om runda"
 
-#: templates/index/includes/add_game_form_contents.html:77
-msgid "Delete round"
-msgstr "Ta bort runda"
-
-#: templates/index/includes/add_game_form_contents.html:83
+#: templates/index/includes/add_game_form_contents.html:99
 msgid "Add round"
 msgstr "Lägg till runda"
+
+#: templates/index/includes/add_game_form_contents.html:100
+msgid "Delete round"
+msgstr "Ta bort runda"
 
 #: templates/index/includes/list_games.html:6
 msgid "Time"
