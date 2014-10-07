@@ -4,6 +4,30 @@
 
 {% block title %}{% trans "LieroGBG" %} {% trans "ranking" %}{% endblock %}
 
+{% block submenu %}
+{% if user.is_authenticated %}
+    <ul class="nav nav-pills navbar-left">
+        <li id="add_game" >
+            <a href="{% url 'index.views.add_game' %}">{% trans "Add match" %}</a>
+        </li>
+        <li id="add_tournament">
+            <a href="{% url 'index.views.add_tournament' %}">{% trans "Add tournament" %}</a>
+        </li>
+    </ul>
+{% endif %}
+<ul class="nav nav-pills navbar-right">
+    <li id="ranking" >
+            <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+    </li>
+    <li id="games" >
+            <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
+    </li>
+    <li id="tournaments" >
+            <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
+    </li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
