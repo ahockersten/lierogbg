@@ -29,6 +29,18 @@ def maps(request):
     context = Context({ })
     return render(request, 'index/maps.html', context)
 
+def ranking_inactive(request, active):
+    last_game_time = None
+    last_game = PlayedGame.objects.last_game()
+    if last_game != None:
+        last_game_time = last_game.start_time.isoformat()
+    context = Context({
+        'players' : create_player_table(active),
+        'last_game_time' : last_game_time,
+    })
+
+    return render(request, 'index/ranking.html', context)
+
 def ranking(request):
     last_game_time = None
     last_game = PlayedGame.objects.last_game()
@@ -41,8 +53,9 @@ def ranking(request):
 
     return render(request, 'index/ranking.html', context)
 
-def create_player_table():
-    player_list = Player.objects.active_players().order_by('ranking_points').reverse()
+def create_player_table(show_inactive=False):
+    shown_players = Player.objects.all() if show_inactive else Player.objects.active_players()
+    player_list = shown_players.order_by('ranking_points').reverse()
     players = []
     current_rank = 1
     for p in player_list:
