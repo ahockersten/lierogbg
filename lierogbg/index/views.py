@@ -43,8 +43,6 @@ def ranking(request, active_only):
 
 def create_player_table(active_only):
     shown_players = Player.objects.active_players() if active_only == 'True' else Player.objects.all()
-    print active_only
-    print shown_players
     player_list = shown_players.order_by('ranking_points').reverse()
     players = []
     current_rank = 1
