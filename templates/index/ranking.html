@@ -5,25 +5,37 @@
 {% block title %}{% trans "LieroGBG" %} {% trans "ranking" %}{% endblock %}
 
 {% block submenu %}
-{% if user.is_authenticated %}
-    <ul class="nav nav-pills navbar-left">
-        <li id="add_game" >
+<ul class="nav nav-pills navbar-left">
+    <li class="dropdown">
+        <a class="dropdown-toggle" id="show" data-toggle="dropdown">
+            {% trans 'Show' %} <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li role="presentation">
+                <label role="menu-item"><input type="checkbox" id="inactive-players-checkbox">
+                    {% trans 'Inactive players' %}
+                </label>
+            </li>
+        </ul>
+    </li>
+    {% if user.is_authenticated %}
+        <li id="add_game">
             <a href="{% url 'index.views.add_game' %}">{% trans "Add match" %}</a>
         </li>
         <li id="add_tournament">
             <a href="{% url 'index.views.add_tournament' %}">{% trans "Add tournament" %}</a>
         </li>
-    </ul>
-{% endif %}
+    {% endif %}
+</ul>
 <ul class="nav nav-pills navbar-right">
     <li id="ranking" >
-            <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+        <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
     </li>
     <li id="games" >
-            <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
+        <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
     </li>
     <li id="tournaments" >
-            <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
+        <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
     </li>
 </ul>
 {% endblock %}
@@ -31,53 +43,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-        <table id="id_ranking_table" class="table table-striped table-bordered sortable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th class="align_left">{% trans "Player" %}</th>
-                    <th>{% trans "Ranking points" %}</th>
-                    <th>{% trans "Wins" %}</th>
-                    <th>{% trans "Losses" %}</th>
-                    <th>{% trans "Ties" %}</th>
-                    <th>{% trans "Matches" %}</th>
-                    <th>{% trans "Lives" %}</th>
-                    <th>{% trans "Ante" %}</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for p in players %}
-                <tr>
-                    <td>{{ p.current_rank }}</td>
-                    <td class="align_left">
-                        <img id={{ p.player.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                        {{ p.player.name }}
-                    </td>
-                    <td>
-                        <span class="rp_text">{{ p.player.ranking_points }}</span>
-                        {% if p.player.pool_points > 0 %}
-                            <span class="pool_points_remaining">(+{{ p.player.pool_points }} pool)</span>
-                        {% endif %}
-                    </td>
-                    </td>
-                    <td>{{ p.round_wins }}</td>
-                    <td>{{ p.round_losses }}</td>
-                    <td>{{ p.round_ties }}</td>
-                    <td>{{ p.games }}</td>
-                    {% if p.lives > 0 %}
-                        <td><span class="change_positive">+{{ p.lives }}</span></td>
-                    {% elif p.lives < 0 %}
-                        <td><span class="change_negative">{{ p.lives }}</span></td>
-                    {% else %}
-                        <td>{{ p.lives }}</td>
-                    {% endif %}
-                    <td>
-                        <span class="rp_text">{{ p.player.calculate_ranked_ante.ante }}</span>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% include 'index/includes/list_players.html' with players=players %}
     </div>
     <div class="col-xs-12">
         {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
@@ -90,7 +56,32 @@
 <script src="{{ STATIC_URL }}/js/jquery.timeago.{{ LANGUAGE_CODE }}.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+    'use strict';
     $(".timeago").timeago();
+    $('#inactive-players-checkbox').click(function () {
+        update_games_played();
+    });
+
+    function update_games_played() {
+        if ($('#inactive-players-checkbox').prop('checked') === true) {
+            var url = "{% url 'index.views.get_players_list' False %}";
+        } else {
+            var url = "{% url 'index.views.get_players_list' True %}";
+        }
+        $.ajax({
+            type: "GET",
+            url: url,
+            traditional: true,
+            success: function(data) {
+                $("#id_ranking_table").replaceWith(data);
+                update_images();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Please report this error: " + errorThrown + xhr.status +
+                      xhr.responseText);
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
