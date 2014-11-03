@@ -18,26 +18,23 @@ from index.models import Tournament, TournamentCreateForm, TournamentEditForm
 from index.models import TournamentPlacingAnte, TournamentPlacingAnteFormSet, TournamentPlacingAnteSubmitForm, TournamentPlacingAnteSubmitFormSet
 
 def about(request):
-    context = Context({ })
-    return render(request, 'index/about.html', context)
+    return render(request, 'index/about.html')
 
 def rules(request):
-    context = Context({ })
-    return render(request, 'index/rules.html', context)
+    return render(request, 'index/rules.html')
 
 def maps(request):
-    context = Context({ })
-    return render(request, 'index/maps.html', context)
+    return render(request, 'index/maps.html')
 
 def ranking(request, active_only):
     last_game_time = None
     last_game = PlayedGame.objects.last_game()
     if last_game != None:
         last_game_time = last_game.start_time.isoformat()
-    context = Context({
+    context = {
         'players' : create_player_table(active_only),
         'last_game_time' : last_game_time,
-    })
+    }
 
     return render(request, 'index/ranking.html', context)
 
@@ -89,10 +86,10 @@ def games(request):
     last_game_time = None
     if last_game != None:
         last_game_time = last_game.start_time.isoformat()
-    context = Context({
+    context = {
         'games' : create_games_table(all_games_by_date),
         'last_game_time' : last_game_time,
-    })
+    }
     return render(request, 'index/games.html', context)
 
 def create_games_table(games_list):
@@ -129,9 +126,9 @@ def create_tournament_table():
     return tournaments
 
 def tournaments(request):
-    context = Context({
+    context = {
         'tournaments' : create_tournament_table()
-    })
+    }
     return render(request, 'index/tournaments.html', context)
 
 @login_required
@@ -139,10 +136,10 @@ def add_tournament(request):
     tournament_form = TournamentCreateForm()
     tournament_placing_ante_formset = TournamentPlacingAnteFormSet(instance=Tournament())
 
-    context = Context({
+    context = {
         'tournament_form'                 : tournament_form,
         'tournament_placing_ante_formset' : tournament_placing_ante_formset,
-    })
+    }
     return render(request, 'index/add_tournament.html', context)
 
 @login_required
@@ -222,13 +219,13 @@ def prepare_tournament_context(tournament_id, form):
     tournament_extra_data["players"] = instance.players.all()
     all_games_in_tournament_by_date = instance.games().order_by('start_time').reverse()
     tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
-    context = Context({
+    context = {
         'played_game_form'                : played_game_form,
         'subgame_formset'                 : subgame_formset,
         'tournament_form'                 : tournament_form,
         'tournament_placing_ante_formset' : tournament_placing_ante_formset,
         'tournament_extra_data'           : tournament_extra_data,
-    })
+    }
     return context
 
 @login_required
@@ -277,10 +274,10 @@ def add_game(request):
     played_game_form = PlayedGameForm(available_players=Player.objects.active_players())
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
-    context = Context({
+    context = {
         'played_game_form' : played_game_form,
         'subgame_formset'  : subgame_formset,
-    })
+    }
 
     return render(request, 'index/add_game.html', context)
 
@@ -415,22 +412,21 @@ def get_games_list(request, tournament_id):
     if request.is_ajax():
         tournament = get_object_or_404(Tournament, id=tournament_id)
         all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
-        context = Context({
+        context = {
             'games' : create_games_table(all_games_in_tournament_by_date)
-        })
+        }
         return render(request, 'index/includes/list_games.html', context)
     else:
         raise Http404
 
 def get_players_list(request, active_only):
     if request.is_ajax():
-        context = Context({
+        context = {
             'players' : create_player_table(active_only)
-        })
+        }
         return render(request, 'index/includes/list_players.html', context)
     else:
         raise Http404
 
 def error(request):
-    context = Context({})
-    return render(request, 'index/error.html', context)
+    return render(request, 'index/error.html')
