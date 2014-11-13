@@ -430,3 +430,14 @@ def get_players_list(request, active_only):
 
 def error(request):
     return render(request, 'index/error.html')
+
+def internal_info(request):
+    total_ranking_points = sum(map(lambda p: p.total_points(), Player.objects.all()))
+    num_players = len(Player.objects.all())
+    rp_per_player = total_ranking_points / num_players
+    context = {
+        'num_players' : num_players,
+        'total_ranking_points' : total_ranking_points,
+        'rp_per_player' : rp_per_player,
+    }
+    return render(request, 'index/internal_info.html', context)
