@@ -66,6 +66,9 @@ class Player(models.Model):
         return self.all_games().exclude(Q(ranked=False) &
                                         Q(tournament=None))
 
+    def total_points(self):
+        return self.ranking_points + self.pool_points
+
     def __unicode__(self):
         return u'%s' % (self.name)
 

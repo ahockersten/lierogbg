@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "LieroGBG" %} {% trans "Internal info" %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xs-2">
+        Number of players:
+    </div>
+    <div class="col-xs-2">
+        {{ num_players }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        Total ranking points:
+    </div>
+    <div class="col-xs-2">
+        {{ total_ranking_points }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-2">
+        Ranking points per player:
+    </div>
+    <div class="col-xs-2">
+        {{ rp_per_player }}
+    </div>
+</div>
+
+{% endblock %}
