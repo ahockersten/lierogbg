@@ -29,12 +29,12 @@ $(CSS_OUTPUT_DIR)/%.css: less/%.less
 django-compile-translations: $(MOFILES)
 
 $(MOFILES): $(POFILES)
-	django-admin compilemessages
+	cd lierogbg; ./manage.py compilemessages
 
 django-prepare-translations: $(POFILES)
 
 $(POFILES): $(PYFILES) $(TEMPLATEFILES)
-	django-admin makemessages -l sv
+	cd lierogbg;./manage.py makemessages -l sv
 
 clean:
 	@echo Deleting all .pyc files

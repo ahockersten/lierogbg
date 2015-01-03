@@ -100,7 +100,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '%xeglg!abga9iup@y#^#p2e9hpb-jooosifer7pa^tmdb0f_i(e$^'
+SECRET_KEY = '%xeasdfxa!abga9iup@y#^#p2e9hpb-jooosifer7pa^tmdb0f_i(e$^'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -155,13 +155,13 @@ INSTALLED_APPS = (
     # the nose test runner
     'django_nose',
 
-    # debugging panel and toolbar (automatically disabled when DEBUG=False)
-    'debug_panel',
-    'debug_toolbar',
-
     # our own apps
     'index',
     'accounts',
+
+    # debugging panel and toolbar (automatically disabled when DEBUG=False)
+    'debug_panel',
+    'debug_toolbar',
 )
 
 # Add import for filter

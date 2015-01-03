@@ -50,8 +50,21 @@ Using the virtual environment and running developer builds
 Deployment instructions
 ===================
 First, edit SECRET_KEY in lierogbg/lierogbg/settings.py and set it to something unique
-for your installation. Then, run these commands.
+for your installation.
 
+* Go to the root directory of the project
+* Install pyenv appropriately:
+* $ export PYENV_ROOT="./pyenv"
+* $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
+* $ export PATH="$PYENV_ROOT/bin:$PATH"
+* $ eval "$(pyenv init -)"
+* $ pyenv install 3.4.2
+* Create virtual environment
+* $ pyenv virtualenv 3.4.2 lierogbg-env
+* $ pyenv activate lierogbg-env
+* $ pip install -r requirements.txt
+
+For every update, run these commands:
 * $ make
 * $ cd lierogbg
 * $ python manage.py collectstatic
