@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-09 21:53+0200\n"
+"POT-Creation-Date: 2015-01-03 10:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,129 +33,110 @@ msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
 msgid "Hex value for a color"
 msgstr "Hex-värde för en färg"
 
-#: lierogbg/index/models.py:149 lierogbg/index/models.py:289
+#: lierogbg/index/models.py:152 lierogbg/index/models.py:292
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/index/models.py:150 lierogbg/index/models.py:175
+#: lierogbg/index/models.py:153 lierogbg/index/models.py:178
 #: templates/index/tournaments.html:37
 msgid "Name"
 msgstr "Namn"
 
-#: lierogbg/index/models.py:151 templates/index/edit_tournament.html:31
+#: lierogbg/index/models.py:154 templates/index/edit_tournament.html:31
 #: templates/index/view_tournament.html:29
 msgid "Players"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:152
+#: lierogbg/index/models.py:155
 msgid "Ante (in %)"
 msgstr "Ante (i %)"
 
-#: lierogbg/index/models.py:153
+#: lierogbg/index/models.py:156
 msgid "Pool points unlocked"
 msgstr "Pool-poäng upplåsta"
 
-#: lierogbg/index/models.py:176 templates/index/tournaments.html:42
+#: lierogbg/index/models.py:179 templates/index/tournaments.html:42
 msgid "Total ante"
 msgstr "Total ante"
 
-#: lierogbg/index/models.py:177 templates/index/tournaments.html:43
+#: lierogbg/index/models.py:180 templates/index/tournaments.html:43
 msgid "Finished"
 msgstr "Slutförd"
 
-#: lierogbg/index/models.py:208 lierogbg/index/models.py:225
+#: lierogbg/index/models.py:211 lierogbg/index/models.py:228
 msgid "Placing"
 msgstr "Placering"
 
-#: lierogbg/index/models.py:209 lierogbg/index/models.py:226
+#: lierogbg/index/models.py:212 lierogbg/index/models.py:229
 msgid "Received ante"
 msgstr "Mottagen ante"
 
-#: lierogbg/index/models.py:227 templates/index/includes/list_players.html:6
+#: lierogbg/index/models.py:230 templates/index/includes/list_players.html:6
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/index/models.py:290 templates/index/includes/list_games.html:7
+#: lierogbg/index/models.py:293 templates/index/includes/list_games.html:7
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/index/models.py:291 templates/index/includes/list_games.html:11
+#: lierogbg/index/models.py:294 templates/index/includes/list_games.html:11
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/index/models.py:292 templates/index/tournaments.html:38
-#: templates/index/includes/list_games.html:15
+#: lierogbg/index/models.py:295 templates/index/includes/list_games.html:15
+#: templates/index/tournaments.html:38
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/index/models.py:293 templates/index/includes/list_games.html:61
+#: lierogbg/index/models.py:296 templates/index/includes/list_games.html:61
 msgid "Ranked"
 msgstr "Rankad"
 
-#: lierogbg/index/models.py:343
+#: lierogbg/index/models.py:346
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/index/models.py:344
+#: lierogbg/index/models.py:347
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/index/models.py:345
+#: lierogbg/index/models.py:348
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/index/models.py:346
+#: lierogbg/index/models.py:349
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/index/views.py:105
+#: lierogbg/index/views.py:100
 msgid "Tied"
 msgstr "Oavgjort"
 
-#: lierogbg/lierogbg/settings.py:84
+#: lierogbg/lierogbg/settings.py:86
 msgid "Swedish"
 msgstr "Svenska"
 
-#: lierogbg/lierogbg/settings.py:85
+#: lierogbg/lierogbg/settings.py:87
 msgid "English"
 msgstr "Engelska"
 
-#: templates/base.html:7 templates/base.html.py:40
 #: templates/accounts/error.html:4 templates/accounts/login.html:4
+#: templates/base.html:8 templates/base.html.py:41
 #: templates/index/add_game.html:4 templates/index/add_tournament.html:6
 #: templates/index/edit_tournament.html:5 templates/index/error.html:4
-#: templates/index/games.html:5 templates/index/ranking.html:5
-#: templates/index/tournaments.html:4 templates/index/view_tournament.html:5
+#: templates/index/games.html:5 templates/index/internal_info.html:4
+#: templates/index/ranking.html:5 templates/index/tournaments.html:4
+#: templates/index/view_tournament.html:5
 msgid "LieroGBG"
 msgstr "LieroGBG"
-
-#: templates/base.html:43
-msgid "Rankings"
-msgstr "Rankingar"
-
-#: templates/base.html:46
-msgid "Rules"
-msgstr "Regler"
-
-#: templates/base.html:49
-msgid "Maps"
-msgstr "Kartor"
-
-#: templates/base.html:53
-msgid "Administration"
-msgstr "Administration"
-
-#: templates/base.html:56
-msgid "Logout"
-msgstr "Logga ut"
-
-#: templates/base.html:60 templates/accounts/login.html:4
-msgid "Login"
-msgstr "Logga in"
 
 #: templates/accounts/error.html:4 templates/index/error.html:4
 msgid "Error"
 msgstr "Fel"
+
+#: templates/accounts/login.html:4 templates/base.html:61
+msgid "Login"
+msgstr "Logga in"
 
 #: templates/accounts/login.html:12
 msgid "Username"
@@ -176,6 +157,26 @@ msgstr "Logga in"
 #: templates/admin/base_site.html:4
 msgid "Django site admin"
 msgstr "Djangos administration"
+
+#: templates/base.html:44
+msgid "Rankings"
+msgstr "Rankingar"
+
+#: templates/base.html:47
+msgid "Rules"
+msgstr "Regler"
+
+#: templates/base.html:50
+msgid "Maps"
+msgstr "Kartor"
+
+#: templates/base.html:54
+msgid "Administration"
+msgstr "Administration"
+
+#: templates/base.html:57
+msgid "Logout"
+msgstr "Logga ut"
 
 #: templates/index/about.html:5 templates/index/maps.html:5
 #: templates/index/rules.html:5
@@ -242,9 +243,8 @@ msgstr "matcher"
 msgid "Ranking"
 msgstr "Ranking"
 
-#: templates/index/games.html:23 templates/index/ranking.html:35
-#: templates/index/tournaments.html:22
-#: templates/index/includes/list_players.html:11
+#: templates/index/games.html:23 templates/index/includes/list_players.html:11
+#: templates/index/ranking.html:35 templates/index/tournaments.html:22
 msgid "Matches"
 msgstr "Matcher"
 
@@ -256,42 +256,6 @@ msgstr "Turneringar"
 #: templates/index/games.html:37 templates/index/ranking.html:49
 msgid "The last match was played "
 msgstr "Den senaste matchen spelades "
-
-#: templates/index/ranking.html:5
-msgid "ranking"
-msgstr "ranking"
-
-#: templates/index/ranking.html:11
-msgid "Show"
-msgstr "Visa"
-
-#: templates/index/ranking.html:16
-msgid "Inactive players"
-msgstr "Inaktiva spelare"
-
-#: templates/index/tournaments.html:4
-msgid "tournaments"
-msgstr "turneringar"
-
-#: templates/index/tournaments.html:36
-msgid "Date"
-msgstr "Datum"
-
-#: templates/index/tournaments.html:39
-msgid "Number of players"
-msgstr "Antal spelare"
-
-#: templates/index/tournaments.html:40
-msgid "Number of matches"
-msgstr "Antal matcher"
-
-#: templates/index/tournaments.html:41
-msgid "Ante percentage"
-msgstr "Ante i procent"
-
-#: templates/index/view_tournament.html:5
-msgid "view tournament"
-msgstr "visa turnering"
 
 #: templates/index/includes/add_game_form_contents.html:6
 msgid "Match info"
@@ -373,3 +337,43 @@ msgstr "Liv"
 #: templates/index/includes/list_players.html:13
 msgid "Ante"
 msgstr "Ante"
+
+#: templates/index/internal_info.html:4
+msgid "Internal info"
+msgstr "Intern information"
+
+#: templates/index/ranking.html:5
+msgid "ranking"
+msgstr "ranking"
+
+#: templates/index/ranking.html:11
+msgid "Show"
+msgstr "Visa"
+
+#: templates/index/ranking.html:16
+msgid "Inactive players"
+msgstr "Inaktiva spelare"
+
+#: templates/index/tournaments.html:4
+msgid "tournaments"
+msgstr "turneringar"
+
+#: templates/index/tournaments.html:36
+msgid "Date"
+msgstr "Datum"
+
+#: templates/index/tournaments.html:39
+msgid "Number of players"
+msgstr "Antal spelare"
+
+#: templates/index/tournaments.html:40
+msgid "Number of matches"
+msgstr "Antal matcher"
+
+#: templates/index/tournaments.html:41
+msgid "Ante percentage"
+msgstr "Ante i procent"
+
+#: templates/index/view_tournament.html:5
+msgid "view tournament"
+msgstr "visa turnering"
