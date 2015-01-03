@@ -1,118 +1,123 @@
 {% load i18n %}
-
-<table class="table" id="id_list_games_table">
-    <thead>
-        <tr>
-            <th>{% trans "Time" %}</th>
-            <th class="align_left">{% trans "Left player" %}</th>
-            <th class="align_left">{% trans "Right player" %}</th>
-            {% if full %}
-                <th>{% trans "Match type" %}</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for g in games %}
-            <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
-                <td>{{ g.game.start_time }}</td>
-                <td class="align_left">
-                    <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                    {{ g.game.player_left }}
-                </td>
-                <td class="align_left">
-                    <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                    {{ g.game.player_right }}
-                </td>
-                {% if full %}
-                    <td>
-                        {% if g.game.tournament %}
-                            {% trans "Tournament" %}
-                        {% elif g.game.ranked %}
-                            {% trans "Ranked" %}
-                        {% else %}
-                            {% trans "Unranked" %}
+<div class="row" id="id_list_games">
+    <div class="col-xs-12">
+        <button type="button" class="btn btn-block" id="id-show-all-results-btn">{% trans "Show all results" %}</button>
+    </div>
+    <div class="col-xs-12">
+        <table class="table" id="id_list_games_table">
+            <thead>
+                <tr>
+                    <th>{% trans "Time" %}</th>
+                    <th class="align_left">{% trans "Left player" %}</th>
+                    <th class="align_left">{% trans "Right player" %}</th>
+                    {% if full %}
+                        <th>{% trans "Match type" %}</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in games %}
+                    <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
+                        <td>{{ g.game.start_time }}</td>
+                        <td class="align_left">
+                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                            {{ g.game.player_left }}
+                        </td>
+                        <td class="align_left">
+                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                            {{ g.game.player_right }}
+                        </td>
+                        {% if full %}
+                            <td>
+                                {% if g.game.tournament %}
+                                    {% trans "Tournament" %}
+                                {% elif g.game.ranked %}
+                                    {% trans "Ranked" %}
+                                {% else %}
+                                    {% trans "Unranked" %}
+                                {% endif %}
+                            </td>
                         {% endif %}
-                    </td>
-                {% endif %}
-            </tr>
-            <tr class="collapse" id="more-info-{{forloop.counter}}">
-                <td colspan="6">
-                    <div class="panel panel-info">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    {% trans "Round" %}
-                                </div>
-                                <div class="col-xs-3">
-                                    {% trans "Map" %}
-                                </div>
-                                <div class="col-xs-3">
-                                    {% trans "Score" %}
-                                </div>
-                                <div class="col-xs-3">
-                                    {% trans "Download" %}
+                    </tr>
+                    <tr class="collapse" id="more-info-{{forloop.counter}}">
+                        <td colspan="6">
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            {% trans "Round" %}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {% trans "Map" %}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {% trans "Score" %}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {% trans "Download" %}
+                                        </div>
+                                    </div>
+                                    {% for sg in g.subgames %}
+                                        <div class="row">
+                                            <div class="col-xs-3">
+                                                {% trans "Round" %} {{ forloop.counter }}
+                                            </div>
+                                            <div class="col-xs-3">
+                                                {{ sg.map_played }}
+                                            </div>
+                                            <div class="col-xs-3 subgame-{{ sg.id }}-show-result game-{{ g.game.id }}-show-result">
+                                                <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                                                {{ sg.pl_lives }} - {{ sg.pr_lives }}
+                                                <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
+                                            </div>
+                                            <div class="col-xs-3 subgame-{{ sg.id }}-hide-result game-{{ g.game.id }}-hide-result">
+                                                <button type="button" class="btn btn-block show-subgame-result-btn" data-subgame-id="{{ sg.id }}">{% trans "Show" %}</button>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                {% if sg.replay_file %}
+                                                    <a href="{{ sg.replay_file.url }}"><span class="glyphicon glyphicon-save"></span></a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="row game-{{ g.game.id }}-hide-result">
+                                        <div class="col-xs-12">
+                                            <button type="button" class="btn btn-block show-result-btn" data-game-id="{{ g.game.id }}">{% trans "Show results" %}</button>
+                                        </div>
+                                    </div>
+                                    <div class="row game-{{ g.game.id }}-show-result">
+                                        <div class="col-xs-4">
+                                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                                                {{ g.game.player_left }}
+                                                {% if g.rp_pl_change > 0 %}
+                                                    {{ g.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
+                                                {% elif g.rp_pl_change < 0 %}
+                                                    {{ g.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
+                                                {% else %}
+                                                    {{ g.rp_pl_after }} (-)
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                                                {{ g.game.player_right }}
+                                                {% if g.rp_pr_change > 0 %}
+                                                    {{ g.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
+                                                {% elif g.rp_pr_change < 0%}
+                                                    {{ g.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
+                                                {% else %}
+                                                    {{ g.rp_pr_after }} (-)
+                                                {% endif %}
+                                        </div>
+                                        <div class="col-xs-4">
+                                                {% trans "Winner:" %} {{ g.game.winner }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            {% for sg in g.subgames %}
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        {% trans "Round" %} {{ forloop.counter }}
-                                    </div>
-                                    <div class="col-xs-3">
-                                        {{ sg.map_played }}
-                                    </div>
-                                    <div class="col-xs-3 subgame-{{ sg.id }}-show-result game-{{ g.game.id }}-show-result">
-                                        <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                                        {{ sg.pl_lives }} - {{ sg.pr_lives }}
-                                        <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
-                                    </div>
-                                    <div class="col-xs-3 subgame-{{ sg.id }}-hide-result game-{{ g.game.id }}-hide-result">
-                                        <button type="button" class="btn btn-block show-subgame-result-btn" data-subgame-id="{{ sg.id }}">{% trans "Show" %}</button>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        {% if sg.replay_file %}
-                                            <a href="{{ sg.replay_file.url }}"><span class="glyphicon glyphicon-save"></span></a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            <div class="row game-{{ g.game.id }}-hide-result">
-                                <div class="col-xs-12">
-                                    <button type="button" class="btn btn-block show-result-btn" data-game-id="{{ g.game.id }}">{% trans "Show results" %}</button>
-                                </div>
-                            </div>
-                            <div class="row game-{{ g.game.id }}-show-result">
-                                <div class="col-xs-4">
-                                    <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                                        {{ g.game.player_left }}
-                                        {% if g.rp_pl_change > 0 %}
-                                            {{ g.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
-                                        {% elif g.rp_pl_change < 0 %}
-                                            {{ g.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
-                                        {% else %}
-                                            {{ g.rp_pl_after }} (-)
-                                        {% endif %}
-                                </div>
-                                <div class="col-xs-4">
-                                    <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
-                                        {{ g.game.player_right }}
-                                        {% if g.rp_pr_change > 0 %}
-                                            {{ g.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
-                                        {% elif g.rp_pr_change < 0%}
-                                            {{ g.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
-                                        {% else %}
-                                            {{ g.rp_pr_after }} (-)
-                                        {% endif %}
-                                </div>
-                                <div class="col-xs-4">
-                                        {% trans "Winner:" %} {{ g.game.winner }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
