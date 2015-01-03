@@ -1,6 +1,11 @@
-from django.conf.urls import patterns, include, url
+"""
+URLs for about
+"""
 
-urlpatterns = patterns('about.views',
+from django.conf.urls import patterns, url
+
+urlpatterns = patterns(
+    'about.views',
     url(r'^index\/$', 'index', name="index"),
 )
 

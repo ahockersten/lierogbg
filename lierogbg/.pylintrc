@@ -1,0 +1,6 @@
+[TYPECHECK]
+generated-members=is_valid,save,objects,_meta,id,add,all,cleaned_data
+
+[MESSAGES CONTROL]
+disable=invalid-name,no-init,old-style-class,too-few-public-methods,locally-disabled,unexpected-keyword-arg,no-value-for-parameter
+

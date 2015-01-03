@@ -7,9 +7,11 @@ class PlayerManager(models.Manager):
     def active_players(self):
         return Player.objects.all().filter(active=True)
 
-# Describes a player. This is separate from the authentication
-# system
 class Player(models.Model):
+    """
+    Describes a player. This is separate from the authentication
+    system
+    """
     # displayed name
     name = models.CharField(max_length=100)
     # color used for the worm in the game
@@ -27,11 +29,13 @@ class Player(models.Model):
 
     objects = PlayerManager()
 
-    # calculates the ante according to the given formula for a certain
-    # ante percentage and a pool point unlock
-    # returns a dictionary consisting of the ante, the new rp (without removing
-    # the ante) and the new pp
     def calculate_ante_percentage(self, percentage, pool_points):
+        """
+        Calculates the ante according to the given formula for a certain
+        ante percentage and a pool point unlock
+        returns a dictionary consisting of the ante, the new rp (without removing
+        the ante) and the new pp.
+        """
         rp = self.ranking_points
         pp = self.pool_points
         if (pp != 0):
@@ -46,20 +50,27 @@ class Player(models.Model):
         tmp["pp"] = pp
         return tmp
 
-    # calculates the ante for a ranked match for this player
-    # returns a dictionary consisting of the ante, the new rp (without removing
-    # the ante) and the new pp
     def calculate_ranked_ante(self):
+        """
+        Calculates the ante for a ranked match for this player
+        returns a dictionary consisting of the ante, the new rp (without removing
+        the ante) and the new pp.
+        """
         return self.calculate_ante_percentage(2, 40)
 
-    # returns all games that the Player p participated in
     def all_games(self):
+        """
+        Returns all games that the Player participated in
+        """
         return PlayedGame.objects.all().filter(Q(player_left = self) |
                                                Q(player_right = self))
 
-    # returns all games with this player that earned or lost them ranking points,
-    # in other words: ranked and tournament games, but not unranked games
     def ranked_and_tournament_games(self, since):
+        """
+        Returns all games with this player that earned or lost them ranking
+        points, in other words: ranked and tournament games, but not unranked
+        games.
+        """
         games = self.all_games().exclude(Q(ranked=False) &
                                          Q(tournament=None))
         if (since != None):
@@ -78,10 +89,12 @@ class Player(models.Model):
         ordering = ['name']
         pass
 
-# Describes a tournament. When initially created, it takes the ante from and
-# adds pool points to all players. When it is recorded as finished, "finished"
-# is set to True and it hands out the ante to the winners.
 class Tournament(models.Model):
+    """
+    Describes a tournament. When initially created, it takes the ante from and
+    adds pool points to all players. When it is recorded as finished, "finished"
+    is set to True and it hands out the ante to the winners.
+    """
     # when True, this tournament has ended and points from it have been recorded
     finished = models.BooleanField(default=False)
     # time and date when the tournament started
@@ -99,9 +112,11 @@ class Tournament(models.Model):
     # a written comment for this tournament
     comment = models.CharField(blank=True, max_length=100000)
 
-    # distributes points to all players in this tournament. It is an error to call this
-    # without finished being set to true
     def distribute_points(self):
+        """
+        Distributes points to all players in this tournament. It is an error
+        to call this without finished being set to true.
+        """
         # not allowed to distribute points for unfinished tournaments
         if not self.finished:
             raise ValueError
@@ -134,11 +149,10 @@ class Tournament(models.Model):
     def clean(self):
         pass
 
-    class Meta:
-        pass
-
-# this is the number of points given to each placing in a tournament
 class TournamentPlacingAnte(models.Model):
+    """
+    This is the number of points given to each placing in a tournament.
+    """
     # the tournament this ante belongs to
     tournament = models.ForeignKey(Tournament)
     # the placing it should be given to
@@ -155,16 +169,17 @@ class TournamentPlacingAnte(models.Model):
     def clean(self):
         pass
 
-    class Meta:
-        pass
-
 class PlayedGameManager(models.Manager):
-    # the last game that was played
     def last_game(self):
+        """
+        The last game that was played
+        """
         return PlayedGame.objects.all().order_by('start_time').reverse().first()
 
-# records a played game
 class PlayedGame(models.Model):
+    """
+    Records a played game
+    """
     # the tournament this played game belongs to, if any
     tournament = models.ForeignKey(Tournament, null=True)
     # keeps track of whether this is a ranked game or not.
@@ -197,8 +212,10 @@ class PlayedGame(models.Model):
     class Meta:
         pass
 
-# a subgame to a game that has been played
 class Subgame(models.Model):
+    """
+    A subgame to a game that has been played
+    """
     # the game this belongs to
     parent = models.ForeignKey(PlayedGame)
     # the map that was played.
@@ -216,12 +233,11 @@ class Subgame(models.Model):
     def clean(self):
         pass
 
-    class Meta:
-        pass
-
-# Keeps track of how ranking points etc was changed for a player.
-# Used to keep track of before/after for games and tournaments
 class PointsChanged(models.Model):
+    """
+    Keeps track of how ranking points etc was changed for a player.
+    Used to keep track of before/after for games and tournaments.
+    """
     # the player this belongs to
     player = models.ForeignKey(Player)
     # the tournament this belongs to. Both this and game may
@@ -245,7 +261,4 @@ class PointsChanged(models.Model):
                                           self.rp_after, self.pp_before,
                                           self.pp_after)
     def clean(self):
-        pass
-
-    class Meta:
         pass
