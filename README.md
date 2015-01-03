@@ -9,7 +9,7 @@ Install instructions
 
 Installing LESS
 ---------------
-* $ sudo apt-get install nodejs
+* $ sudo apt-get install nodejs-legacy npm
 * $ sudo npm install -g less
 
 Installing dependencies for the virtual environment
@@ -55,8 +55,8 @@ for your installation.
 * Go to the root directory of the project
 * Install pyenv appropriately:
 * $ export PYENV_ROOT="/var/www/lierogbg/pyenv"
-* $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 * $ export PATH="$PYENV_ROOT/bin:$PATH"
+* $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 * $ eval "$(pyenv init -)"
 * $ eval "$(pyenv virtualenv-init -)"
 * $ pyenv install 3.4.2
