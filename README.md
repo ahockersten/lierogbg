@@ -73,6 +73,6 @@ LieroGBG is now ready to run as per normal django deployment instructions.
 
 How to test developer builds
 ============
-    make
-    cd lierogbg
-    python manage.py runserver
+* $ make
+* $ cd lierogbg
+* $ ./manage.py runserver
