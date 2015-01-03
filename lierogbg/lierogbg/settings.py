@@ -1,4 +1,6 @@
-# Django settings for lierogbg project.
+"""
+Django settings for lierogbg project.
+"""
 import os
 
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
@@ -108,6 +110,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_panel.middleware.DebugPanelMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -149,6 +152,13 @@ INSTALLED_APPS = (
     # external stuff
     'datetimewidget',
 
+    # the nose test runner
+    'django_nose',
+
+    # debugging panel and toolbar (automatically disabled when DEBUG=False)
+    'debug_panel',
+    'debug_toolbar',
+
     # our own apps
     'index',
     'accounts',
@@ -169,17 +179,11 @@ LOGGING = {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         },
-        # add filter for suspicious operations
-        'skip_suspicious_operations': {
-            '()': 'django.utils.log.CallbackFilter',
-            'callback': skip_suspicious_operations,
-        },
     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            # don't mail the admins about suspicious operations
-            'filters': ['require_debug_false', 'skip_suspicious_operations'],
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         }
     },

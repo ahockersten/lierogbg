@@ -4,31 +4,58 @@ This is the LieroGBG ranking and match system. It's a Django + Bootstrap web app
 
 A live deployment of this is currently available at http://lierogbg.maskinskrift.com.
 
-Things you will need to build or deploy this
-============
-- Django 1.6 for python (or later)
-- LESS
-- A recent version of node.js (available via ppa:chris-lea/node.js) (needed for LESS)
-- nodejs and npm from above source (version in Ubuntu 12.10 won't work) (needed for LESS)
-- django-datetime-widget
+Install instructions
+====================
 
-On Ubuntu:
-    sudo add-apt-repository ppa:chris-lea/node.js
-    sudo add-apt-repository ppa:chris-lea/python-django
-    sudo apt-get update
-    sudo apt-get install python-django python-pip nodejs
-    sudo npm install -g less
-    sudo pip install django-datetime-widget
+Installing LESS
+---------------
+* $ sudo apt-get install nodejs
+* $ sudo npm install -g less
+
+Installing dependencies for the virtual environment
+---------------------------------------------------
+
+* First, install pyenv and if you don't have it
+* $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
+* Setup your shell as directed by the installer
+* Install latest Python
+* $ pyenv install 3.4.2
+* Install pyenv-virtualenv, if it was not installed by the above (mine was?)
+* $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+
+Setting up the virtual environment
+----------------------------------
+
+* Go to the root directory of the project
+* Create virtual environment
+* $ pyenv virtualenv 3.4.2 lierogbg-env
+* $ pyenv activate lierogbg-env
+* $ pip install -r requirements.txt
+
+Optional
+--------
+You may want to install the Django Debug Panel in Chrome to debug AJAX
+requests:
+* https://chrome.google.com/webstore/detail/django-debug-panel/nbiajhhibgfgkjegbnflpdccejocmbbn
+
+Usage
+=====
+
+Using the virtual environment and running developer builds
+----------------------------------------------------------
+* $ pyenv activate lierogbg-env
+* $ cd lierogbg
+* $ ./manage.py runserver
 
 Deployment instructions
 ===================
 First, edit SECRET_KEY in lierogbg/lierogbg/settings.py and set it to something unique
 for your installation. Then, run these commands.
 
-    make
-    cd lierogbg
-    python manage.py syncdb
-    python manage.py collectstatic
+* $ make
+* $ cd lierogbg
+* $ python manage.py collectstatic
+* $ sudo service apache2 reload
 
 LieroGBG is now ready to run as per normal django deployment instructions.
 

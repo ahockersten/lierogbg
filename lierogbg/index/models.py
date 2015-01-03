@@ -62,15 +62,17 @@ class Player(models.Model):
 
     # returns all games with this player that earned or lost them ranking points,
     # in other words: ranked and tournament games, but not unranked games
-    def ranked_and_tournament_games(self):
-        return self.all_games().exclude(Q(ranked=False) &
-                                        Q(tournament=None))
+    def ranked_and_tournament_games(self, since):
+        games = self.all_games().exclude(Q(ranked=False) &
+                                         Q(tournament=None))
+        if (since != None):
+            return games.filter(start_time__gt=since)
 
     def total_points(self):
         return self.ranking_points + self.pool_points
 
-    def __unicode__(self):
-        return u'%s' % (self.name)
+    def __str__(self):
+        return '%s' % (self.name)
 
     def clean(self):
         pass
@@ -127,9 +129,10 @@ class Tournament(models.Model):
     def tournament_placing_antes(self):
         return TournamentPlacingAnte.objects.all().filter(tournament=self)
 
-    def __unicode__(self):
-        return u'%s_%s_%s_%s_%s_%s' % (self.name, self.finished, self.start_time,
-                                       self.ante, self.pool_points, self.total_ante)
+    def __str__(self):
+        return '%s_%s_%s_%s_%s_%s' % (self.name, self.finished,
+                                      self.start_time, self.ante,
+                                      self.pool_points, self.total_ante)
 
     def clean(self):
         pass
@@ -191,8 +194,9 @@ class TournamentPlacingAnte(models.Model):
     # the player that got this placing
     player = models.ForeignKey(Player, null=True, blank=True)
 
-    def __unicode__(self):
-        return u'%s %s %s %s' % (self.tournament, self.placing, self.ante, self.player)
+    def __str__(self):
+        return u'%s %s %s %s' % (self.tournament, self.placing, self.ante,
+                                 self.player)
 
     def clean(self):
         pass
@@ -269,8 +273,9 @@ class PlayedGame(models.Model):
     def subgames(self):
         return Subgame.objects.all().filter(parent=self)
 
-    def __unicode__(self):
-        return u'%s %s vs %s, %s won' % (self.start_time, self.player_left, self.player_right, self.winner)
+    def __str__(self):
+        return '%s %s vs %s, %s won' % (self.start_time, self.player_left,
+                                        self.player_right, self.winner)
 
     def clean(self):
         pass
@@ -323,7 +328,7 @@ class Subgame(models.Model):
     # the replay file for this game
     replay_file = models.FileField(blank=True, upload_to="replays/")
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%i - %i' % (self.pl_lives, self.pr_lives)
 
     def clean(self):
@@ -372,7 +377,7 @@ class PointsChanged(models.Model):
     # pool points after match
     pp_after = models.IntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s_%s_%s_%s_%s_%s_%s' % (self.player, self.tournament,
                                           self.game, self.rp_before,
                                           self.rp_after, self.pp_before,

@@ -1,6 +1,7 @@
-##
-# @file views.py
-#
+"""
+Views for the accounts app. These views will handle login, logout and
+authentication.
+"""
 
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -9,10 +10,14 @@ from django.template import Context
 from django.contrib import auth
 from django.utils.translation import ugettext_lazy as _
 
-##
-# try to authenticate
-#
 def authenticate(request):
+    """
+    This view will perform the actual authentication of a user.
+
+    :param request: The HTTP request
+    :type request: HttpRequest
+    :returns: A HttpResponse
+    """
     username = request.POST['username']
     password = request.POST['password']
 
@@ -23,37 +28,44 @@ def authenticate(request):
             auth.login(request, user)
             return redirect('index.views.ranking')
         else:
-            context = Context({
+            context = {
                 'error_msg' : _('User disabled')
-            })
+            }
 
             return render(request, 'accounts/error.html', context)
     else:
-        context = Context({
+        context = {
             'error_msg' : _('User does not exist')
-        })
+        }
         return render(request, 'accounts/error.html', context)
 
-##
-# main login screen
-#
 def login(request):
+    """
+    The login-view. Displays the actual login-screen.
+
+    :param request: The HTTP request
+    :type request: HttpRequest
+    :returns: A HttpResponse
+    """
     if request.GET.get('next'):
         next_view = request.GET['next']
     else:
         next_view = 'index.views.ranking'
 
-    context = Context()
-
     if request.user.is_authenticated():
         return redirect(next_view)
     else:
-        return render(request, 'accounts/login.html', context)
+        return render(request, 'accounts/login.html')
 
-##
-# logout screen
-#
 def logout(request):
+    """
+    The logout-view. Will always re-direct to the login screen, and
+    perhaps logout the user from the auth system.
+
+    :param request: The HTTP request
+    :type request: HttpRequest
+    :returns: A HttpResponse
+    """
     if request.user.is_authenticated():
         # Logout
         auth.logout(request)
