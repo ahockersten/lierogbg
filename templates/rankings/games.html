@@ -74,6 +74,21 @@ $(document).ready(function() {
             $(this).hide();
         });
     });
+    $('#id-show-all-results-btn').click(function() {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'rankings.views.get_games_list' %}",
+            traditional: true,
+            data: [],
+            success: function(data) {
+                $('#id-show-all-results-btn').hide();
+                $("#id_list_games").replaceWith(data);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Please report this error: " + errorThrown + xhr.status +
+                      xhr.responseText);
+        }});
+    });
     $(".timeago").timeago();
 });
 </script>

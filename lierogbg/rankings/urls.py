@@ -10,6 +10,7 @@ urlpatterns = patterns(
     url(r'^edit_tournament\/(?P<tournament_id>.*)', 'edit_tournament', name='edit_tournament'),
     url(r'^error\/$', 'error', name="error"),
     url(r'^games\/$', 'games', name="games"),
+    url(r'^get_games_list\/$', 'get_games_list', name="get_games_list"),
     url(r'^get_games_list\/(?P<tournament_id>.*)', 'get_games_list', name="get_games_list"),
     url(r'^get_players_list\/$', 'get_players_list', name="get_players_list"),
     url(r'^internal_info\/$', 'internal_info', name="internal_info"),

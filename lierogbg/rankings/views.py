@@ -458,15 +458,21 @@ def update_total_ante(request):
     else:
         raise Http404
 
-def get_games_list(request, tournament_id):
+def get_games_list(request, tournament_id=None):
     """
     Renders a list of games belonging to this tournament.
     """
     if request.is_ajax():
-        tournament = get_object_or_404(Tournament, id=tournament_id)
-        all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+            all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
+            games = create_games_table(all_games_in_tournament_by_date)
+        except Tournament.DoesNotExist:
+            all_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()
+            games = create_games_table(all_games_by_date)
         context = {
-            'games' : create_games_table(all_games_in_tournament_by_date)
+            'games' : games,
+            'full' : True,
         }
         return render(request, 'rankings/includes/list_games.html', context)
     else:
