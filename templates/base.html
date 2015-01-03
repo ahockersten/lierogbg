@@ -33,16 +33,16 @@
             <div id="main_menu" class="navbar navbar-default" role="navigation">
                 <ul class="nav nav-pills navbar-right">
                     <li id="about" >
-                        <a href="{% url 'index.views.about' %}">{% trans "LieroGBG" %}</a>
+                        <a href="{% url 'about.views.index' %}">{% trans "LieroGBG" %}</a>
                     </li>
                     <li id="rankings" >
-                        <a href="{% url 'index.views.ranking' %}">{% trans "Rankings" %}</a>
+                        <a href="{% url 'rankings.views.ranking' %}">{% trans "Rankings" %}</a>
                     </li>
                     <li id="rules" >
-                        <a href="{% url 'index.views.rules' %}">{% trans "Rules" %}</a>
+                        <a href="{% url 'rules.views.index' %}">{% trans "Rules" %}</a>
                     </li>
                     <li id="maps" >
-                        <a href="{% url 'index.views.maps' %}">{% trans "Maps" %}</a>
+                        <a href="{% url 'maps.views.index' %}">{% trans "Maps" %}</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li id="administration" >

@@ -1,7 +1,6 @@
-##
-# @module index
-# @file views.py
-#
+"""
+Views for the ranking module
+"""
 
 import datetime
 import json
@@ -12,21 +11,12 @@ from django.template import Context
 from django.template import RequestContext, loader
 from django.utils.translation import ugettext_lazy as _
 from functools import partial, wraps
-from index.models import PlayedGame, PlayedGameForm
-from index.models import Player
-from index.models import PointsChanged
-from index.models import SubgameFormSet
-from index.models import Tournament, TournamentCreateForm, TournamentEditForm
-from index.models import TournamentPlacingAnte, TournamentPlacingAnteFormSet, TournamentPlacingAnteSubmitForm, TournamentPlacingAnteSubmitFormSet
-
-def about(request):
-    return render(request, 'index/about.html')
-
-def rules(request):
-    return render(request, 'index/rules.html')
-
-def maps(request):
-    return render(request, 'index/maps.html')
+from rankings.models import PlayedGame, PlayedGameForm
+from rankings.models import Player
+from rankings.models import PointsChanged
+from rankings.models import SubgameFormSet
+from rankings.models import Tournament, TournamentCreateForm, TournamentEditForm
+from rankings.models import TournamentPlacingAnte, TournamentPlacingAnteFormSet, TournamentPlacingAnteSubmitForm, TournamentPlacingAnteSubmitFormSet
 
 def ranking(request, active_only):
     last_game_time = None
@@ -38,7 +28,7 @@ def ranking(request, active_only):
         'last_game_time' : last_game_time,
     }
 
-    return render(request, 'index/ranking.html', context)
+    return render(request, 'rankings/ranking.html', context)
 
 def create_player_table(active_only,
         since=datetime.datetime(datetime.datetime.today().year, 1, 1)):
@@ -94,7 +84,7 @@ def games(request):
         'games' : create_games_table(all_games_by_date),
         'last_game_time' : last_game_time,
     }
-    return render(request, 'index/games.html', context)
+    return render(request, 'rankings/games.html', context)
 
 def create_games_table(games_list):
     games = []
@@ -133,7 +123,7 @@ def tournaments(request):
     context = {
         'tournaments' : create_tournament_table()
     }
-    return render(request, 'index/tournaments.html', context)
+    return render(request, 'rankings/tournaments.html', context)
 
 @login_required
 def add_tournament(request):
@@ -144,7 +134,7 @@ def add_tournament(request):
         'tournament_form'                 : tournament_form,
         'tournament_placing_ante_formset' : tournament_placing_ante_formset,
     }
-    return render(request, 'index/add_tournament.html', context)
+    return render(request, 'rankings/add_tournament.html', context)
 
 @login_required
 def submit_tournament(request):
@@ -157,7 +147,7 @@ def submit_tournament(request):
         # FIXME this is not valid here, since the tournament for each tpa has not
         # been setup yet
         #if not tournament_placing_ante_formset.is_valid():
-        #    return redirect('index.views.error')
+        #    return redirect('rankings.views.error')
 
         tournament.total_ante = 0
         tournament.save()
@@ -188,7 +178,7 @@ def submit_tournament(request):
 
         if total_ante != total_placing_ante:
             tournament.delete()
-            return redirect('index.views.error')
+            return redirect('rankings.views.error')
 
         for player in players:
             player.save()
@@ -204,9 +194,9 @@ def submit_tournament(request):
             tpa.save()
             form.save_m2m()
 
-        return redirect('index.views.edit_tournament', tournament.pk)
+        return redirect('rankings.views.edit_tournament', tournament.pk)
     else:
-        return redirect('index.views.error')
+        return redirect('rankings.views.error')
 
 def prepare_tournament_context(tournament_id, form):
     instance = get_object_or_404(Tournament, pk=tournament_id)
@@ -234,12 +224,12 @@ def prepare_tournament_context(tournament_id, form):
 
 @login_required
 def edit_tournament(request, tournament_id):
-    return render(request, 'index/edit_tournament.html',
+    return render(request, 'rankings/edit_tournament.html',
                   prepare_tournament_context(tournament_id,
                                              TournamentEditForm))
 
 def view_tournament(request, tournament_id):
-    return render(request, 'index/view_tournament.html',
+    return render(request, 'rankings/view_tournament.html',
                   prepare_tournament_context(tournament_id,
                                              TournamentEditForm))
 
@@ -254,7 +244,7 @@ def save_tournament(request, tournament_id):
                                                instance=tournament)
 
         if not tournament_placing_ante_formset.is_valid():
-            return redirect('index.views.error')
+            return redirect('rankings.views.error')
 
         tournament.save()
         tournament_form.save_m2m()
@@ -269,9 +259,9 @@ def save_tournament(request, tournament_id):
         if tournament.finished:
             tournament.distribute_points()
 
-        return redirect('index.views.tournaments')
+        return redirect('rankings.views.tournaments')
     else:
-        return redirect('index.views.error')
+        return redirect('rankings.views.error')
 
 @login_required
 def add_game(request):
@@ -283,7 +273,7 @@ def add_game(request):
         'subgame_formset'  : subgame_formset,
     }
 
-    return render(request, 'index/add_game.html', context)
+    return render(request, 'rankings/add_game.html', context)
 
 @login_required
 def submit_game(request, tournament_id=None):
@@ -300,13 +290,13 @@ def submit_game(request, tournament_id=None):
         subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
 
         if not subgame_formset.is_valid():
-            return redirect('index.views.error')
+            return redirect('rankings.views.error')
 
         pl = played_game.player_left
         pr = played_game.player_right
         winner = played_game.winner
         if (pl == pr or (winner != pl and winner != pr and winner != None)):
-            return redirect('index.views.error')
+            return redirect('rankings.views.error')
 
         subgames = []
         for form in subgame_formset.forms:
@@ -390,9 +380,9 @@ def submit_game(request, tournament_id=None):
         if request.is_ajax():
             return HttpResponse()
         else:
-            return redirect('index.views.ranking')
+            return redirect('rankings.views.ranking')
     else:
-        return redirect('index.views.error')
+        return redirect('rankings.views.error')
 
 @login_required
 def update_total_ante(request):
@@ -419,7 +409,7 @@ def get_games_list(request, tournament_id):
         context = {
             'games' : create_games_table(all_games_in_tournament_by_date)
         }
-        return render(request, 'index/includes/list_games.html', context)
+        return render(request, 'rankings/includes/list_games.html', context)
     else:
         raise Http404
 
@@ -439,12 +429,12 @@ def get_players_list(request):
         context = {
             'players' : player_table,
         }
-        return render(request, 'index/includes/list_players.html', context)
+        return render(request, 'rankings/includes/list_players.html', context)
     else:
         raise Http404
 
 def error(request):
-    return render(request, 'index/error.html')
+    return render(request, 'rankings/error.html')
 
 def internal_info(request):
     total_ranking_points = sum(map(lambda p: p.total_points(),
@@ -456,4 +446,4 @@ def internal_info(request):
         'total_ranking_points' : total_ranking_points,
         'rp_per_player' : rp_per_player,
     }
-    return render(request, 'index/internal_info.html', context)
+    return render(request, 'rankings/internal_info.html', context)

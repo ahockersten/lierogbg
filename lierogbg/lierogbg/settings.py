@@ -156,8 +156,12 @@ INSTALLED_APPS = (
     'django_nose',
 
     # our own apps
-    'index',
     'accounts',
+    'about',
+    'maps',
+    'rankings',
+    'replays',
+    'rules',
 
     # debugging panel and toolbar (automatically disabled when DEBUG=False)
     'debug_panel',

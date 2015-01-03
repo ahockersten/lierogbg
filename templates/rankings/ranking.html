@@ -24,22 +24,22 @@
     </li>
     {% if user.is_authenticated %}
         <li id="add_game">
-            <a href="{% url 'index.views.add_game' %}">{% trans "Add match" %}</a>
+            <a href="{% url 'rankings.views.add_game' %}">{% trans "Add match" %}</a>
         </li>
         <li id="add_tournament">
-            <a href="{% url 'index.views.add_tournament' %}">{% trans "Add tournament" %}</a>
+            <a href="{% url 'rankings.views.add_tournament' %}">{% trans "Add tournament" %}</a>
         </li>
     {% endif %}
 </ul>
 <ul class="nav nav-pills navbar-right">
     <li id="ranking" >
-        <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+        <a href="{% url 'rankings.views.ranking' %}">{% trans "Ranking" %}</a>
     </li>
     <li id="games" >
-        <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
+        <a href="{% url 'rankings.views.games' %}">{% trans "Matches" %}</a>
     </li>
     <li id="tournaments" >
-        <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
+        <a href="{% url 'rankings.views.tournaments' %}">{% trans "Tournaments" %}</a>
     </li>
 </ul>
 {% endblock %}
@@ -47,7 +47,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-        {% include 'index/includes/list_players.html' with players=players %}
+        {% include 'rankings/includes/list_players.html' with players=players %}
     </div>
     <div class="col-xs-12">
         {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
@@ -86,7 +86,7 @@ $(document).ready(function() {
     });
 
     function update_games_played() {
-        var url = "{% url 'index.views.get_players_list'%}";
+        var url = "{% url 'rankings.views.get_players_list'%}";
         var data = {};
         if ($('#inactive-players-checkbox').prop('checked') === true) {
             data.active_only = "False";

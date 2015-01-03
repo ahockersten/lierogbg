@@ -9,22 +9,22 @@
 {% if user.is_authenticated %}
     <ul class="nav nav-pills navbar-left">
         <li id="add_game" >
-            <a href="{% url 'index.views.add_game' %}">{% trans "Add match" %}</a>
+            <a href="{% url 'rankings.views.add_game' %}">{% trans "Add match" %}</a>
         </li>
         <li id="add_tournament">
-            <a href="{% url 'index.views.add_tournament' %}">{% trans "Add tournament" %}</a>
+            <a href="{% url 'rankings.views.add_tournament' %}">{% trans "Add tournament" %}</a>
         </li>
     </ul>
 {% endif %}
 <ul class="nav nav-pills navbar-right">
     <li id="ranking" >
-            <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+            <a href="{% url 'rankings.views.ranking' %}">{% trans "Ranking" %}</a>
     </li>
     <li id="games" >
-            <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
+            <a href="{% url 'rankings.views.games' %}">{% trans "Matches" %}</a>
     </li>
     <li id="tournaments" >
-            <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
+            <a href="{% url 'rankings.views.tournaments' %}">{% trans "Tournaments" %}</a>
     </li>
 </ul>
 {% endblock %}
@@ -32,7 +32,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-    {% include 'index/includes/list_games.html' with games=games full=True %}
+    {% include 'rankings/includes/list_games.html' with games=games full=True %}
     </div>
     <div class="col-xs-12">
         {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
