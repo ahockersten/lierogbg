@@ -7,6 +7,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import ugettext_lazy as _
 from functools import partial, wraps
 from rankings.forms import PlayedGameForm, SubgameFormSet
@@ -18,6 +19,11 @@ from rankings.models import PlayedGame
 from rankings.models import Player
 from rankings.models import PointsChanged
 from rankings.models import Tournament
+
+"""
+Number of games to display per page in the game list
+"""
+GAME_PAGE_LIMIT = 30
 
 def ranking(request, active_only):
     """
@@ -92,14 +98,17 @@ def games(request):
     """
     Display data about all games.
     """
-    all_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()
+    first_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()[:GAME_PAGE_LIMIT]
     last_game = PlayedGame.objects.last_game()
     last_game_time = None
     if last_game != None:
         last_game_time = last_game.start_time.isoformat()
     context = {
-        'games' : create_games_table(all_games_by_date),
+        'games' : create_games_table(first_games_by_date),
+        'current_match' : 0,
+        'next_match' : GAME_PAGE_LIMIT,
         'last_game_time' : last_game_time,
+        'show_all' : False,
     }
     return render(request, 'rankings/games.html', context)
 
@@ -460,21 +469,40 @@ def update_total_ante(request):
 
 def get_games_list(request, tournament_id=None):
     """
-    Renders a list of games belonging to this tournament.
+    Renders a list of games.
+    FIXME this does too much!
     """
     if request.is_ajax():
+        context = {}
         try:
             tournament = Tournament.objects.get(id=tournament_id)
             all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
-            games = create_games_table(all_games_in_tournament_by_date)
+            context['games'] = create_games_table(all_games_in_tournament_by_date)
+            context['full'] = True
+            return render(request, 'rankings/includes/list_games.html', context)
         except Tournament.DoesNotExist:
-            all_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()
-            games = create_games_table(all_games_by_date)
-        context = {
-            'games' : games,
-            'full' : True,
-        }
-        return render(request, 'rankings/includes/list_games.html', context)
+            games_to_load = 0
+            try:
+                games_to_load = int(request.GET['games'])
+            except MultiValueDictKeyError:
+                pass
+            context['show_all'] = request.GET['show_all']
+            all_games = PlayedGame.objects.all()
+            games_by_date = []
+            next_match = games_to_load + GAME_PAGE_LIMIT
+            games_by_date = all_games.order_by('start_time').reverse()[games_to_load:next_match]
+            context['games'] = create_games_table(games_by_date)
+            context['current_match'] = games_to_load
+            if next_match < len(all_games):
+                context['next_match'] = next_match
+            prev_match = games_to_load - GAME_PAGE_LIMIT
+            if prev_match > -1:
+                context['prev_match'] = prev_match
+            context['full'] = True
+            if context['show_all'] == "True":
+                return render(request, 'rankings/includes/list_games.html', context)
+            else:
+                return render(request, 'rankings/includes/list_games_hidden.html', context)
     else:
         raise Http404
 

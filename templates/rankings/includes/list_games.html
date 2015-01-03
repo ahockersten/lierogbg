@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="row" id="id_list_games">
+<div class="row" id="id_list_games" data-current-match="{{ current_match }}" data-show-all="{{ show_all }}">
     <div class="col-xs-12">
         <table class="table" id="id_list_games_table">
             <thead>
@@ -105,5 +105,21 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            {% if prev_match > -1 %}
+                <button type="button" class="btn btn-block" data-prev-match="{{ prev_match }}" id="id-prev-match"> &lArr;</button>
+            {% else %}
+                <button type="button" class="btn btn-block" id="id-prev-match" disabled="disabled"> &lArr;</button>
+            {% endif %}
+        </div>
+        <div class="col-xs-6">
+            {% if next_match > -1 %}
+                <button type="button" class="btn btn-block" data-next-match="{{ next_match }}" id="id-next-match"> &rArr;</button>
+            {% else %}
+                <button type="button" class="btn btn-block" id="id-next-match" disabled="disabled"> &rArr;</button>
+            {% endif %}
+        </div>
     </div>
 </div>
