@@ -5,7 +5,6 @@ authentication.
 
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.template import Context
 
 from django.contrib import auth
 from django.utils.translation import ugettext_lazy as _

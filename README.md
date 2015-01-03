@@ -73,3 +73,26 @@ For every update, run these commands:
 * $ cd lierogbg
 * $ ./manage.py collectstatic
 * $ sudo service apache2 reload
+
+Running the various tests
+=========================
+
+Unit tests
+----------
+The unit tests will do model testing, form testing and some basic view
+testing for the various apps. Run with:
+    $ ./manage.py test
+
+Coverage
+--------
+Run coverage testing with:
+    $ ./coverage.sh
+
+PyLINT
+------
+PyLINT will check for syntax errors and coding standard errors. A configuration
+is present in .pylintrc to make pylint and django play nicely together.
+Run a full pylint test suite with:
+    $ ./pylint.sh
+
+A good total score would be around 8.0/10 or above.

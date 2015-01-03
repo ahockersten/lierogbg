@@ -1,6 +1,7 @@
 """
 Admin model declarations
 """
+# pylint: disable=missing-docstring
 from django.contrib import admin
 from rankings.models import Player, PlayedGame, Subgame, Tournament
 from rankings.models import TournamentPlacingAnte, PointsChanged

@@ -5,25 +5,32 @@ import os
 
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
+# pylint: disable=star-args
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-     ('Anders Hockersten', 'anders@maskinskrift.com'),
+    ('Anders Hockersten', 'anders@maskinskrift.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': here('..', '..', 'lierogbg.sqlite3'), # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3',
+        # Or path to database file if using sqlite3.
+        'NAME': here('..', '..', 'lierogbg.sqlite3'),
+        # Not used with sqlite3.
+        'USER': '',
+        # Not used with sqlite3.
+        'PASSWORD': '',
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '',
     }
 }
 
@@ -96,7 +103,6 @@ LOCALE_PATHS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -106,7 +112,6 @@ SECRET_KEY = '%xeasdfxa!abga9iup@y#^#p2e9hpb-jooosifer7pa^tmdb0f_i(e$^'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -167,8 +172,13 @@ INSTALLED_APPS = (
     'debug_toolbar',
 )
 
-# Add import for filter
-from lierogbg.logging_filters import skip_suspicious_operations
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Nose configuration
+NOSE_ARGS = [
+    '--with-doctest',
+]
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

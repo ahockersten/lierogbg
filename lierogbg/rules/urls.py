@@ -1,6 +1,9 @@
-from django.conf.urls import patterns, include, url
+"""
+URLs for rules
+"""
+from django.conf.urls import patterns, url
 
-urlpatterns = patterns('rules.views',
+urlpatterns = patterns(
+    'rules.views',
     url(r'^index\/$', 'index', name="index"),
 )
-

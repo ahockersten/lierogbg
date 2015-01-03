@@ -1,18 +1,25 @@
-from datetimewidget.widgets import DateTimeWidget
+"""
+Models used in the rankings
+"""
 from django.db import models
 from django.db.models import Q
-from django.forms import ModelForm
-from django.forms.models import inlineformset_factory
-from django.utils.translation import ugettext_lazy as _
 from rankings import fields
 
 class PlayerManager(models.Manager):
+    """
+    Model manager for Player.
+    """
     def active_players(self):
-        return Player.objects.all().filter(active=True)
+        """
+        Returns all active players.
+        """
+        return self.all().filter(active=True)
 
-# Describes a player. This is separate from the authentication
-# system
 class Player(models.Model):
+    """
+    Describes a player. This is separate from the authentication
+    system
+    """
     # displayed name
     name = models.CharField(max_length=100)
     # color used for the worm in the game
@@ -30,14 +37,16 @@ class Player(models.Model):
 
     objects = PlayerManager()
 
-    # calculates the ante according to the given formula for a certain
-    # ante percentage and a pool point unlock
-    # returns a dictionary consisting of the ante, the new rp (without removing
-    # the ante) and the new pp
     def calculate_ante_percentage(self, percentage, pool_points):
+        """
+        Calculates the ante according to the given formula for a certain
+        ante percentage and a pool point unlock
+        returns a dictionary consisting of the ante, the new rp (without removing
+        the ante) and the new pp.
+        """
         rp = self.ranking_points
         pp = self.pool_points
-        if (pp != 0):
+        if pp != 0:
             rp = self.ranking_points + min(self.pool_points, pool_points)
             pp = pp - min(pp, pool_points)
         player_ante = round((rp ** 2) * 0.001 * (percentage * 0.01))
@@ -49,42 +58,53 @@ class Player(models.Model):
         tmp["pp"] = pp
         return tmp
 
-    # calculates the ante for a ranked match for this player
-    # returns a dictionary consisting of the ante, the new rp (without removing
-    # the ante) and the new pp
     def calculate_ranked_ante(self):
+        """
+        Calculates the ante for a ranked match for this player
+        returns a dictionary consisting of the ante, the new rp (without removing
+        the ante) and the new pp.
+        """
         return self.calculate_ante_percentage(2, 40)
 
-    # returns all games that the Player p participated in
     def all_games(self):
-        return PlayedGame.objects.all().filter(Q(player_left = self) |
-                                               Q(player_right = self))
+        """
+        Returns all games that the Player participated in
+        """
+        return PlayedGame.objects.all().filter(Q(player_left=self) |
+                                               Q(player_right=self))
 
-    # returns all games with this player that earned or lost them ranking points,
-    # in other words: ranked and tournament games, but not unranked games
     def ranked_and_tournament_games(self, since):
+        """
+        Returns all games with this player that earned or lost them ranking
+        points, in other words: ranked and tournament games, but not unranked
+        games.
+        """
         games = self.all_games().exclude(Q(ranked=False) &
                                          Q(tournament=None))
-        if (since != None):
+        if since != None:
             return games.filter(start_time__gt=since)
 
     def total_points(self):
+        """
+        Returns the sum of all points belonging to this player.
+        """
         return self.ranking_points + self.pool_points
 
     def __str__(self):
         return '%s' % (self.name)
 
-    def clean(self):
-        pass
-
     class Meta:
+        """
+        Meta class deciding ordering for this model.
+        """
         ordering = ['name']
-        pass
 
-# Describes a tournament. When initially created, it takes the ante from and
-# adds pool points to all players. When it is recorded as finished, "finished"
-# is set to True and it hands out the ante to the winners.
 class Tournament(models.Model):
+    """
+    Describes a tournament. When initially created, it takes the ante from and
+    adds pool points to all players. When it is recorded as finished, "finished"
+    is set to True and it hands out the ante to the winners.
+    """
     # when True, this tournament has ended and points from it have been recorded
     finished = models.BooleanField(default=False)
     # time and date when the tournament started
@@ -102,9 +122,11 @@ class Tournament(models.Model):
     # a written comment for this tournament
     comment = models.CharField(blank=True, max_length=100000)
 
-    # distributes points to all players in this tournament. It is an error to call this
-    # without finished being set to true
     def distribute_points(self):
+        """
+        Distributes points to all players in this tournament. It is an error
+        to call this without finished being set to true.
+        """
         # not allowed to distribute points for unfinished tournaments
         if not self.finished:
             raise ValueError
@@ -112,21 +134,28 @@ class Tournament(models.Model):
         for tpa in tpas:
             tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
             tpa.player.save()
-            points_changed = PointsChanged.objects.all().filter(tournament=self,
-                                                                player=tpa.player)[0]
+            pcs = PointsChanged.objects.all()
+            points_changed = pcs.filter(tournament=self, player=tpa.player)[0]
             points_changed.rp_after = tpa.player.ranking_points
             points_changed.save()
 
     def games(self):
+        """
+        Returns all played games in this tournament
+        """
         return PlayedGame.objects.all().filter(tournament=self)
 
     def winner(self):
-        try:
-            return TournamentPlacingAnte.objects.all().filter(tournament=self).filter(placing=1)[0].player
-        except:
-            return None
+        """
+        Returns the winner of this tournament, or None if there is no winner.
+        """
+        tpas = TournamentPlacingAnte.objects.all()
+        return tpas.filter(tournament=self).filter(placing=1)[0].player
 
     def tournament_placing_antes(self):
+        """
+        Returns all tournament placing antes belonging to this tournament
+        """
         return TournamentPlacingAnte.objects.all().filter(tournament=self)
 
     def __str__(self):
@@ -134,57 +163,10 @@ class Tournament(models.Model):
                                       self.start_time, self.ante,
                                       self.pool_points, self.total_ante)
 
-    def clean(self):
-        pass
-
-    class Meta:
-        pass
-
-# used for creating a new tournament
-class TournamentCreateForm(ModelForm):
-    class Meta:
-        model = Tournament
-        fields = (
-            'start_time',
-            'name',
-            'players',
-            'ante',
-            'pool_points',
-        )
-        labels = {
-            'start_time'   : _('Start time'),
-            'name'         : _('Name'),
-            'players'      : _('Players'),
-            'ante'         : _('Ante (in %)'),
-            'pool_points'  : _('Pool points unlocked'),
-        }
-        widgets = {
-            'start_time' : DateTimeWidget(usel10n=True,
-                                          bootstrap_version=3,
-                                          options={'format' : 'yyyy-mm-dd hh:ii',
-                                                   'weekStart' : '1'})
-        }
-    def __init__(self, *args, **kwargs):
-        super(ModelForm, self).__init__(*args, **kwargs)
-        self.fields['players'].queryset = Player.objects.active_players()
-
-# used for editing a tournament
-class TournamentEditForm(ModelForm):
-    class Meta:
-        model = Tournament
-        fields = (
-            'name',
-            'total_ante',
-            'finished',
-        )
-        labels = {
-            'name'         : _('Name'),
-            'total_ante'   : _('Total ante'),
-            'finished'     : _('Finished'),
-        }
-
-# this is the number of points given to each placing in a tournament
 class TournamentPlacingAnte(models.Model):
+    """
+    This is the number of points given to each placing in a tournament.
+    """
     # the tournament this ante belongs to
     tournament = models.ForeignKey(Tournament)
     # the placing it should be given to
@@ -198,59 +180,20 @@ class TournamentPlacingAnte(models.Model):
         return u'%s %s %s %s' % (self.tournament, self.placing, self.ante,
                                  self.player)
 
-    def clean(self):
-        pass
-
-    class Meta:
-        pass
-
-class TournamentPlacingAnteForm(ModelForm):
-    class Meta:
-        model = TournamentPlacingAnte
-        fields = (
-            'placing',
-            'ante',
-        )
-        labels = {
-            'placing' : _('Placing'),
-            'ante'    : _('Received ante'),
-        }
-
-TournamentPlacingAnteFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
-                                                       extra=1, can_delete=False,
-                                                       form=TournamentPlacingAnteForm)
-
-class TournamentPlacingAnteSubmitForm(ModelForm):
-    class Meta:
-        model = TournamentPlacingAnte
-        fields = (
-            'placing',
-            'ante',
-            'player'
-        )
-        labels = {
-            'placing' : _('Placing'),
-            'ante'    : _('Received ante'),
-            'player'  : _('Player'),
-        }
-    def __init__(self, *args, **kwargs):
-        available_players = kwargs.pop('available_players', None)
-        super(ModelForm, self).__init__(*args, **kwargs)
-
-        if available_players:
-            self.fields['player'].queryset = available_players
-
-TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
-                                        extra=0, can_delete=False,
-                                        form=TournamentPlacingAnteSubmitForm)
-
 class PlayedGameManager(models.Manager):
-    # the last game that was played
+    """
+    Manager for the PlayedGame class
+    """
     def last_game(self):
-        return PlayedGame.objects.all().order_by('start_time').reverse().first()
+        """
+        The last game that was played
+        """
+        return self.all().order_by('start_time').reverse().first()
 
-# records a played game
 class PlayedGame(models.Model):
+    """
+    Records a played game
+    """
     # the tournament this played game belongs to, if any
     tournament = models.ForeignKey(Tournament, null=True)
     # keeps track of whether this is a ranked game or not.
@@ -269,54 +212,20 @@ class PlayedGame(models.Model):
 
     objects = PlayedGameManager()
 
-    # returns all subgames played as a part of this game
     def subgames(self):
+        """
+        Returns all subgames played as a part of this game.
+        """
         return Subgame.objects.all().filter(parent=self)
 
     def __str__(self):
         return '%s %s vs %s, %s won' % (self.start_time, self.player_left,
                                         self.player_right, self.winner)
 
-    def clean(self):
-        pass
-
-    class Meta:
-        pass
-
-class PlayedGameForm(ModelForm):
-    class Meta:
-        model = PlayedGame
-        fields = (
-            'start_time',
-            'player_left',
-            'player_right',
-            'winner',
-            'ranked'
-        )
-        labels = {
-            'start_time'   : _('Start time'),
-            'player_left'  : _('Left player'),
-            'player_right' : _('Right player'),
-            'winner'       : _('Winner'),
-            'ranked'       : _('Ranked'),
-        }
-        widgets = {
-            'start_time' : DateTimeWidget(usel10n=True,
-                                          bootstrap_version=3,
-                                          options={'format' : 'yyyy-mm-dd hh:ii',
-                                                   'weekStart' : '1'})
-        }
-
-    def __init__(self, *args, **kwargs):
-        available_players = kwargs.pop('available_players', None)
-        super(ModelForm, self).__init__(*args, **kwargs)
-
-        if available_players:
-            self.fields['player_left'].queryset = available_players
-            self.fields['player_right'].queryset = available_players
-
-# a subgame to a game that has been played
 class Subgame(models.Model):
+    """
+    A subgame to a game that has been played
+    """
     # the game this belongs to
     parent = models.ForeignKey(PlayedGame)
     # the map that was played.
@@ -331,35 +240,11 @@ class Subgame(models.Model):
     def __str__(self):
         return u'%i - %i' % (self.pl_lives, self.pr_lives)
 
-    def clean(self):
-        pass
-
-    class Meta:
-        pass
-
-class SubgameForm(ModelForm):
-    class Meta:
-        model = Subgame
-        fields = (
-            'map_played',
-            'pl_lives',
-            'pr_lives',
-            'replay_file',
-        )
-
-        labels = {
-            'map_played'   : _('Map played'),
-            'pl_lives'     : _('Left player lives left'),
-            'pr_lives'     : _('Right player lives left'),
-            'replay_file'  : _('Replay file')
-        }
-
-SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1,
-                                       can_delete=False, form=SubgameForm)
-
-# Keeps track of how ranking points etc was changed for a player.
-# Used to keep track of before/after for games and tournaments
 class PointsChanged(models.Model):
+    """
+    Keeps track of how ranking points etc was changed for a player.
+    Used to keep track of before/after for games and tournaments.
+    """
     # the player this belongs to
     player = models.ForeignKey(Player)
     # the tournament this belongs to. Both this and game may
@@ -382,8 +267,3 @@ class PointsChanged(models.Model):
                                           self.game, self.rp_before,
                                           self.rp_after, self.pp_before,
                                           self.pp_after)
-    def clean(self):
-        pass
-
-    class Meta:
-        pass
