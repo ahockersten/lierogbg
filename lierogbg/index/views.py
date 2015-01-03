@@ -404,8 +404,8 @@ def update_total_ante(request):
             pool_points = int(request.POST['pool_points'])
             total_ante = 0
             for player in players:
-                total_ante = total_ante + player.calculate_ante_percentage(ante_percentage,
-                                                                           pool_points)["ante"]
+                total_ante = total_ante + player.calculate_ante_percentage(
+                   ante_percentage, pool_points)["ante"]
             return HttpResponse(str(total_ante))
         except ValueError:
             return HttpResponse('Error') # incorrect post
@@ -431,7 +431,9 @@ def get_players_list(request):
         active_only = data['active_only']
         print(all_time)
         if all_time == "True":
-            player_table = create_player_table(active_only, since=datetime.date(1970, 1, 1))
+            player_table = create_player_table(active_only,
+                                               since=datetime.date(1970,
+                                                                   1, 1))
         else:
             player_table = create_player_table(active_only)
         context = {
@@ -445,7 +447,8 @@ def error(request):
     return render(request, 'index/error.html')
 
 def internal_info(request):
-    total_ranking_points = sum(map(lambda p: p.total_points(), Player.objects.all()))
+    total_ranking_points = sum(map(lambda p: p.total_points(),
+                               Player.objects.all()))
     num_players = len(Player.objects.all())
     rp_per_player = total_ranking_points / num_players
     context = {
