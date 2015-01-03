@@ -28,18 +28,18 @@ class TestSimpleLookups(TestCase):
                                       ante=0, pool_points=0, total_ante=0,
                                       comment="")
         t.players.add(p1, p2)
-        tpa1 = TournamentPlacingAnte.objects.create(tournament=t, placing=1,
-                                                    ante=0, player=p1)
-        tpa2 = TournamentPlacingAnte.objects.create(tournament=t, placing=1,
-                                                    ante=0, player=p2)
+        TournamentPlacingAnte.objects.create(tournament=t, placing=1,
+                                             ante=0, player=p1)
+        TournamentPlacingAnte.objects.create(tournament=t, placing=1,
+                                             ante=0, player=p2)
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=p1, player_right=p2,
                                        winner=p1, comment="")
-        g2 = PlayedGame.objects.create(tournament=None, ranked=False,
-                                       start_time=timezone.now(),
-                                       player_left=p2, player_right=p1,
-                                       winner=p2, comment="")
+        PlayedGame.objects.create(tournament=None, ranked=False,
+                                  start_time=timezone.now(),
+                                  player_left=p2, player_right=p1,
+                                  winner=p2, comment="")
         g3 = PlayedGame.objects.create(tournament=t, ranked=False,
                                        start_time=timezone.now(),
                                        player_left=p2, player_right=p1,
@@ -52,26 +52,44 @@ class TestSimpleLookups(TestCase):
                                pr_lives=0, replay_file=None)
 
     def test_player_all_games(self):
+        """
+        all_games() works
+        """
         self.assertEqual(len(Player.objects.get(name="Foo Bar").all_games()),
                          3)
 
     def test_player_ranked_and_tournament_games(self):
+        """
+        ranked_and_tournament_games() works
+        """
         foobar = Player.objects.get(name="Foo Bar")
         self.assertEqual(len(foobar.ranked_and_tournament_games()), 2)
 
     def test_tournament_games(self):
+        """
+        games() for Tournament works
+        """
         self.assertEqual(len(Tournament.objects.get(name="Tourney").games()),
                          1)
 
     def test_tournament_winner(self):
+        """
+        Tournament winner is correct
+        """
         self.assertEqual(Tournament.objects.get(name="Tourney").winner(),
                          Player.objects.get(name="Foo Bar"))
 
     def test_find_tpas(self):
+        """
+        tournament_placing_antes() works
+        """
         tourney = Tournament.objects.get(name="Tourney")
         self.assertEqual(len(tourney.tournament_placing_antes()), 2)
 
     def test_subgames(self):
+        """
+        subgames() works
+        """
         g3 = Tournament.objects.get(name="Tourney").games()[0]
         self.assertEqual(len(g3.subgames()), 1)
 

@@ -1,12 +1,21 @@
+"""
+Custom forms
+"""
+# pylint: disable=bad-super-call
 from datetimewidget.widgets import DateTimeWidget
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from rankings import models
 
-# used for creating a new tournament
 class TournamentCreateForm(ModelForm):
+    """
+    Form used for creating a new tournament.
+    """
     class Meta:
+        """
+        Meta class for this form.
+        """
         model = models.Tournament
         fields = (
             'start_time',
@@ -30,11 +39,16 @@ class TournamentCreateForm(ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(ModelForm, self).__init__(*args, **kwargs)
-        self.fields['players'].queryset = Player.objects.active_players()
+        self.fields['players'].queryset = models.Player.objects.active_players()
 
-# used for editing a tournament
 class TournamentEditForm(ModelForm):
+    """
+    Form used for editing a new tournament.
+    """
     class Meta:
+        """
+        Meta class for this form.
+        """
         model = models.Tournament
         fields = (
             'name',
@@ -48,7 +62,13 @@ class TournamentEditForm(ModelForm):
         }
 
 class TournamentPlacingAnteForm(ModelForm):
+    """
+    Form used for describing a tournament placing ante.
+    """
     class Meta:
+        """
+        Meta class for this form.
+        """
         model = models.TournamentPlacingAnte
         fields = (
             'placing',
@@ -64,7 +84,13 @@ TournamentPlacingAnteFormSet = inlineformset_factory(
     can_delete=False, form=TournamentPlacingAnteForm)
 
 class TournamentPlacingAnteSubmitForm(ModelForm):
+    """
+    Form used for recording the result of a given tournament placing ante.
+    """
     class Meta:
+        """
+        Meta class for this form.
+        """
         model = models.TournamentPlacingAnte
         fields = (
             'placing',
@@ -88,7 +114,13 @@ TournamentPlacingAnteSubmitFormSet = inlineformset_factory(
     can_delete=False, form=TournamentPlacingAnteSubmitForm)
 
 class SubgameForm(ModelForm):
+    """
+    Used for entering a Subgame.
+    """
     class Meta:
+        """
+        Meta class for this form.
+        """
         model = models.Subgame
         fields = (
             'map_played',
@@ -109,7 +141,13 @@ SubgameFormSet = inlineformset_factory(models.PlayedGame, models.Subgame,
                                        form=SubgameForm)
 
 class PlayedGameForm(ModelForm):
+    """
+    Used for entering results of a played game.
+    """
     class Meta:
+        """
+        Meta class for this form.
+        """
         model = models.PlayedGame
         fields = (
             'start_time',

@@ -1,7 +1,10 @@
+"""
+URLs for rankings
+"""
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
-   'rankings.views',
+    'rankings.views',
     url(r'^add_game\/$', 'add_game', name="add_game"),
     url(r'^add_tournament\/$', 'add_tournament', name="add_tournament"),
     url(r'^edit_tournament\/(?P<tournament_id>.*)', 'edit_tournament', name='edit_tournament'),

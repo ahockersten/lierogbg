@@ -1,9 +1,15 @@
+"""
+Custom form fields
+"""
 import re
 from django import forms
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 class ColorFormField(forms.IntegerField):
+    """
+    A form field for describing a color as hex.
+    """
     default_error_messages = {
         'invalid': _('Enter a valid Color value: e.g. "#ff0022"'),
     }
@@ -20,8 +26,10 @@ class ColorFormField(forms.IntegerField):
         super(ColorFormField, self).clean(value)
         return value
 
-# used to enter a color as a hex value
 class ColorField(models.PositiveIntegerField):
+    """
+    A field for entering a color as hex.
+    """
     description = _("Hex value for a color")
 
     def __init__(self, *args, **kwargs):

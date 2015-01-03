@@ -1,11 +1,19 @@
+"""
+Models used in the rankings
+"""
 from django.db import models
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
 from rankings import fields
 
 class PlayerManager(models.Manager):
+    """
+    Model manager for Player.
+    """
     def active_players(self):
-        return Player.objects.all().filter(active=True)
+        """
+        Returns all active players.
+        """
+        return self.all().filter(active=True)
 
 class Player(models.Model):
     """
@@ -38,7 +46,7 @@ class Player(models.Model):
         """
         rp = self.ranking_points
         pp = self.pool_points
-        if (pp != 0):
+        if pp != 0:
             rp = self.ranking_points + min(self.pool_points, pool_points)
             pp = pp - min(pp, pool_points)
         player_ante = round((rp ** 2) * 0.001 * (percentage * 0.01))
@@ -62,8 +70,8 @@ class Player(models.Model):
         """
         Returns all games that the Player participated in
         """
-        return PlayedGame.objects.all().filter(Q(player_left = self) |
-                                               Q(player_right = self))
+        return PlayedGame.objects.all().filter(Q(player_left=self) |
+                                               Q(player_right=self))
 
     def ranked_and_tournament_games(self, since):
         """
@@ -73,21 +81,23 @@ class Player(models.Model):
         """
         games = self.all_games().exclude(Q(ranked=False) &
                                          Q(tournament=None))
-        if (since != None):
+        if since != None:
             return games.filter(start_time__gt=since)
 
     def total_points(self):
+        """
+        Returns the sum of all points belonging to this player.
+        """
         return self.ranking_points + self.pool_points
 
     def __str__(self):
         return '%s' % (self.name)
 
-    def clean(self):
-        pass
-
     class Meta:
+        """
+        Meta class deciding ordering for this model.
+        """
         ordering = ['name']
-        pass
 
 class Tournament(models.Model):
     """
@@ -124,30 +134,34 @@ class Tournament(models.Model):
         for tpa in tpas:
             tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
             tpa.player.save()
-            points_changed = PointsChanged.objects.all().filter(tournament=self,
-                                                                player=tpa.player)[0]
+            pcs = PointsChanged.objects.all()
+            points_changed = pcs.filter(tournament=self, player=tpa.player)[0]
             points_changed.rp_after = tpa.player.ranking_points
             points_changed.save()
 
     def games(self):
+        """
+        Returns all played games in this tournament
+        """
         return PlayedGame.objects.all().filter(tournament=self)
 
     def winner(self):
-        try:
-            return TournamentPlacingAnte.objects.all().filter(tournament=self).filter(placing=1)[0].player
-        except:
-            return None
+        """
+        Returns the winner of this tournament, or None if there is no winner.
+        """
+        tpas = TournamentPlacingAnte.objects.all()
+        return tpas.filter(tournament=self).filter(placing=1)[0].player
 
     def tournament_placing_antes(self):
+        """
+        Returns all tournament placing antes belonging to this tournament
+        """
         return TournamentPlacingAnte.objects.all().filter(tournament=self)
 
     def __str__(self):
         return '%s_%s_%s_%s_%s_%s' % (self.name, self.finished,
                                       self.start_time, self.ante,
                                       self.pool_points, self.total_ante)
-
-    def clean(self):
-        pass
 
 class TournamentPlacingAnte(models.Model):
     """
@@ -166,15 +180,15 @@ class TournamentPlacingAnte(models.Model):
         return u'%s %s %s %s' % (self.tournament, self.placing, self.ante,
                                  self.player)
 
-    def clean(self):
-        pass
-
 class PlayedGameManager(models.Manager):
+    """
+    Manager for the PlayedGame class
+    """
     def last_game(self):
         """
         The last game that was played
         """
-        return PlayedGame.objects.all().order_by('start_time').reverse().first()
+        return self.all().order_by('start_time').reverse().first()
 
 class PlayedGame(models.Model):
     """
@@ -198,19 +212,15 @@ class PlayedGame(models.Model):
 
     objects = PlayedGameManager()
 
-    # returns all subgames played as a part of this game
     def subgames(self):
+        """
+        Returns all subgames played as a part of this game.
+        """
         return Subgame.objects.all().filter(parent=self)
 
     def __str__(self):
         return '%s %s vs %s, %s won' % (self.start_time, self.player_left,
                                         self.player_right, self.winner)
-
-    def clean(self):
-        pass
-
-    class Meta:
-        pass
 
 class Subgame(models.Model):
     """
@@ -229,9 +239,6 @@ class Subgame(models.Model):
 
     def __str__(self):
         return u'%i - %i' % (self.pl_lives, self.pr_lives)
-
-    def clean(self):
-        pass
 
 class PointsChanged(models.Model):
     """
@@ -260,5 +267,3 @@ class PointsChanged(models.Model):
                                           self.game, self.rp_before,
                                           self.rp_after, self.pp_before,
                                           self.pp_after)
-    def clean(self):
-        pass
