@@ -15,13 +15,11 @@ Installing LESS
 Installing dependencies for the virtual environment
 ---------------------------------------------------
 
-* First, install pyenv and if you don't have it
+* First, install pyenv if you don't have it
 * $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 * Setup your shell as directed by the installer
 * Install latest Python
 * $ pyenv install 3.4.2
-* Install pyenv-virtualenv, if it was not installed by the above (mine was?)
-* $ git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 
 Setting up the virtual environment
 ----------------------------------
