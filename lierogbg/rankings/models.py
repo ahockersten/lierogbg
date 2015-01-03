@@ -1,8 +1,5 @@
-from datetimewidget.widgets import DateTimeWidget
 from django.db import models
 from django.db.models import Q
-from django.forms import ModelForm
-from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from rankings import fields
 
@@ -140,49 +137,6 @@ class Tournament(models.Model):
     class Meta:
         pass
 
-# used for creating a new tournament
-class TournamentCreateForm(ModelForm):
-    class Meta:
-        model = Tournament
-        fields = (
-            'start_time',
-            'name',
-            'players',
-            'ante',
-            'pool_points',
-        )
-        labels = {
-            'start_time'   : _('Start time'),
-            'name'         : _('Name'),
-            'players'      : _('Players'),
-            'ante'         : _('Ante (in %)'),
-            'pool_points'  : _('Pool points unlocked'),
-        }
-        widgets = {
-            'start_time' : DateTimeWidget(usel10n=True,
-                                          bootstrap_version=3,
-                                          options={'format' : 'yyyy-mm-dd hh:ii',
-                                                   'weekStart' : '1'})
-        }
-    def __init__(self, *args, **kwargs):
-        super(ModelForm, self).__init__(*args, **kwargs)
-        self.fields['players'].queryset = Player.objects.active_players()
-
-# used for editing a tournament
-class TournamentEditForm(ModelForm):
-    class Meta:
-        model = Tournament
-        fields = (
-            'name',
-            'total_ante',
-            'finished',
-        )
-        labels = {
-            'name'         : _('Name'),
-            'total_ante'   : _('Total ante'),
-            'finished'     : _('Finished'),
-        }
-
 # this is the number of points given to each placing in a tournament
 class TournamentPlacingAnte(models.Model):
     # the tournament this ante belongs to
@@ -203,46 +157,6 @@ class TournamentPlacingAnte(models.Model):
 
     class Meta:
         pass
-
-class TournamentPlacingAnteForm(ModelForm):
-    class Meta:
-        model = TournamentPlacingAnte
-        fields = (
-            'placing',
-            'ante',
-        )
-        labels = {
-            'placing' : _('Placing'),
-            'ante'    : _('Received ante'),
-        }
-
-TournamentPlacingAnteFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
-                                                       extra=1, can_delete=False,
-                                                       form=TournamentPlacingAnteForm)
-
-class TournamentPlacingAnteSubmitForm(ModelForm):
-    class Meta:
-        model = TournamentPlacingAnte
-        fields = (
-            'placing',
-            'ante',
-            'player'
-        )
-        labels = {
-            'placing' : _('Placing'),
-            'ante'    : _('Received ante'),
-            'player'  : _('Player'),
-        }
-    def __init__(self, *args, **kwargs):
-        available_players = kwargs.pop('available_players', None)
-        super(ModelForm, self).__init__(*args, **kwargs)
-
-        if available_players:
-            self.fields['player'].queryset = available_players
-
-TournamentPlacingAnteSubmitFormSet = inlineformset_factory(Tournament, TournamentPlacingAnte,
-                                        extra=0, can_delete=False,
-                                        form=TournamentPlacingAnteSubmitForm)
 
 class PlayedGameManager(models.Manager):
     # the last game that was played
@@ -283,38 +197,6 @@ class PlayedGame(models.Model):
     class Meta:
         pass
 
-class PlayedGameForm(ModelForm):
-    class Meta:
-        model = PlayedGame
-        fields = (
-            'start_time',
-            'player_left',
-            'player_right',
-            'winner',
-            'ranked'
-        )
-        labels = {
-            'start_time'   : _('Start time'),
-            'player_left'  : _('Left player'),
-            'player_right' : _('Right player'),
-            'winner'       : _('Winner'),
-            'ranked'       : _('Ranked'),
-        }
-        widgets = {
-            'start_time' : DateTimeWidget(usel10n=True,
-                                          bootstrap_version=3,
-                                          options={'format' : 'yyyy-mm-dd hh:ii',
-                                                   'weekStart' : '1'})
-        }
-
-    def __init__(self, *args, **kwargs):
-        available_players = kwargs.pop('available_players', None)
-        super(ModelForm, self).__init__(*args, **kwargs)
-
-        if available_players:
-            self.fields['player_left'].queryset = available_players
-            self.fields['player_right'].queryset = available_players
-
 # a subgame to a game that has been played
 class Subgame(models.Model):
     # the game this belongs to
@@ -336,26 +218,6 @@ class Subgame(models.Model):
 
     class Meta:
         pass
-
-class SubgameForm(ModelForm):
-    class Meta:
-        model = Subgame
-        fields = (
-            'map_played',
-            'pl_lives',
-            'pr_lives',
-            'replay_file',
-        )
-
-        labels = {
-            'map_played'   : _('Map played'),
-            'pl_lives'     : _('Left player lives left'),
-            'pr_lives'     : _('Right player lives left'),
-            'replay_file'  : _('Replay file')
-        }
-
-SubgameFormSet = inlineformset_factory(PlayedGame, Subgame, max_num=10, extra=1,
-                                       can_delete=False, form=SubgameForm)
 
 # Keeps track of how ranking points etc was changed for a player.
 # Used to keep track of before/after for games and tournaments
