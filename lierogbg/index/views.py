@@ -431,7 +431,6 @@ def get_players_list(request):
         active_only = data['active_only']
         print(all_time)
         if all_time == "True":
-            print("all time")
             player_table = create_player_table(active_only, since=datetime.date(1970, 1, 1))
         else:
             player_table = create_player_table(active_only)
