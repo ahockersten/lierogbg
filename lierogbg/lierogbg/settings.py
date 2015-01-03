@@ -7,7 +7,7 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
