@@ -75,7 +75,7 @@ function init() {
         });
     });
     $('#id-show-all-results-btn').click(function() {
-        var data = {'games' : $('id_list_games').data('current-match'),
+        var data = {'games' : $('#id_list_games').data('current-match'),
                     'show_all' : 'True'};
         $.ajax({
             type: "GET",
@@ -86,6 +86,7 @@ function init() {
                 $('#id-show-all-results-btn').hide();
                 $("#id_list_games").replaceWith(data);
                 init();
+                update_images();
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Please report this error: " + errorThrown + xhr.status +
