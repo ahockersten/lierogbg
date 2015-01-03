@@ -1,5 +1,9 @@
+"""
+Admin model declarations
+"""
 from django.contrib import admin
-from index.models import Player, PlayedGame, Subgame, Tournament, TournamentPlacingAnte, PointsChanged
+from rankings.models import Player, PlayedGame, Subgame, Tournament
+from rankings.models import TournamentPlacingAnte, PointsChanged
 
 class PlayerAdmin(admin.ModelAdmin):
     pass

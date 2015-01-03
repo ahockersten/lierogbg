@@ -64,15 +64,12 @@ for your installation.
 * $ pip install -r requirements.txt
 
 For every update, run these commands:
+* $ export PYENV_ROOT="/var/www/lierogbg/pyenv"
+* $ export PATH="$PYENV_ROOT/bin:$PATH"
+* $ eval "$(pyenv init -)"
+* $ eval "$(pyenv virtualenv-init -)"
+* $ pyenv activate lierogbg-env
 * $ make
 * $ cd lierogbg
 * $ ./manage.py collectstatic
 * $ sudo service apache2 reload
-
-LieroGBG is now ready to run as per normal django deployment instructions.
-
-How to test developer builds
-============
-* $ make
-* $ cd lierogbg
-* $ ./manage.py runserver

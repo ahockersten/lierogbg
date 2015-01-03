@@ -7,22 +7,22 @@
 {% if user.is_authenticated %}
     <ul class="nav nav-pills navbar-left">
         <li id="add_game" >
-            <a href="{% url 'index.views.add_game' %}">{% trans "Add match" %}</a>
+            <a href="{% url 'rankings.views.add_game' %}">{% trans "Add match" %}</a>
         </li>
         <li id="add_tournament">
-            <a href="{% url 'index.views.add_tournament' %}">{% trans "Add tournament" %}</a>
+            <a href="{% url 'rankings.views.add_tournament' %}">{% trans "Add tournament" %}</a>
         </li>
     </ul>
 {% endif %}
 <ul class="nav nav-pills navbar-right">
     <li id="ranking" >
-            <a href="{% url 'index.views.ranking' %}">{% trans "Ranking" %}</a>
+            <a href="{% url 'rankings.views.ranking' %}">{% trans "Ranking" %}</a>
     </li>
     <li id="games" >
-            <a href="{% url 'index.views.games' %}">{% trans "Matches" %}</a>
+            <a href="{% url 'rankings.views.games' %}">{% trans "Matches" %}</a>
     </li>
     <li id="tournaments" >
-            <a href="{% url 'index.views.tournaments' %}">{% trans "Tournaments" %}</a>
+            <a href="{% url 'rankings.views.tournaments' %}">{% trans "Tournaments" %}</a>
     </li>
 </ul>
 {% endblock %}
@@ -80,7 +80,7 @@ $(document).ready(function () {
         var id_regex = new RegExp('id_tournament_(\\d+)');
         var replacement = "$1";
         var replaced = tournament_key.replace(id_regex, replacement);
-        window.location.href = {% url 'index.views.edit_tournament' '' %} + replaced;
+        window.location.href = {% url 'rankings.views.edit_tournament' '' %} + replaced;
     });
 
     $(".tournament_view_link").click(function() {
@@ -88,7 +88,7 @@ $(document).ready(function () {
         var id_regex = new RegExp('id_tournament_(\\d+)');
         var replacement = "$1";
         var replaced = tournament_key.replace(id_regex, replacement);
-        window.location.href = {% url 'index.views.view_tournament' '' %} + replaced;
+        window.location.href = {% url 'rankings.views.view_tournament' '' %} + replaced;
     });
 });
 </script>

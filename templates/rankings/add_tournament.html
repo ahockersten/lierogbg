@@ -9,7 +9,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-        <form action="{% url 'index.views.submit_tournament' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+        <form action="{% url 'rankings.views.submit_tournament' %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
             {% csrf_token %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -157,7 +157,7 @@ $(document).ready(function () {
         $("#id_ante, #id_players, #id_pool_points, .placing_ante").change(function() {
             $.ajax({
                 type: "POST",
-                url: "{% url 'index.views.update_total_ante' %}",
+                url: "{% url 'rankings.views.update_total_ante' %}",
                 traditional: true,
                 data: {
                     csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,

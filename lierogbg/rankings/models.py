@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
-from index import fields
+from rankings import fields
 
 class PlayerManager(models.Manager):
     def active_players(self):

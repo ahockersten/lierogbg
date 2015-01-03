@@ -11,7 +11,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-        <form action="{% url 'index.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+        <form action="{% url 'rankings.views.save_tournament' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
             {% csrf_token %}
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -61,7 +61,7 @@
                     {% trans "Matches played" %}
                 </div>
                 <div class="panel-body">
-                    {% include 'index/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
+                    {% include 'rankings/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
                 </div>
             </div>
             <div class="panel panel-success">
@@ -114,9 +114,9 @@
                 {% trans "Add match" %}
             </div>
             <div class="panel-body collapse" id="add_game_body">
-                <form action="{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
+                <form action="{% url 'rankings.views.submit_game' tournament_extra_data.tournament_pk %}" enctype="multipart/form-data" method="post" role="form" class="form-horizontal" id="id_add_game_form">
                     {% csrf_token %}
-                    {% include 'index/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=False %}
+                    {% include 'rankings/includes/add_game_form_contents.html' with played_game_form=played_game_form subgame_formset=subgame_formset show_ranked=False %}
                     <div class="row">
                         <div class="col-xs-12">
                             <button id="id_add_game_btn" type="submit" class="btn btn-success">{% trans "Add match" %}</button>
@@ -144,7 +144,7 @@ $(document).ready(function () {
     function update_games_played() {
         $.ajax({
             type: "GET",
-            url: "{% url 'index.views.get_games_list' tournament_extra_data.tournament_pk %}",
+            url: "{% url 'rankings.views.get_games_list' tournament_extra_data.tournament_pk %}",
             traditional: true,
             success: function(data) {
                 $("#id_list_games_table").replaceWith(data);
@@ -163,7 +163,7 @@ $(document).ready(function () {
     $("#id_add_game_btn").click(function() {
         $.ajax({
             type: "POST",
-            url: "{% url 'index.views.submit_game' tournament_extra_data.tournament_pk %}",
+            url: "{% url 'rankings.views.submit_game' tournament_extra_data.tournament_pk %}",
             traditional: true,
             data: $("#id_add_game_form").serialize(),
             success: function(data) {

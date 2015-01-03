@@ -1,5 +1,5 @@
 """
-Views for the accounts app. These views will handle login, logout and
+Views for the accounts app. These views handle login, logout and
 authentication.
 """
 
@@ -26,7 +26,7 @@ def authenticate(request):
     if user is not None:
         if user.is_active:
             auth.login(request, user)
-            return redirect('index.views.ranking')
+            return redirect('rankings.views.ranking')
         else:
             context = {
                 'error_msg' : _('User disabled')
@@ -50,7 +50,7 @@ def login(request):
     if request.GET.get('next'):
         next_view = request.GET['next']
     else:
-        next_view = 'index.views.ranking'
+        next_view = 'rankings.views.ranking'
 
     if request.user.is_authenticated():
         return redirect(next_view)
@@ -70,5 +70,5 @@ def logout(request):
         # Logout
         auth.logout(request)
 
-    return redirect('index.views.ranking')
+    return redirect('rankings.views.ranking')
 
