@@ -73,11 +73,3 @@ For every update, run these commands:
 * $ cd lierogbg
 * $ ./manage.py collectstatic
 * $ sudo service apache2 reload
-
-LieroGBG is now ready to run as per normal django deployment instructions.
-
-How to test developer builds
-============
-* $ make
-* $ cd lierogbg
-* $ ./manage.py runserver
