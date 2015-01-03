@@ -160,7 +160,6 @@ INSTALLED_APPS = (
     'about',
     'maps',
     'rankings',
-    'replays',
     'rules',
 
     # debugging panel and toolbar (automatically disabled when DEBUG=False)
