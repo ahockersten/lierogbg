@@ -62,9 +62,11 @@ class Player(models.Model):
 
     # returns all games with this player that earned or lost them ranking points,
     # in other words: ranked and tournament games, but not unranked games
-    def ranked_and_tournament_games(self):
-        return self.all_games().exclude(Q(ranked=False) &
-                                        Q(tournament=None))
+    def ranked_and_tournament_games(self, since):
+        games = self.all_games().exclude(Q(ranked=False) &
+                                         Q(tournament=None))
+        if (since != None):
+            return games.filter(start_time__gt=since)
 
     def total_points(self):
         return self.ranking_points + self.pool_points

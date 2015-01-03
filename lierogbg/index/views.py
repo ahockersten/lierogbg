@@ -3,6 +3,8 @@
 # @file views.py
 #
 
+import datetime
+import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
@@ -38,7 +40,8 @@ def ranking(request, active_only):
 
     return render(request, 'index/ranking.html', context)
 
-def create_player_table(active_only):
+def create_player_table(active_only,
+        since=datetime.datetime(datetime.datetime.today().year, 1, 1)):
     shown_players = Player.objects.active_players() if active_only == 'True' else Player.objects.all()
     player_list = shown_players.order_by('ranking_points').reverse()
     players = []
@@ -47,7 +50,8 @@ def create_player_table(active_only):
         tmp = {}
         tmp["player"] = p
         tmp["current_rank"] = current_rank
-        ranked_and_tournament_games = p.ranked_and_tournament_games()
+        ranked_and_tournament_games = p.ranked_and_tournament_games(
+                                          since=since)
         tmp["round_wins"] = 0
         tmp["round_losses"] = 0
         tmp["round_ties"] = 0
@@ -419,10 +423,20 @@ def get_games_list(request, tournament_id):
     else:
         raise Http404
 
-def get_players_list(request, active_only):
+def get_players_list(request):
     if request.is_ajax():
+        str_body = request.body.decode('utf-8')
+        data = json.loads(str_body)
+        all_time = data['all_time']
+        active_only = data['active_only']
+        print(all_time)
+        if all_time == "True":
+            print("all time")
+            player_table = create_player_table(active_only, since=datetime.date(1970, 1, 1))
+        else:
+            player_table = create_player_table(active_only)
         context = {
-            'players' : create_player_table(active_only)
+            'players' : player_table,
         }
         return render(request, 'index/includes/list_players.html', context)
     else:
