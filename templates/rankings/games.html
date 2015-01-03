@@ -32,7 +32,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-        {% include 'rankings/includes/list_games_hidden.html' with games=games full=True %}
+        {% include 'rankings/includes/list_games_hidden.html' with games=games next_match=next_match prev_match=prev_match current_match=current_match full=True %}
     </div>
     <div class="col-xs-12">
         {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
@@ -45,7 +45,7 @@
     <script src="{% static timeago_static %}" type="text/javascript"></script>
 {% endwith %}
 <script type="text/javascript">
-$(document).ready(function() {
+function init() {
     $('.btn').button();
     $('.show-result-btn').click(function() {
         $(".game-" + $(this).data('game-id') + "-hide-result").each(function() {
@@ -75,14 +75,53 @@ $(document).ready(function() {
         });
     });
     $('#id-show-all-results-btn').click(function() {
+        var data = {'games' : $('id_list_games').data('current-match'),
+                    'show_all' : 'True'};
         $.ajax({
             type: "GET",
             url: "{% url 'rankings.views.get_games_list' %}",
             traditional: true,
-            data: [],
+            data: data,
             success: function(data) {
                 $('#id-show-all-results-btn').hide();
                 $("#id_list_games").replaceWith(data);
+                init();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Please report this error: " + errorThrown + xhr.status +
+                      xhr.responseText);
+        }});
+    });
+    $('#id-prev-match').click(function() {
+        var data = {'games' : $(this).data('prev-match'),
+                    'show_all' : $("#id_list_games").data('show-all')};
+        $.ajax({
+            type: "GET",
+            url: "{% url 'rankings.views.get_games_list' %}",
+            traditional: true,
+            data: data,
+            success: function(data) {
+                $("#id_list_games").replaceWith(data);
+                init();
+                update_images();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Please report this error: " + errorThrown + xhr.status +
+                      xhr.responseText);
+        }});
+    });
+    $('#id-next-match').click(function() {
+        var data = {'games' : $(this).data('next-match'),
+                    'show_all' : $("#id_list_games").data('show-all')};
+        $.ajax({
+            type: "GET",
+            url: "{% url 'rankings.views.get_games_list' %}",
+            traditional: true,
+            data: data,
+            success: function(data) {
+                $("#id_list_games").replaceWith(data);
+                init();
+                update_images();
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Please report this error: " + errorThrown + xhr.status +
@@ -90,6 +129,10 @@ $(document).ready(function() {
         }});
     });
     $(".timeago").timeago();
+}
+
+$(document).ready(function() {
+    init();
 });
 </script>
 {% endblock %}
