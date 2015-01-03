@@ -32,7 +32,7 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-12">
-    {% include 'rankings/includes/list_games.html' with games=games full=True %}
+        {% include 'rankings/includes/list_games_hidden.html' with games=games full=True %}
     </div>
     <div class="col-xs-12">
         {% trans 'The last match was played ' %}<time class="timeago" datetime="{{ last_game_time }}"></time>
@@ -46,6 +46,34 @@
 {% endwith %}
 <script type="text/javascript">
 $(document).ready(function() {
+    $('.btn').button();
+    $('.show-result-btn').click(function() {
+        $(".game-" + $(this).data('game-id') + "-hide-result").each(function() {
+            $(this).hide();
+        });
+        $(".game-" + $(this).data('game-id') + "-show-result").each(function() {
+            $(this).show();
+        });
+    });
+    $('.show-result-btn').each(function() {
+        $(".game-" + $(this).data('game-id') + "-show-result").each(function() {
+            $(this).hide();
+        });
+    });
+
+    $('.show-subgame-result-btn').click(function() {
+        $(".subgame-" + $(this).data('subgame-id') + "-show-result").each(function() {
+            $(this).show();
+        });
+        $(".subgame-" + $(this).data('subgame-id') + "-hide-result").each(function() {
+            $(this).hide();
+        });
+    });
+    $('.show-subgame-result-btn').each(function() {
+        $(".subgame-" + $(this).data('subgame-id') + "-show-result").each(function() {
+            $(this).hide();
+        });
+    });
     $(".timeago").timeago();
 });
 </script>
