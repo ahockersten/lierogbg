@@ -8,7 +8,9 @@ from django.test import TestCase
 from django.test import Client, TestCase, RequestFactory
 from rankings.models import Player, Tournament, TournamentPlacingAnte
 from rankings.models import PlayedGame, Subgame, PointsChanged
+from rankings.views import add_tournament
 from rankings.views import create_player_table, games, ranking
+from rankings.views import create_tournament_table, tournaments
 
 class TestViews(TestCase):
     """
@@ -30,15 +32,16 @@ class TestViews(TestCase):
                                    real_name="", ranking_points=1500,
                                    pool_points=0, active=False,
                                    comment="")
-        t = Tournament.objects.create(finished=True,
-                                      start_time=timezone.now(),
-                                      name="Tourney",
-                                      ante=0, pool_points=0, total_ante=0,
-                                      comment="")
-        t.players.add(p1, p2)
-        TournamentPlacingAnte.objects.create(tournament=t, placing=1,
+        self.t = Tournament.objects.create(finished=True,
+                                           start_time=timezone.now(),
+                                           name="Tourney",
+                                           ante=0, pool_points=0,
+                                           total_ante=0,
+                                           comment="")
+        self.t.players.add(p1, p2)
+        TournamentPlacingAnte.objects.create(tournament=self.t, placing=1,
                                              ante=0, player=p1)
-        TournamentPlacingAnte.objects.create(tournament=t, placing=2,
+        TournamentPlacingAnte.objects.create(tournament=self.t, placing=2,
                                              ante=0, player=p2)
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
@@ -48,7 +51,7 @@ class TestViews(TestCase):
                                   start_time=timezone.now(),
                                   player_left=p2, player_right=p1,
                                   winner=p2, comment="")
-        g3 = PlayedGame.objects.create(tournament=t, ranked=False,
+        g3 = PlayedGame.objects.create(tournament=self.t, ranked=False,
                                        start_time=timezone.now(),
                                        player_left=p2, player_right=p1,
                                        winner=p2, comment="")
@@ -101,6 +104,50 @@ class TestViews(TestCase):
 
         response = games(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_create_tournament_table(self):
+        """
+        Tests create_tournament_table()
+        """
+
+        tournament_table = create_tournament_table()
+        self.assertEquals(tournament_table[0]['pk'], self.t.pk)
+        self.assertEquals(tournament_table[0]['start_time'], self.t.start_time)
+        self.assertEquals(tournament_table[0]['name'], self.t.name)
+        self.assertEquals(tournament_table[0]['winner'], self.t.winner())
+        self.assertEquals(tournament_table[0]['players'],
+                          len(self.t.players.all()))
+        self.assertEquals(tournament_table[0]['games'], len(self.t.games()))
+        self.assertEquals(tournament_table[0]['ante'], self.t.ante)
+        self.assertEquals(tournament_table[0]['total_ante'],
+                          self.t.total_ante)
+        self.assertEquals(tournament_table[0]['finished'], self.t.finished)
+
+    def test_tournaments(self):
+        """
+        Tests the tournaments() output
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+
+        response = tournaments(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_add_tournament(self):
+        """
+        Tests the add_tournament view
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+
+        response = add_tournament(request)
+        self.assertEqual(response.status_code, 302)
+
+        request.user = self.user
+
+        response = add_tournament(request)
+        self.assertEqual(response.status_code, 200)
+
 
 class TestViewsNormalMatches(TestCase):
     """
