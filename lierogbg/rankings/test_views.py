@@ -32,44 +32,77 @@ class TestViews(TestCase):
                                    real_name="", ranking_points=1500,
                                    pool_points=0, active=True,
                                    comment="")
-        p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=False,
-                                   comment="")
+        # an inactive player
+        self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
+                                       real_name="", ranking_points=1500,
+                                       pool_points=0, active=False,
+                                       comment="")
+        # an inactive player
+        self.p4 = Player.objects.create(name="Bar Foo", color="#00FFFF",
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=False,
+                                        comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
                                            name="Tourney",
                                            ante=0, pool_points=0,
                                            total_ante=0,
                                            comment="")
+        self.t2 = Tournament.objects.create(finished=True,
+                                            start_time=timezone.now(),
+                                            name="Tourney",
+                                            ante=0, pool_points=0,
+                                            total_ante=0,
+                                            comment="")
         self.t.players.add(self.p1, self.p2)
-        self.tpa1 = TournamentPlacingAnte.objects.create(tournament=self.t,
-                                                         placing=1,
-                                                         ante=90,
-                                                         player=self.p1)
-        self.tpa2 = TournamentPlacingAnte.objects.create(tournament=self.t,
-                                                         placing=2,
-                                                         ante=10,
-                                                         player=self.p2)
+        self.tpa11 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=1,
+                                                          ante=90,
+                                                          player=self.p1)
+        self.tpa12 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=2,
+                                                          ante=10,
+                                                          player=self.p2)
+        self.t2.players.add(self.p2, self.p3)
+        self.tpa21 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=1,
+                                                          ante=40,
+                                                          player=self.p2)
+        self.tpa22 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=2,
+                                                          ante=10,
+                                                          player=self.p3)
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=self.p1,
                                        player_right=self.p2,
                                        winner=self.p1, comment="")
-        PlayedGame.objects.create(tournament=None, ranked=True,
-                                  start_time=timezone.now(),
-                                  player_left=self.p2, player_right=self.p1,
-                                  winner=self.p2, comment="")
-        g3 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+        g2 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
-                                       player_left=self.p2,
-                                       player_right=self.p1,
+                                       player_left=self.p2, player_right=self.p1,
                                        winner=self.p2, comment="")
+        # played between two inactive players
+        g3 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p3, player_right=self.p4,
+                                       winner=self.p4, comment="")
+        tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                        start_time=timezone.now(),
+                                        player_left=self.p2,
+                                        player_right=self.p1,
+                                        winner=self.p1, comment="")
+        tg2 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                        start_time=timezone.now(),
+                                        player_left=self.p2,
+                                        player_right=self.p3,
+                                        winner=self.p2, comment="")
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
-                               pr_lives=3, replay_file=None)
-        Subgame.objects.create(parent=g3, map_played="", pl_lives=0,
+                               pr_lives=2, replay_file=None)
+        Subgame.objects.create(parent=tg1, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=tg2, map_played="", pl_lives=2,
                                pr_lives=0, replay_file=None)
 
         # Every test needs access to the request factory.
@@ -97,13 +130,14 @@ class TestViews(TestCase):
         """
         active_players = create_player_table(active_only='True')
         self.assertEqual(len(active_players), 2)
-        self.assertEqual(active_players[0]['games'], 3)
+        self.assertEqual(active_players[0]['games'], 4)
         self.assertEqual(active_players[1]['games'], 3)
         all_players = create_player_table(active_only='False')
-        self.assertEqual(len(all_players), 3)
-        self.assertEqual(all_players[0]['games'], 3)
-        self.assertEqual(all_players[1]['games'], 0)
+        self.assertEqual(len(all_players), 4)
+        self.assertEqual(all_players[0]['games'], 4)
+        self.assertEqual(all_players[1]['games'], 2)
         self.assertEqual(all_players[2]['games'], 3)
+        self.assertEqual(all_players[3]['games'], 1)
 
     def test_games(self):
         """
@@ -121,17 +155,29 @@ class TestViews(TestCase):
         """
 
         tournament_table = create_tournament_table()
-        self.assertEquals(tournament_table[0]['pk'], self.t.pk)
-        self.assertEquals(tournament_table[0]['start_time'], self.t.start_time)
-        self.assertEquals(tournament_table[0]['name'], self.t.name)
-        self.assertEquals(tournament_table[0]['winner'], self.t.winner())
-        self.assertEquals(tournament_table[0]['players'],
+        self.assertEquals(tournament_table[1]['pk'], self.t.pk)
+        self.assertEquals(tournament_table[1]['start_time'], self.t.start_time)
+        self.assertEquals(tournament_table[1]['name'], self.t.name)
+        self.assertEquals(tournament_table[1]['winner'], self.t.winner())
+        self.assertEquals(tournament_table[1]['players'],
                           len(self.t.players.all()))
-        self.assertEquals(tournament_table[0]['games'], len(self.t.games()))
-        self.assertEquals(tournament_table[0]['ante'], self.t.ante)
-        self.assertEquals(tournament_table[0]['total_ante'],
+        self.assertEquals(tournament_table[1]['games'], len(self.t.games()))
+        self.assertEquals(tournament_table[1]['ante'], self.t.ante)
+        self.assertEquals(tournament_table[1]['total_ante'],
                           self.t.total_ante)
-        self.assertEquals(tournament_table[0]['finished'], self.t.finished)
+        self.assertEquals(tournament_table[1]['finished'], self.t.finished)
+
+        self.assertEquals(tournament_table[0]['pk'], self.t2.pk)
+        self.assertEquals(tournament_table[0]['start_time'], self.t2.start_time)
+        self.assertEquals(tournament_table[0]['name'], self.t2.name)
+        self.assertEquals(tournament_table[0]['winner'], self.t2.winner())
+        self.assertEquals(tournament_table[0]['players'],
+                          len(self.t2.players.all()))
+        self.assertEquals(tournament_table[0]['games'], len(self.t2.games()))
+        self.assertEquals(tournament_table[0]['ante'], self.t2.ante)
+        self.assertEquals(tournament_table[0]['total_ante'],
+                          self.t2.total_ante)
+        self.assertEquals(tournament_table[0]['finished'], self.t2.finished)
 
     def test_tournaments(self):
         """
@@ -205,7 +251,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = submit_tournament(request)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingsedit_tournament/2')
+        self.assertEqual(response.url, '/rankingsedit_tournament/3')
 
     def test_submit_tournament_incorrect_ante(self):
         """
