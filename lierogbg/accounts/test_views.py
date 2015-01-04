@@ -2,7 +2,7 @@
 # pylint: disable=too-many-public-methods
 
 """
-Tests for the accounts app - views.
+Tests for the accounts app views.
 """
 
 from django.contrib.sessions.middleware import SessionMiddleware

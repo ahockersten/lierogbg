@@ -2,18 +2,18 @@
 # pylint: disable=too-many-public-methods
 
 """
-Tests for the about app views
+Tests for the maps app views
 """
 
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import TestCase, RequestFactory
 
-from about.views import index
+from maps.views import index
 
 
 class TestView(TestCase):
     """
-    Tests for About - Views.
+    Tests for Maps - Views.
     """
     def setUp(self):
         """
