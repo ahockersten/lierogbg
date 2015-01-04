@@ -517,7 +517,6 @@ def get_players_list(request):
         data = json.loads(str_body)
         all_time = data['all_time']
         active_only = data['active_only']
-        print(all_time)
         if all_time == "True":
             player_table = create_player_table(active_only,
                                                since=datetime.date(1970,
