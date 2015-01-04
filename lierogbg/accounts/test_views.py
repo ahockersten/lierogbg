@@ -31,7 +31,8 @@ class ViewTest(TestCase):
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
         self.user = User.objects.create_user(
-            username='jacob', email='jacob@example.com', password='top_secret')
+            username='jacob', email='jacob@example.com',
+            password='top_secret')
 
     def test_login_no_user(self):
         """
