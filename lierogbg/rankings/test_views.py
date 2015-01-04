@@ -63,15 +63,27 @@ class TestViews(TestCase):
                                                           placing=2,
                                                           ante=10,
                                                           player=self.p2)
+        PointsChanged.objects.create(player=self.p1, tournament=self.t,
+                                     rp_before=500, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p2, tournament=self.t,
+                                     rp_before=500, rp_after=500,
+                                     pp_before=0, pp_after=0)
         self.t2.players.add(self.p2, self.p3)
-        self.tpa21 = TournamentPlacingAnte.objects.create(tournament=self.t,
+        self.tpa21 = TournamentPlacingAnte.objects.create(tournament=self.t2,
                                                           placing=1,
                                                           ante=40,
                                                           player=self.p2)
-        self.tpa22 = TournamentPlacingAnte.objects.create(tournament=self.t,
+        self.tpa22 = TournamentPlacingAnte.objects.create(tournament=self.t2,
                                                           placing=2,
                                                           ante=10,
                                                           player=self.p3)
+        PointsChanged.objects.create(player=self.p2, tournament=self.t2,
+                                     rp_before=485, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p3, tournament=self.t2,
+                                     rp_before=515, rp_after=500,
+                                     pp_before=500, pp_after=500)
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=self.p1,
@@ -339,6 +351,43 @@ class TestViews(TestCase):
 
         response = view_tournament(request, self.t.pk)
         self.assertEqual(response.status_code, 200)
+
+    def test_save_tournament_valid_finish(self):
+        """
+        Saving a tournament for a valid case, which is now finished
+        """
+        management_form_data = {
+            'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
+            'tournamentplacingante_set-INITIAL_FORMS' : '0',
+            'tournamentplacingante_set-TOTAL_FORMS' : '2',
+            'tournamentplacingante_set-MAX_NUM_FORMS' : '1000',
+            'tournamentplacingante_set-0-id' : self.tpa11.pk,
+            'tournamentplacingante_set-0-placing' : self.tpa11.placing,
+            'tournamentplacingante_set-0-ante' : self.tpa11.ante,
+            'tournamentplacingante_set-0-tournament' : self.t.pk,
+            'tournamentplacingante_set-0-player' : self.p1.pk,
+            'tournamentplacingante_set-1-id' : self.tpa12.pk,
+            'tournamentplacingante_set-1-placing' : self.tpa12.placing,
+            'tournamentplacingante_set-1-ante' : self.tpa12.ante,
+            'tournamentplacingante_set-1-tournament' : self.t.pk,
+            'tournamentplacingante_set-1-player' : self.p2.pk,
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'name' : 'Fools tournament',
+            'players' : [self.p1.pk, self.p2.pk],
+            'ante' : 100, # FIXME what does this do?
+            'pool_points' : 0,
+            'total_ante' : 100,
+            'finished' : 'True',
+            }
+        form.update(management_form_data)
+        print(form)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = save_tournament(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankingstournaments/')
 
     def test_save_tournament_valid(self):
         """
