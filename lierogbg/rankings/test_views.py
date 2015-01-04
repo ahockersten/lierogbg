@@ -79,12 +79,20 @@ class TestViews(TestCase):
                                        winner=self.p1, comment="")
         g2 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
-                                       player_left=self.p2, player_right=self.p1,
+                                       player_left=self.p2,
+                                       player_right=self.p1,
                                        winner=self.p2, comment="")
-        # played between two inactive players
+        # a tied game
         g3 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
-                                       player_left=self.p3, player_right=self.p4,
+                                       player_left=self.p2,
+                                       player_right=self.p1,
+                                       winner=None, comment="")
+        # played between two inactive players
+        g4 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p3,
+                                       player_right=self.p4,
                                        winner=self.p4, comment="")
         tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
                                         start_time=timezone.now(),
@@ -99,6 +107,12 @@ class TestViews(TestCase):
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
+                               pr_lives=2, replay_file=None)
+        Subgame.objects.create(parent=g2, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=g3, map_played="", pl_lives=0,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=g4, map_played="", pl_lives=0,
                                pr_lives=2, replay_file=None)
         Subgame.objects.create(parent=tg1, map_played="", pl_lives=2,
                                pr_lives=0, replay_file=None)
@@ -130,13 +144,13 @@ class TestViews(TestCase):
         """
         active_players = create_player_table(active_only='True')
         self.assertEqual(len(active_players), 2)
-        self.assertEqual(active_players[0]['games'], 4)
-        self.assertEqual(active_players[1]['games'], 3)
+        self.assertEqual(active_players[0]['games'], 5)
+        self.assertEqual(active_players[1]['games'], 4)
         all_players = create_player_table(active_only='False')
         self.assertEqual(len(all_players), 4)
-        self.assertEqual(all_players[0]['games'], 4)
+        self.assertEqual(all_players[0]['games'], 5)
         self.assertEqual(all_players[1]['games'], 2)
-        self.assertEqual(all_players[2]['games'], 3)
+        self.assertEqual(all_players[2]['games'], 4)
         self.assertEqual(all_players[3]['games'], 1)
 
     def test_games(self):
