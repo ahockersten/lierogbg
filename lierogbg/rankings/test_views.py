@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.test import Client, TestCase, RequestFactory
 from rankings.models import Player, Tournament, TournamentPlacingAnte
 from rankings.models import PlayedGame, Subgame, PointsChanged
-from rankings.views import add_tournament
+from rankings.views import add_tournament, submit_tournament
 from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
 
@@ -20,11 +20,11 @@ class TestViews(TestCase):
         """
         Creates various needed objects.
         """
-        p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
                                    real_name="", ranking_points=500,
                                    pool_points=500, active=True,
                                    comment="")
-        p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
                                    real_name="", ranking_points=1500,
                                    pool_points=0, active=True,
                                    comment="")
@@ -32,29 +32,35 @@ class TestViews(TestCase):
                                    real_name="", ranking_points=1500,
                                    pool_points=0, active=False,
                                    comment="")
-        self.t = Tournament.objects.create(finished=True,
+        self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
                                            name="Tourney",
                                            ante=0, pool_points=0,
                                            total_ante=0,
                                            comment="")
-        self.t.players.add(p1, p2)
-        TournamentPlacingAnte.objects.create(tournament=self.t, placing=1,
-                                             ante=0, player=p1)
-        TournamentPlacingAnte.objects.create(tournament=self.t, placing=2,
-                                             ante=0, player=p2)
+        self.t.players.add(self.p1, self.p2)
+        self.tpa1 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                         placing=1,
+                                                         ante=90,
+                                                         player=self.p1)
+        self.tpa2 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                         placing=2,
+                                                         ante=10,
+                                                         player=self.p2)
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
-                                       player_left=p1, player_right=p2,
-                                       winner=p1, comment="")
+                                       player_left=self.p1,
+                                       player_right=self.p2,
+                                       winner=self.p1, comment="")
         PlayedGame.objects.create(tournament=None, ranked=True,
                                   start_time=timezone.now(),
-                                  player_left=p2, player_right=p1,
-                                  winner=p2, comment="")
+                                  player_left=self.p2, player_right=self.p1,
+                                  winner=self.p2, comment="")
         g3 = PlayedGame.objects.create(tournament=self.t, ranked=False,
                                        start_time=timezone.now(),
-                                       player_left=p2, player_right=p1,
-                                       winner=p2, comment="")
+                                       player_left=self.p2,
+                                       player_right=self.p1,
+                                       winner=self.p2, comment="")
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
@@ -148,6 +154,50 @@ class TestViews(TestCase):
         response = add_tournament(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_submit_tournament(self):
+        """
+        Tests the submit tournament view
+        """
+        request = self.factory.post('/accounts/login')
+        request.user = AnonymousUser()
+
+        # needs to be logged in
+        response = submit_tournament(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertNotEqual(response.url, '/rankingsedit_tournament/2')
+
+        # no form is an error
+        request.user = self.user
+        response = submit_tournament(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertNotEqual(response.url, '/rankingsedit_tournament/2')
+
+        # correct form
+        management_form_data = {
+            'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
+            'tournamentplacingante_set-INITIAL_FORMS' : '0',
+            'tournamentplacingante_set-TOTAL_FORMS' : '2',
+            'tournamentplacingante_set-MAX_NUM_FORMS' : '1000',
+            'tournamentplacingante_set-0-id' : '',
+            'tournamentplacingante_set-0-placing' : '1',
+            'tournamentplacingante_set-0-ante' : '1',
+            'tournamentplacingante_set-0-tournament' : '',
+            'tournamentplacingante_set-1-id' : '',
+            'tournamentplacingante_set-1-placing' : '2',
+            'tournamentplacingante_set-1-ante' : '1',
+            'tournamentplacingante_set-1-tournament' : '' }
+        form = { 'start_time' : '2014-01-01 07:00',
+                 'name' : 'Fools tournament',
+                 'players' : [self.p1.pk, self.p2.pk],
+                 'ante' : 0, # FIXME what does this do?
+                 'pool_points' : 0,
+                 'total_ante' : 2 }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_tournament(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankingsedit_tournament/2')
 
 class TestViewsNormalMatches(TestCase):
     """
