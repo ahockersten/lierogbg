@@ -7,12 +7,14 @@ from django.http import Http404
 from django.utils import timezone
 from django.test import TestCase
 from django.test import Client, TestCase, RequestFactory
+from rankings.forms import TournamentEditForm
 from rankings.models import Player, Tournament, TournamentPlacingAnte
 from rankings.models import PlayedGame, Subgame, PointsChanged
 from rankings.views import add_tournament, submit_tournament
 from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
+from rankings.views import edit_tournament, view_tournament
 
 class TestViews(TestCase):
     """
@@ -250,6 +252,32 @@ class TestViews(TestCase):
         with self.assertRaises(TypeError):
             prepare_tournament_context(self.t.pk, None)
 
+    def test_prepare_tournament_context_valid(self):
+        """
+        prepare_tournament_context() for valid data
+        """
+        result = prepare_tournament_context(self.t.pk, TournamentEditForm)
+        self.assertNotEqual(result, {})
+
+    def test_edit_tournament(self):
+        """
+        Tests the edit_tournament() output
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = self.user
+
+        response = edit_tournament(request, self.t.pk)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_tournament(self):
+        """
+        Tests the edit_tournament() output
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+
+        response = view_tournament(request, self.t.pk)
+        self.assertEqual(response.status_code, 200)
 
 class TestViewsNormalMatches(TestCase):
     """
