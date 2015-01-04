@@ -4,6 +4,7 @@ Tests for rankings
 import datetime
 from django.utils import timezone
 from django.test import TestCase
+from django.test import Client, TestCase, RequestFactory
 from rankings.models import Player, PlayedGame, Subgame, Tournament
 from rankings.models import TournamentPlacingAnte
 
