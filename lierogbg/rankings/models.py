@@ -150,7 +150,10 @@ class Tournament(models.Model):
         Returns the winner of this tournament, or None if there is no winner.
         """
         tpas = TournamentPlacingAnte.objects.all()
-        return tpas.filter(tournament=self).filter(placing=1)[0].player
+        try:
+            return tpas.filter(tournament=self).filter(placing=1)[0].player
+        except IndexError:
+            return None
 
     def tournament_placing_antes(self):
         """
