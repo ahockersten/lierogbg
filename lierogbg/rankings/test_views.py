@@ -3,6 +3,7 @@ Tests for rankings
 """
 import datetime
 from django.contrib.auth.models import User, AnonymousUser
+from django.forms import ValidationError
 from django.http import Http404
 from django.utils import timezone
 from django.test import TestCase
@@ -382,7 +383,6 @@ class TestViews(TestCase):
             'finished' : 'True',
             }
         form.update(management_form_data)
-        print(form)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
@@ -414,7 +414,6 @@ class TestViews(TestCase):
                  'pool_points' : 0,
                  'total_ante' : 100 }
         form.update(management_form_data)
-        print(form)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
@@ -448,12 +447,65 @@ class TestViews(TestCase):
                  'pool_points' : 0,
                  'total_ante' : 50 }
         form.update(management_form_data)
-        print(form)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/rankingserror/')
+
+    def test_save_tournament_no_mgmt_form(self):
+        """
+        Saving a tournament with no management form fails
+        """
+        # no management form data
+        management_form_data = {
+            'tournamentplacingante_set-0-id' : self.tpa21.pk,
+            'tournamentplacingante_set-0-placing' : self.tpa21.placing,
+            'tournamentplacingante_set-0-ante' : self.tpa21.ante,
+            'tournamentplacingante_set-0-tournament' : self.t2.pk,
+            'tournamentplacingante_set-1-id' : self.tpa22.pk,
+            'tournamentplacingante_set-1-placing' : self.tpa22.placing,
+            'tournamentplacingante_set-1-ante' : self.tpa22.ante,
+            'tournamentplacingante_set-1-tournament' : self.t2.pk
+            }
+        form = { 'start_time' : '2014-01-01 07:00',
+                 'name' : 'Fools tournament',
+                 'players' : [self.p2.pk, self.p3.pk],
+                 'ante' : 50, # FIXME what does this do?
+                 'pool_points' : 0,
+                 'total_ante' : 50 }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        with self.assertRaises(ValidationError):
+            save_tournament(request, tournament_id=self.t.pk)
+
+    def test_save_tournament_invalid_form(self):
+        """
+        Saving a tournament with an invalid form fails
+        """
+        # no management form data
+        management_form_data = {
+            'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
+            'tournamentplacingante_set-INITIAL_FORMS' : '0',
+            'tournamentplacingante_set-TOTAL_FORMS' : '2',
+            'tournamentplacingante_set-MAX_NUM_FORMS' : '1000',
+            'tournamentplacingante_set-0-id' : self.tpa21.pk,
+            'tournamentplacingante_set-0-placing' : self.tpa21.placing,
+            'tournamentplacingante_set-0-ante' : self.tpa21.ante,
+            'tournamentplacingante_set-0-tournament' : self.t2.pk,
+            'tournamentplacingante_set-1-id' : self.tpa22.pk,
+            'tournamentplacingante_set-1-placing' : self.tpa22.placing,
+            'tournamentplacingante_set-1-ante' : self.tpa22.ante,
+            'tournamentplacingante_set-1-tournament' : self.t2.pk
+            }
+        form = {  }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = save_tournament(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 302)
+        s
 
 class TestViewsNormalMatches(TestCase):
     """
