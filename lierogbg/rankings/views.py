@@ -246,7 +246,7 @@ def prepare_tournament_context(tournament_id, form):
     """
     Prepares the context for a tournament.
     """
-    instance = get_object_or_404(Tournament, pk=tournament_id)
+    instance = Tournament.objects.get(pk=tournament_id)
     tournament_form = form(instance=instance)
     played_game_form = PlayedGameForm(initial={'tournament' : instance},
                                       available_players=instance.players.all())

@@ -3,6 +3,7 @@ Tests for rankings
 """
 import datetime
 from django.contrib.auth.models import User, AnonymousUser
+from django.http import Http404
 from django.utils import timezone
 from django.test import TestCase
 from django.test import Client, TestCase, RequestFactory
@@ -11,6 +12,7 @@ from rankings.models import PlayedGame, Subgame, PointsChanged
 from rankings.views import add_tournament, submit_tournament
 from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
+from rankings.views import prepare_tournament_context
 
 class TestViews(TestCase):
     """
@@ -289,3 +291,11 @@ class TestViewsNormalMatches(TestCase):
 
         response = games(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_prepare_tournament_context_invalid_tournament(self):
+        """
+        prepare_tournament_context() for no tournament
+        """
+        with self.assertRaises(Tournament.DoesNotExist):
+            prepare_tournament_context(None, None)
+
