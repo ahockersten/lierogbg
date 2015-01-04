@@ -14,7 +14,7 @@ from rankings.views import add_tournament, submit_tournament
 from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
-from rankings.views import edit_tournament, view_tournament
+from rankings.views import edit_tournament, view_tournament, save_tournament
 
 class TestViews(TestCase):
     """
@@ -240,7 +240,9 @@ class TestViews(TestCase):
         self.assertEqual(response.url, '/rankingserror/')
 
     def test_submit_tournament_correct(self):
-        # correct form
+        """
+        Submit tournament, with a correct form
+        """
         management_form_data = {
             'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
             'tournamentplacingante_set-INITIAL_FORMS' : '0',
@@ -269,9 +271,8 @@ class TestViews(TestCase):
 
     def test_submit_tournament_incorrect_ante(self):
         """
-        Tests the submit tournament view
+        Submit tournament, correct form with incorrect ante total
         """
-        # correct form with incorrect ante total
         management_form_data = {
             'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
             'tournamentplacingante_set-INITIAL_FORMS' : '0',
@@ -321,7 +322,7 @@ class TestViews(TestCase):
 
     def test_edit_tournament(self):
         """
-        Tests the edit_tournament() output
+        The edit_tournament() output
         """
         request = self.factory.get('/accounts/login')
         request.user = self.user
@@ -331,13 +332,79 @@ class TestViews(TestCase):
 
     def test_view_tournament(self):
         """
-        Tests the edit_tournament() output
+        The view_tournament() output
         """
         request = self.factory.get('/accounts/login')
         request.user = AnonymousUser()
 
         response = view_tournament(request, self.t.pk)
         self.assertEqual(response.status_code, 200)
+
+    def test_save_tournament_valid(self):
+        """
+        Saving a tournament for a valid case.
+        """
+        management_form_data = {
+            'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
+            'tournamentplacingante_set-INITIAL_FORMS' : '0',
+            'tournamentplacingante_set-TOTAL_FORMS' : '2',
+            'tournamentplacingante_set-MAX_NUM_FORMS' : '1000',
+            'tournamentplacingante_set-0-id' : self.tpa11.pk,
+            'tournamentplacingante_set-0-placing' : self.tpa11.placing,
+            'tournamentplacingante_set-0-ante' : self.tpa11.ante,
+            'tournamentplacingante_set-0-tournament' : self.t.pk,
+            'tournamentplacingante_set-1-id' : self.tpa12.pk,
+            'tournamentplacingante_set-1-placing' : self.tpa12.placing,
+            'tournamentplacingante_set-1-ante' : self.tpa12.ante,
+            'tournamentplacingante_set-1-tournament' : self.t.pk
+            }
+        form = { 'start_time' : '2014-01-01 07:00',
+                 'name' : 'Fools tournament',
+                 'players' : [self.p1.pk, self.p2.pk],
+                 'ante' : 100, # FIXME what does this do?
+                 'pool_points' : 0,
+                 'total_ante' : 100 }
+        form.update(management_form_data)
+        print(form)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = save_tournament(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankingstournaments/')
+
+
+    def test_save_tournament_already_finished(self):
+        """
+        Saving a tournament that has already finished fails.
+        """
+        # correct form with incorrect ante total
+        management_form_data = {
+            'tournamentplacingante_set-MIN_NUM_FORMS' : '0',
+            'tournamentplacingante_set-INITIAL_FORMS' : '0',
+            'tournamentplacingante_set-TOTAL_FORMS' : '2',
+            'tournamentplacingante_set-MAX_NUM_FORMS' : '1000',
+            'tournamentplacingante_set-0-id' : self.tpa21.pk,
+            'tournamentplacingante_set-0-placing' : self.tpa21.placing,
+            'tournamentplacingante_set-0-ante' : self.tpa21.ante,
+            'tournamentplacingante_set-0-tournament' : self.t2.pk,
+            'tournamentplacingante_set-1-id' : self.tpa22.pk,
+            'tournamentplacingante_set-1-placing' : self.tpa22.placing,
+            'tournamentplacingante_set-1-ante' : self.tpa22.ante,
+            'tournamentplacingante_set-1-tournament' : self.t2.pk
+            }
+        form = { 'start_time' : '2014-01-01 07:00',
+                 'name' : 'Fools tournament',
+                 'players' : [self.p2.pk, self.p3.pk],
+                 'ante' : 50, # FIXME what does this do?
+                 'pool_points' : 0,
+                 'total_ante' : 50 }
+        form.update(management_form_data)
+        print(form)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = save_tournament(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankingserror/')
 
 class TestViewsNormalMatches(TestCase):
     """
