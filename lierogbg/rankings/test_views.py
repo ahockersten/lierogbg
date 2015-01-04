@@ -52,12 +52,12 @@ class TestViews(TestCase):
                                        start_time=timezone.now(),
                                        player_left=p2, player_right=p1,
                                        winner=p2, comment="")
-        Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
+        Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
-        Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
+        Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g3, map_played="", pl_lives=0,
-                               pr_lives=0, replay_file=None)
+                               pr_lives=3, replay_file=None)
 
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
