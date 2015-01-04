@@ -123,11 +123,13 @@ def create_games_table(games_list):
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
         all_pc = PointsChanged.objects.all()
         pc_pl = all_pc.filter(game=g).filter(player=g.player_left)
-        tmp["rp_pl_after"] = pc_pl[0].rp_after
-        tmp["rp_pl_change"] = pc_pl[0].rp_after - pc_pl[0].rp_before
+        if pc_pl.exists():
+            tmp["rp_pl_after"] = pc_pl[0].rp_after
+            tmp["rp_pl_change"] = pc_pl[0].rp_after - pc_pl[0].rp_before
         pc_pr = all_pc.filter(game=g).filter(player=g.player_right)
-        tmp["rp_pr_after"] = pc_pr[0].rp_after
-        tmp["rp_pr_change"] = pc_pr[0].rp_after - pc_pr[0].rp_before
+        if pc_pl.exists():
+            tmp["rp_pr_after"] = pc_pr[0].rp_after
+            tmp["rp_pr_change"] = pc_pr[0].rp_after - pc_pr[0].rp_before
         tmp["subgames"] = g.subgames()
         ret.append(tmp)
     return ret

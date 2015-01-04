@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.test import Client, TestCase, RequestFactory
 from rankings.models import Player, Tournament, TournamentPlacingAnte
 from rankings.models import PlayedGame, Subgame
-from rankings.views import create_player_table, ranking
+from rankings.views import create_player_table, games, ranking
 
 class TestViews(TestCase):
     """
@@ -93,3 +93,13 @@ class TestViews(TestCase):
         self.assertEqual(all_players[0]['games'], 2)
         self.assertEqual(all_players[1]['games'], 0)
         self.assertEqual(all_players[2]['games'], 2)
+
+    def test_games(self):
+        """
+        Tests the games() output
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+
+        response = games(request)
+        self.assertEqual(response.status_code, 200)
