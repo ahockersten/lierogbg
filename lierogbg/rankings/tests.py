@@ -1,6 +1,7 @@
 """
 Tests for rankings
 """
+import datetime
 from django.utils import timezone
 from django.test import TestCase
 from rankings.models import Player, PlayedGame, Subgame, Tournament
@@ -63,7 +64,14 @@ class TestSimpleLookups(TestCase):
         ranked_and_tournament_games() works
         """
         foobar = Player.objects.get(name="Foo Bar")
-        self.assertEqual(len(foobar.ranked_and_tournament_games()), 2)
+        this_year = datetime.datetime(datetime.datetime.today().year, 1, 1)
+        next_year = datetime.datetime(this_year.year + 1, 1, 1)
+        # All matches occur this year, so this should return all of them
+        self.assertEqual(
+            len(foobar.ranked_and_tournament_games(since=this_year)), 2)
+        # This should return no matches
+        self.assertEqual(
+            len(foobar.ranked_and_tournament_games(since=next_year)), 0)
 
     def test_tournament_games(self):
         """
