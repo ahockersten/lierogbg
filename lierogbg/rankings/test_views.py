@@ -236,6 +236,21 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/rankingserror/')
 
+    def test_prepare_tournament_context_invalid_tournament(self):
+        """
+        prepare_tournament_context() for no tournament
+        """
+        with self.assertRaises(Tournament.DoesNotExist):
+            prepare_tournament_context(None, None)
+
+    def test_prepare_tournament_context_valid_tournament_no_form(self):
+        """
+        prepare_tournament_context() for no form
+        """
+        with self.assertRaises(TypeError):
+            prepare_tournament_context(self.t.pk, None)
+
+
 class TestViewsNormalMatches(TestCase):
     """
     Test views when there are only normal matches, no tournament matches
@@ -291,11 +306,3 @@ class TestViewsNormalMatches(TestCase):
 
         response = games(request)
         self.assertEqual(response.status_code, 200)
-
-    def test_prepare_tournament_context_invalid_tournament(self):
-        """
-        prepare_tournament_context() for no tournament
-        """
-        with self.assertRaises(Tournament.DoesNotExist):
-            prepare_tournament_context(None, None)
-
