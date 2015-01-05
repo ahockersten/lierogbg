@@ -50,12 +50,6 @@ class TestViews(TestCase):
                                            ante=0, pool_points=0,
                                            total_ante=0,
                                            comment="")
-        self.t2 = Tournament.objects.create(finished=True,
-                                            start_time=timezone.now(),
-                                            name="Tourney",
-                                            ante=0, pool_points=0,
-                                            total_ante=0,
-                                            comment="")
         self.t.players.add(self.p1, self.p2)
         self.tpa11 = TournamentPlacingAnte.objects.create(tournament=self.t,
                                                           placing=1,
@@ -71,6 +65,12 @@ class TestViews(TestCase):
         PointsChanged.objects.create(player=self.p2, tournament=self.t,
                                      rp_before=500, rp_after=500,
                                      pp_before=0, pp_after=0)
+        self.t2 = Tournament.objects.create(finished=True,
+                                            start_time=timezone.now(),
+                                            name="Tourney",
+                                            ante=0, pool_points=0,
+                                            total_ante=0,
+                                            comment="")
         self.t2.players.add(self.p2, self.p3)
         self.tpa21 = TournamentPlacingAnte.objects.create(tournament=self.t2,
                                                           placing=1,
@@ -421,7 +421,6 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/rankingstournaments/')
 
-
     def test_save_tournament_already_finished(self):
         """
         Saving a tournament that has already finished fails.
@@ -509,6 +508,75 @@ class TestViews(TestCase):
         response = save_tournament(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
 
+    def test_submit_game_valid_tournament(self):
+        """
+        Submit a game for a valid tournament case.
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        management_form_data = {
+            'subgame_set-MIN_NUM_FORMS' : '0',
+            'subgame_set-INITIAL_FORMS' : '0',
+            'subgame_set-TOTAL_FORMS' : '1',
+            'subgame_set-MAX_NUM_FORMS' : '1000',
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : self.p1.pk,
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_game(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankings')
+
+        # an unranked game means ranking points should not have changed
+        self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
+                           p1_rp_before)
+        self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
+                        p2_rp_before)
+
+    def test_submit_game_tournament_already_finished(self):
+        """
+        Submit a game for a tournament that has already finished
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        management_form_data = {
+            'subgame_set-MIN_NUM_FORMS' : '0',
+            'subgame_set-INITIAL_FORMS' : '0',
+            'subgame_set-TOTAL_FORMS' : '1',
+            'subgame_set-MAX_NUM_FORMS' : '1000',
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : self.p1.pk,
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_game(request, tournament_id=self.t2.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankingserror/')
+
+        # an unranked game means ranking points should not have changed
+        self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
+                           p1_rp_before)
+        self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
+                        p2_rp_before)
 
 class TestViewsNormalMatches(TestCase):
     """
