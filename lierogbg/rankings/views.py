@@ -93,7 +93,7 @@ def create_player_table(active_only,
 
 def games(request):
     """
-    Display data about all games.
+    Display data about the latest GAME_PAGE_LIMIT number of games.
     """
     all_pg = PlayedGame.objects.all().order_by('start_time')
     first_games_by_date = all_pg.reverse()[:GAME_PAGE_LIMIT]
@@ -136,7 +136,8 @@ def create_tournament_table():
     """
     Creates a table wiith information about all tournaments.
     """
-    tournaments_list = Tournament.objects.all().order_by('start_time').reverse()
+    all_tournaments = Tournament.objects.all()
+    tournaments_list = all_tournaments.order_by('start_time').reverse()
     ret = []
     for t in tournaments_list:
         tmp = {}
@@ -167,8 +168,8 @@ def add_tournament(request):
     Renders the page used for adding a new tournament
     """
     tournament_form = TournamentCreateForm()
-    tournament_placing_ante_formset = TournamentPlacingAnteFormSet(instance=Tournament())
-
+    tournament_placing_ante_formset = TournamentPlacingAnteFormSet(
+        instance=Tournament())
     context = {
         'tournament_form'                 : tournament_form,
         'tournament_placing_ante_formset' : tournament_placing_ante_formset,
@@ -184,8 +185,8 @@ def submit_tournament(request):
 
     if tournament_form.is_valid():
         tournament = tournament_form.save(commit=False)
-        tournament_placing_ante_formset = TournamentPlacingAnteFormSet(request.POST,
-                                                                       instance=tournament)
+        tournament_placing_ante_formset = TournamentPlacingAnteFormSet(
+            request.POST, instance=tournament)
         # FIXME this is not valid here, since the tournament for each tpa has not
         # been setup yet
         #if not tournament_placing_ante_formset.is_valid():
@@ -198,14 +199,15 @@ def submit_tournament(request):
         total_ante = 0
         points_changed_list = []
         players = tournament.players.all()
-        for player in players:
-            points_changed = PointsChanged(player=player, tournament=tournament,
-                                           rp_before=player.ranking_points,
-                                           pp_before=player.pool_points)
-            calculated_ante = player.calculate_ante_percentage(tournament.ante,
-                                                               tournament.pool_points)
-            player.ranking_points = calculated_ante["rp"] - calculated_ante["ante"]
-            player.pool_points = calculated_ante["pp"]
+        for p in players:
+            points_changed = PointsChanged(player=p,
+                                           tournament=tournament,
+                                           rp_before=p.ranking_points,
+                                           pp_before=p.pool_points)
+            calculated_ante = p.calculate_ante_percentage(
+                tournament.ante, tournament.pool_points)
+            p.ranking_points = calculated_ante["rp"] - calculated_ante["ante"]
+            p.pool_points = calculated_ante["pp"]
             # this will be set to a correct value when the tournament
             # is saved
             points_changed.rp_after = calculated_ante["rp"]
@@ -222,8 +224,8 @@ def submit_tournament(request):
             tournament.delete()
             return redirect('rankings.views.error')
 
-        for player in players:
-            player.save()
+        for p in players:
+            p.save()
         for points_changed in points_changed_list:
             points_changed.save()
         tournament.total_ante = total_ante
@@ -246,19 +248,22 @@ def prepare_tournament_context(tournament_id, form):
     """
     instance = Tournament.objects.get(pk=tournament_id)
     tournament_form = form(instance=instance)
-    played_game_form = PlayedGameForm(initial={'tournament' : instance},
-                                      available_players=instance.players.all())
+    played_game_form = PlayedGameForm(
+        initial={'tournament' : instance},
+        available_players=instance.players.all())
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
-    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(instance=instance)
+    tournament_placing_ante_formset = TournamentPlacingAnteSubmitFormSet(
+        instance=instance)
     tournament_placing_ante_formset.form = wraps(
         TournamentPlacingAnteSubmitForm)(partial(
-            TournamentPlacingAnteSubmitForm, available_players=instance.players.all()))
+            TournamentPlacingAnteSubmitForm,
+            available_players=instance.players.all()))
     tournament_extra_data = {}
     tournament_extra_data["tournament_pk"] = tournament_id
     tournament_extra_data["players"] = instance.players.all()
-    all_games_in_tournament_by_date = instance.games().order_by('start_time').reverse()
-    tournament_extra_data["games"] = create_games_table(all_games_in_tournament_by_date)
+    games_in_tournament = instance.games().order_by('start_time').reverse()
+    tournament_extra_data["games"] = create_games_table(games_in_tournament)
     context = {
         'played_game_form'                : played_game_form,
         'subgame_formset'                 : subgame_formset,
@@ -480,8 +485,8 @@ def get_tournament_games_list(request, tournament_id):
         context = {}
         try:
             tournament = Tournament.objects.get(id=tournament_id)
-            all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
-            context['games'] = create_games_table(all_games_in_tournament_by_date)
+            tgames = tournament.games().order_by('start_time').reverse()
+            context['games'] = create_games_table(tgames)
             return render(request, 'rankings/includes/list_games.html',
                           context)
         # pylint: disable=no-member
