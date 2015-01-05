@@ -11,7 +11,7 @@
                 {{ played_game_form.start_time.label_tag }}
             </div>
             <div class="col-xs-9">
-                {{ played_game_form.start_time|addcss:'form-control' }}
+                {{ played_game_form.start_time|add_class:'form-control' }}
             </div>
         </div>
         <div class="form-group">
@@ -19,7 +19,7 @@
                 {{ played_game_form.player_left.label_tag }}
             </div>
             <div class="col-xs-9">
-                {{ played_game_form.player_left|addcss:'form-control' }}
+                {{ played_game_form.player_left|add_class:'form-control' }}
             </div>
         </div>
         <div class="form-group">
@@ -27,7 +27,7 @@
                 {{ played_game_form.player_right.label_tag }}
             </div>
             <div class="col-xs-9">
-                {{ played_game_form.player_right|addcss:'form-control' }}
+                {{ played_game_form.player_right|add_class:'form-control' }}
             </div>
         </div>
         <div class="form-group">
@@ -35,7 +35,7 @@
                 {{ played_game_form.winner.label_tag }}
             </div>
             <div class="col-xs-9">
-                {{ played_game_form.winner|addcss:'form-control' }}
+                {{ played_game_form.winner|add_class:'form-control' }}
             </div>
         </div>
         {% if show_ranked %}
@@ -44,7 +44,7 @@
                     {{ played_game_form.ranked.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ played_game_form.ranked|addcss:'form-control' }}
+                    {{ played_game_form.ranked|add_class:'form-control' }}
                 </div>
             </div>
         {% endif %}
@@ -65,7 +65,7 @@
                     {{ form.map_played.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ form.map_played|addcss:'form-control' }}
+                    {{ form.map_played|add_class:'form-control' }}
                 </div>
             </div>
             <div class="form-group">
@@ -73,7 +73,7 @@
                     {{ form.pl_lives.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ form.pl_lives|addcss:'form-control' }}
+                    {{ form.pl_lives|add_class:'form-control' }}
                 </div>
             </div>
             <div class="form-group">
@@ -81,7 +81,7 @@
                     {{ form.pr_lives.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ form.pr_lives|addcss:'form-control' }}
+                    {{ form.pr_lives|add_class:'form-control' }}
                 </div>
             </div>
             <div class="form-group">
@@ -89,7 +89,7 @@
                     {{ form.replay_file.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ form.replay_file|addcss:'form-control' }}
+                    {{ form.replay_file|add_class:'form-control' }}
                 </div>
             </div>
             {% for field in form.hidden_fields %}
