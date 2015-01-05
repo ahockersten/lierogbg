@@ -3,9 +3,9 @@ Tests for rankings
 """
 import datetime
 from django.contrib.auth.models import User, AnonymousUser
+from django.forms import ValidationError
 from django.utils import timezone
 from django.test import TestCase
-from django.test import Client, TestCase, RequestFactory
 from rankings.models import Player, PlayedGame, Subgame, Tournament
 from rankings.models import TournamentPlacingAnte, PointsChanged
 
@@ -105,7 +105,7 @@ class TestPlayer(TestCase):
 
 class TestPlayerAnteCalculation(TestCase):
     """
-    Tests for ante calculation.
+    Tests for Player's ante calculation.
     """
     def setUp(self):
         """
@@ -283,6 +283,9 @@ class TestPlayerAnteCalculation(TestCase):
         self.assertEqual(calculated_ante["pp"], 460)
 
 class TestTournament(TestCase):
+    """
+    Tests related to Tournament
+    """
     def setUp(self):
         """
         Creates various needed objects.
@@ -400,12 +403,6 @@ class TestTournament(TestCase):
         Subgame.objects.create(parent=self.tg2, map_played="", pl_lives=2,
                                pr_lives=0, replay_file=None)
 
-        # Every test needs access to the request factory.
-        self.factory = RequestFactory()
-        self.user = User.objects.create_user(
-            username='jacob', email='jacob@example.com',
-            password='top_secret')
-
     def test_distribute_points_open_tournament(self):
         """
         distribute_points() for an open tournament should fail
@@ -457,6 +454,9 @@ class TestTournament(TestCase):
                          str(self.t))
 
 class TestTournamentPlacingAnte(TestCase):
+    """
+    Tests related to TournamentPlacingAnte
+    """
     def setUp(self):
         """
         Creates various needed objects.
@@ -485,5 +485,189 @@ class TestTournamentPlacingAnte(TestCase):
                                                           ante=10,
                                                           player=self.p2)
     def test_str(self):
+        """
+        __str__() works correctly
+        """
         self.assertEqual(str(self.t) + " 1 90 " + str(self.p1),
                          str(self.tpa11))
+
+class TestPlayedGame(TestCase):
+    """
+    Tests related to PlayedGame
+    """
+    def setUp(self):
+        """
+        Creates various needed objects.
+        """
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                   real_name="", ranking_points=500,
+                                   pool_points=500, active=True,
+                                   comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                   real_name="", ranking_points=1500,
+                                   pool_points=0, active=True,
+                                   comment="")
+        self.g1 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p1,
+                                       player_right=self.p2,
+                                       winner=self.p1, comment="")
+        self.g2 = PlayedGame.objects.create(
+            tournament=None, ranked=True,
+            start_time=timezone.now() + datetime.timedelta(days=1),
+            player_left=self.p2,
+            player_right=self.p1,
+            winner=self.p2, comment="")
+        self.sg11 = Subgame.objects.create(parent=self.g1, map_played="",
+                                           pl_lives=3, pr_lives=0,
+                                           replay_file=None)
+        self.sg12 = Subgame.objects.create(parent=self.g1, map_played="",
+                                           pl_lives=0, pr_lives=2,
+                                           replay_file=None)
+        self.sg21 = Subgame.objects.create(parent=self.g2, map_played="",
+                                           pl_lives=2, pr_lives=0,
+                                           replay_file=None)
+
+    def test_last_game(self):
+        """
+        last_game() works correctly
+        """
+        self.assertEqual(PlayedGame.objects.last_game(), self.g2)
+
+    def test_subgames(self):
+        """
+        subgames() works correctly
+        """
+        self.assertEqual(list(self.g1.subgames()), [self.sg11, self.sg12])
+        self.assertEqual(list(self.g2.subgames()), [self.sg21])
+
+    def test_str(self):
+        """
+        __str__() works correctly
+        """
+        self.assertEqual(
+            str(self.g1.start_time) + " " + str(self.p1) + " vs " + str(self.p2) + ", " + str(self.p1) + " won",
+            str(self.g1))
+
+class TestSubgame(TestCase):
+    """
+    Tests related to Subgame
+    """
+    def setUp(self):
+        """
+        Creates various needed objects.
+        """
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                   real_name="", ranking_points=500,
+                                   pool_points=500, active=True,
+                                   comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                   real_name="", ranking_points=1500,
+                                   pool_points=0, active=True,
+                                   comment="")
+        self.g1 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p1,
+                                       player_right=self.p2,
+                                       winner=self.p1, comment="")
+        self.g2 = PlayedGame.objects.create(
+            tournament=None, ranked=True,
+            start_time=timezone.now() + datetime.timedelta(days=1),
+            player_left=self.p2,
+            player_right=self.p1,
+            winner=self.p2, comment="")
+        self.sg11 = Subgame.objects.create(parent=self.g1, map_played="",
+                                           pl_lives=3, pr_lives=0,
+                                           replay_file=None)
+        self.sg12 = Subgame.objects.create(parent=self.g1, map_played="",
+                                           pl_lives=0, pr_lives=2,
+                                           replay_file=None)
+        self.sg21 = Subgame.objects.create(parent=self.g2, map_played="",
+                                           pl_lives=2, pr_lives=0,
+                                           replay_file=None)
+    def test_str(self):
+        """
+        __str__() works correctly
+        """
+        self.assertEqual("3 - 0", str(self.sg11))
+        self.assertEqual("0 - 2", str(self.sg12))
+        self.assertEqual("2 - 0", str(self.sg21))
+
+    def test_clean(self):
+        """
+        The clean() function works.
+        """
+        # these three are well-formed and should have no problems
+        self.sg11.clean()
+        self.sg12.clean()
+        self.sg21.clean()
+
+        sg4 = Subgame.objects.create(parent=self.g1, map_played="",
+                                     pl_lives=-1, pr_lives=0,
+                                     replay_file=None)
+        sg5 = Subgame.objects.create(parent=self.g1, map_played="",
+                                     pl_lives=0, pr_lives=-1,
+                                     replay_file=None)
+        with self.assertRaises(ValidationError):
+            sg4.clean()
+        with self.assertRaises(ValidationError):
+            sg5.clean()
+
+class TestPointsChanged(TestCase):
+    """
+    Tests related to PointsChanged
+    """
+    def setUp(self):
+        """
+        Creates various needed objects.
+        """
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                   real_name="", ranking_points=500,
+                                   pool_points=500, active=True,
+                                   comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                   real_name="", ranking_points=1500,
+                                   pool_points=0, active=True,
+                                   comment="")
+        self.t = Tournament.objects.create(finished=False,
+                                           start_time=timezone.now(),
+                                           name="Tourney",
+                                           ante=0, pool_points=0,
+                                           total_ante=0,
+                                           comment="")
+        self.t.players.add(self.p1, self.p2)
+        self.tpa11 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=1,
+                                                          ante=90,
+                                                          player=self.p1)
+        self.tpa12 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=2,
+                                                          ante=10,
+                                                          player=self.p2)
+        self.pc1 = PointsChanged.objects.create(player=self.p1, tournament=self.t,
+                                                rp_before=500, rp_after=500,
+                                                pp_before=0, pp_after=0)
+        self.pc2 = PointsChanged.objects.create(player=self.p2, tournament=self.t,
+                                                rp_before=500, rp_after=500,
+                                                pp_before=0, pp_after=0)
+        self.tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                             start_time=timezone.now(),
+                                             player_left=self.p2,
+                                             player_right=self.p1,
+                                             winner=self.p1, comment="")
+        self.tg2 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                             start_time=timezone.now(),
+                                             player_left=self.p2,
+                                             player_right=self.p1,
+                                             winner=self.p2, comment="")
+        Subgame.objects.create(parent=self.tg1, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=self.tg2, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+
+    def test_str(self):
+        """
+        __str__() works correctly
+        """
+        self.assertEqual(str(self.p1) + "_" + str(self.t) + "_None_500_500_0_0",
+                         str(self.pc1))
