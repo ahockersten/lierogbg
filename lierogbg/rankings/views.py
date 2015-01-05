@@ -483,8 +483,8 @@ def get_tournament_games_list(request, tournament_id):
             tournament = Tournament.objects.get(id=tournament_id)
             all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
             context['games'] = create_games_table(all_games_in_tournament_by_date)
-            context['full'] = True
-            return render(request, 'rankings/includes/list_games.html', context)
+            return render(request, 'rankings/includes/list_games.html',
+                          context)
         except Tournament.DoesNotExist:
             return HttpResponse('Error, incorrect parameters')
     else:
@@ -493,8 +493,10 @@ def get_tournament_games_list(request, tournament_id):
 def get_games_list(request):
     """
     Renders a list of games.
-    :param
-    FIXME this does too much!
+    :param request.GET['games']: the (newest - x) games to load.
+                                 Defaults to 0.
+    :param request.GET['show_all']: Whether or not to show full information
+                                    about all games.
     """
     if request.is_ajax():
         context = {}
@@ -515,7 +517,6 @@ def get_games_list(request):
         prev_match = games_to_load - GAME_PAGE_LIMIT
         if prev_match > -1:
             context['prev_match'] = prev_match
-        context['full'] = True
         if context['show_all'] == "True":
             return render(request, 'rankings/includes/list_games.html', context)
         else:
