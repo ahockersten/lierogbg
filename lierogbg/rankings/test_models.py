@@ -1,5 +1,5 @@
 """
-Tests for rankings
+Tests for rankings models
 """
 import datetime
 from django.contrib.auth.models import User, AnonymousUser
