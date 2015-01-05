@@ -17,6 +17,7 @@ from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
 from rankings.views import add_game, submit_game, update_total_ante
+from rankings.views import get_games_list
 
 class TestViews(TestCase):
     """
@@ -578,6 +579,29 @@ class TestViews(TestCase):
         self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
                         p2_rp_before)
 
+    def test_get_games_list_no_ajax(self):
+        """
+        get_games_list() that is not AJAX fails
+        """
+        form = {
+            }
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = AnonymousUser()
+        with self.assertRaises(Http404):
+            get_games_list(request)
+
+    def test_get_games_list_tournament(self):
+        """
+        get_games_list() when a tournament is supplied
+        """
+        form = {
+            }
+        request = self.factory.post('/accounts/login', data=form,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = AnonymousUser()
+        response = get_games_list(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 200)
+
 class TestViewsNormalMatches(TestCase):
     """
     Test views when there are only normal matches, no tournament matches
@@ -1025,7 +1049,6 @@ class TestViewsNormalMatches(TestCase):
         self.assertLess(Player.objects.get(id=self.p2.pk).ranking_points,
                         p2_rp_before)
 
-
     def test_submit_game_broken_formset(self):
         """
         Submit a game for broken formset.
@@ -1170,3 +1193,66 @@ class TestViewsSimilarPlayers(TestCase):
         response = update_total_ante(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b'Error')
+
+class TestViewsLotsOfMatches(TestCase):
+    """
+    Test with *lots* of games
+    """
+    """
+    Test views
+    """
+    def setUp(self):
+        """
+        Creates a huge amount of games
+        """
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                   real_name="", ranking_points=500,
+                                   pool_points=500, active=True,
+                                   comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                   real_name="", ranking_points=1500,
+                                   pool_points=0, active=True,
+                                   comment="")
+        i = 0
+        while i < 100:
+            g = PlayedGame.objects.create(tournament=None, ranked=True,
+                                          start_time=timezone.now(),
+                                          player_left=self.p1,
+                                          player_right=self.p2,
+                                          winner=self.p1, comment="")
+            Subgame.objects.create(parent=g, map_played="", pl_lives=3,
+                                   pr_lives=0, replay_file=None)
+            i = i + 1
+
+        # Every test needs access to the request factory.
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@example.com',
+            password='top_secret')
+
+    def test_get_games_list_no_tournament(self):
+        """
+        get_games_list() when no tournament is supplied
+        """
+        form = {
+            'games' : '60',
+            'show_all' : 'False',
+            }
+        request = self.factory.get('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = AnonymousUser()
+        response = get_games_list(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_games_list_no_tournament_no_games(self):
+        """
+        get_games_list() when no tournament and no games are supplied
+        """
+        form = {
+            'show_all' : 'True',
+            }
+        request = self.factory.get('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = AnonymousUser()
+        response = get_games_list(request)
+        self.assertEqual(response.status_code, 200)
