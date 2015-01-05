@@ -2,15 +2,16 @@
 Tests for rankings
 """
 import datetime
+from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone
 from django.test import TestCase
 from django.test import Client, TestCase, RequestFactory
 from rankings.models import Player, PlayedGame, Subgame, Tournament
-from rankings.models import TournamentPlacingAnte
+from rankings.models import TournamentPlacingAnte, PointsChanged
 
-class TestSimpleLookups(TestCase):
+class TestPlayer(TestCase):
     """
-    Test simpler lookups.
+    Tests the Player model
     """
     def setUp(self):
         """
@@ -53,7 +54,7 @@ class TestSimpleLookups(TestCase):
         Subgame.objects.create(parent=g3, map_played="", pl_lives=0,
                                pr_lives=0, replay_file=None)
 
-    def test_player_all_games(self):
+    def test_all_games(self):
         """
         all_games() works
         """
@@ -102,7 +103,7 @@ class TestSimpleLookups(TestCase):
         g3 = Tournament.objects.get(name="Tourney").games()[0]
         self.assertEqual(len(g3.subgames()), 1)
 
-class TestAnteCalculation(TestCase):
+class TestPlayerAnteCalculation(TestCase):
     """
     Tests for ante calculation.
     """
@@ -280,3 +281,137 @@ class TestAnteCalculation(TestCase):
         self.assertEqual(calculated_ante["ante"], 1)
         self.assertEqual(calculated_ante["rp"], 40)
         self.assertEqual(calculated_ante["pp"], 460)
+
+class TestTournament(TestCase):
+    def setUp(self):
+        """
+        Creates various needed objects.
+        """
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                   real_name="", ranking_points=500,
+                                   pool_points=500, active=True,
+                                   comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                   real_name="", ranking_points=1500,
+                                   pool_points=0, active=True,
+                                   comment="")
+        # an inactive player
+        self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
+                                       real_name="", ranking_points=1500,
+                                       pool_points=0, active=False,
+                                       comment="")
+        # an inactive player
+        self.p4 = Player.objects.create(name="Bar Foo", color="#00FFFF",
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=False,
+                                        comment="")
+        self.t = Tournament.objects.create(finished=False,
+                                           start_time=timezone.now(),
+                                           name="Tourney",
+                                           ante=0, pool_points=0,
+                                           total_ante=0,
+                                           comment="")
+        self.t.players.add(self.p1, self.p2)
+        self.tpa11 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=1,
+                                                          ante=90,
+                                                          player=self.p1)
+        self.tpa12 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=2,
+                                                          ante=10,
+                                                          player=self.p2)
+        PointsChanged.objects.create(player=self.p1, tournament=self.t,
+                                     rp_before=500, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p2, tournament=self.t,
+                                     rp_before=500, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        self.t2 = Tournament.objects.create(finished=True,
+                                            start_time=timezone.now(),
+                                            name="Tourney",
+                                            ante=5, pool_points=0,
+                                            total_ante=50,
+                                            comment="")
+        self.t2.players.add(self.p2, self.p3)
+        self.tpa21 = TournamentPlacingAnte.objects.create(tournament=self.t2,
+                                                          placing=1,
+                                                          ante=40,
+                                                          player=self.p2)
+        self.tpa22 = TournamentPlacingAnte.objects.create(tournament=self.t2,
+                                                          placing=2,
+                                                          ante=10,
+                                                          player=self.p3)
+        PointsChanged.objects.create(player=self.p2, tournament=self.t2,
+                                     rp_before=485, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p3, tournament=self.t2,
+                                     rp_before=515, rp_after=500,
+                                     pp_before=500, pp_after=500)
+        g1 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p1,
+                                       player_right=self.p2,
+                                       winner=self.p1, comment="")
+        g2 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p2,
+                                       player_right=self.p1,
+                                       winner=self.p2, comment="")
+        # a tied game
+        g3 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p2,
+                                       player_right=self.p1,
+                                       winner=None, comment="")
+        # played between two inactive players
+        g4 = PlayedGame.objects.create(tournament=None, ranked=True,
+                                       start_time=timezone.now(),
+                                       player_left=self.p3,
+                                       player_right=self.p4,
+                                       winner=self.p4, comment="")
+        tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                        start_time=timezone.now(),
+                                        player_left=self.p2,
+                                        player_right=self.p1,
+                                        winner=self.p1, comment="")
+        tg2 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                        start_time=timezone.now(),
+                                        player_left=self.p2,
+                                        player_right=self.p3,
+                                        winner=self.p2, comment="")
+        Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
+                               pr_lives=2, replay_file=None)
+        Subgame.objects.create(parent=g2, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=g3, map_played="", pl_lives=0,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=g4, map_played="", pl_lives=0,
+                               pr_lives=2, replay_file=None)
+        Subgame.objects.create(parent=tg1, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+        Subgame.objects.create(parent=tg2, map_played="", pl_lives=2,
+                               pr_lives=0, replay_file=None)
+
+        # Every test needs access to the request factory.
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@example.com',
+            password='top_secret')
+
+    def test_distribute_points_open_tournament(self):
+        with self.assertRaises(ValueError):
+            self.t.distribute_points()
+
+    def test_distribute_points_closed_tournament(self):
+        p2_rp_before = self.p2.ranking_points
+        p3_rp_before = self.p3.ranking_points
+        self.t2.distribute_points()
+        # ranking points should have changed now
+        # both are greater since they had already "paid in" to the tournament
+        # before
+        self.assertGreater(Player.objects.get(id=self.p2.pk).ranking_points,
+                           p2_rp_before)
+        self.assertGreater(Player.objects.get(id=self.p3.pk).ranking_points,
+                        p3_rp_before)
