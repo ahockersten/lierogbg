@@ -18,7 +18,7 @@ from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
 from rankings.views import add_game, submit_game, update_total_ante
 from rankings.views import get_games_list, get_players_list, error
-from rankings.views import internal_info
+from rankings.views import get_tournament_games_list, internal_info
 
 class TestViews(TestCase):
     """
@@ -580,29 +580,6 @@ class TestViews(TestCase):
         self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
                         p2_rp_before)
 
-    def test_get_games_list_no_ajax(self):
-        """
-        get_games_list() that is not AJAX fails
-        """
-        form = {
-            }
-        request = self.factory.get('/accounts/login', data=form)
-        request.user = AnonymousUser()
-        with self.assertRaises(Http404):
-            get_games_list(request)
-
-    def test_get_games_list_tournament(self):
-        """
-        get_games_list() when a tournament is supplied
-        """
-        form = {
-            }
-        request = self.factory.get('/accounts/login', data=form,
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        request.user = AnonymousUser()
-        response = get_games_list(request, tournament_id=self.t.pk)
-        self.assertEqual(response.status_code, 200)
-
     def test_get_players_list_no_ajax(self):
         """
         get_players_list() that is not AJAX fails
@@ -640,6 +617,18 @@ class TestViews(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = self.user
         response = get_players_list(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_tournament_games_list(self):
+        """
+        get_tournament_games_list() when a tournament is supplied
+        """
+        form = {
+            }
+        request = self.factory.get('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = AnonymousUser()
+        response = get_tournament_games_list(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 200)
 
 class TestViewsNormalMatches(TestCase):
@@ -1270,9 +1259,31 @@ class TestViewsLotsOfMatches(TestCase):
             username='jacob', email='jacob@example.com',
             password='top_secret')
 
-    def test_get_games_list_no_tournament(self):
+    def test_get_games_list_no_ajax(self):
         """
-        get_games_list() when no tournament is supplied
+        get_games_list() that is not AJAX fails
+        """
+        form = {
+            }
+        request = self.factory.get('/accounts/login', data=form)
+        request.user = AnonymousUser()
+        with self.assertRaises(Http404):
+            get_games_list(request)
+
+    def test_get_tournament_games_list_no_ajax(self):
+        """
+        get_tournament_games_list() that is not AJAX fails
+        """
+        form = {
+            }
+        request = self.factory.get('/accounts/login', data=form)
+        request.user = AnonymousUser()
+        with self.assertRaises(Http404):
+            get_tournament_games_list(request, tournament_id=None)
+
+    def test_get_games_list(self):
+        """
+        get_games_list() for a valid request
         """
         form = {
             'games' : '60',
@@ -1284,9 +1295,9 @@ class TestViewsLotsOfMatches(TestCase):
         response = get_games_list(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_get_games_list_no_tournament_no_games(self):
+    def test_get_games_list_no_games(self):
         """
-        get_games_list() when no tournament and no games are supplied
+        get_games_list() when no games are supplied
         """
         form = {
             'show_all' : 'True',
@@ -1295,6 +1306,19 @@ class TestViewsLotsOfMatches(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = AnonymousUser()
         response = get_games_list(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_tournament_games_list_no_tournament(self):
+        """
+        get_tournament_games_list() when no tournament is supplied
+        """
+        form = {
+            'show_all' : 'True',
+            }
+        request = self.factory.get('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = AnonymousUser()
+        response = get_tournament_games_list(request, tournament_id=None)
         self.assertEqual(response.status_code, 200)
 
     def test_error(self):

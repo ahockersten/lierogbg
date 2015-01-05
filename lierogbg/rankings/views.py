@@ -473,10 +473,9 @@ def update_total_ante(request):
     else:
         raise Http404
 
-def get_games_list(request, tournament_id=None):
+def get_tournament_games_list(request, tournament_id):
     """
-    Renders a list of games.
-    FIXME this does too much!
+    Renders a list of for the tournament view.
     """
     if request.is_ajax():
         context = {}
@@ -487,28 +486,40 @@ def get_games_list(request, tournament_id=None):
             context['full'] = True
             return render(request, 'rankings/includes/list_games.html', context)
         except Tournament.DoesNotExist:
-            games_to_load = 0
-            try:
-                games_to_load = int(request.GET['games'])
-            except MultiValueDictKeyError:
-                pass
-            context['show_all'] = request.GET['show_all']
-            all_games = PlayedGame.objects.all()
-            games_by_date = []
-            next_match = games_to_load + GAME_PAGE_LIMIT
-            games_by_date = all_games.order_by('start_time').reverse()[games_to_load:next_match]
-            context['games'] = create_games_table(games_by_date)
-            context['current_match'] = games_to_load
-            if next_match < len(all_games):
-                context['next_match'] = next_match
-            prev_match = games_to_load - GAME_PAGE_LIMIT
-            if prev_match > -1:
-                context['prev_match'] = prev_match
-            context['full'] = True
-            if context['show_all'] == "True":
-                return render(request, 'rankings/includes/list_games.html', context)
-            else:
-                return render(request, 'rankings/includes/list_games_hidden.html', context)
+            return HttpResponse('Error, incorrect parameters')
+    else:
+        raise Http404
+
+def get_games_list(request):
+    """
+    Renders a list of games.
+    :param
+    FIXME this does too much!
+    """
+    if request.is_ajax():
+        context = {}
+        games_to_load = 0
+        try:
+            games_to_load = int(request.GET['games'])
+        except MultiValueDictKeyError:
+            pass
+        context['show_all'] = request.GET['show_all']
+        all_games = PlayedGame.objects.all()
+        games_by_date = []
+        next_match = games_to_load + GAME_PAGE_LIMIT
+        games_by_date = all_games.order_by('start_time').reverse()[games_to_load:next_match]
+        context['games'] = create_games_table(games_by_date)
+        context['current_match'] = games_to_load
+        if next_match < len(all_games):
+            context['next_match'] = next_match
+        prev_match = games_to_load - GAME_PAGE_LIMIT
+        if prev_match > -1:
+            context['prev_match'] = prev_match
+        context['full'] = True
+        if context['show_all'] == "True":
+            return render(request, 'rankings/includes/list_games.html', context)
+        else:
+            return render(request, 'rankings/includes/list_games_hidden.html', context)
     else:
         raise Http404
 

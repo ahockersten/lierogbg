@@ -144,7 +144,7 @@ $(document).ready(function () {
     function update_games_played() {
         $.ajax({
             type: "GET",
-            url: "{% url 'rankings.views.get_games_list' tournament_extra_data.tournament_pk %}",
+            url: "{% url 'rankings.views.get_tournament_games_list' tournament_extra_data.tournament_pk %}",
             traditional: true,
             success: function(data) {
                 $("#id_list_games_table").replaceWith(data);
