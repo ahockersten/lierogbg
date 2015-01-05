@@ -347,6 +347,12 @@ class TestTournament(TestCase):
         PointsChanged.objects.create(player=self.p3, tournament=self.t2,
                                      rp_before=515, rp_after=500,
                                      pp_before=500, pp_after=500)
+        self.t3 = Tournament.objects.create(finished=False,
+                                            start_time=timezone.now(),
+                                            name="Tourney",
+                                            ante=5, pool_points=0,
+                                            total_ante=50,
+                                            comment="")
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=self.p1,
@@ -369,16 +375,16 @@ class TestTournament(TestCase):
                                        player_left=self.p3,
                                        player_right=self.p4,
                                        winner=self.p4, comment="")
-        tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
-                                        start_time=timezone.now(),
-                                        player_left=self.p2,
-                                        player_right=self.p1,
-                                        winner=self.p1, comment="")
-        tg2 = PlayedGame.objects.create(tournament=self.t, ranked=False,
-                                        start_time=timezone.now(),
-                                        player_left=self.p2,
-                                        player_right=self.p3,
-                                        winner=self.p2, comment="")
+        self.tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                             start_time=timezone.now(),
+                                             player_left=self.p2,
+                                             player_right=self.p1,
+                                             winner=self.p1, comment="")
+        self.tg2 = PlayedGame.objects.create(tournament=self.t, ranked=False,
+                                             start_time=timezone.now(),
+                                             player_left=self.p2,
+                                             player_right=self.p3,
+                                             winner=self.p2, comment="")
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g1, map_played="", pl_lives=0,
@@ -389,9 +395,9 @@ class TestTournament(TestCase):
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g4, map_played="", pl_lives=0,
                                pr_lives=2, replay_file=None)
-        Subgame.objects.create(parent=tg1, map_played="", pl_lives=2,
+        Subgame.objects.create(parent=self.tg1, map_played="", pl_lives=2,
                                pr_lives=0, replay_file=None)
-        Subgame.objects.create(parent=tg2, map_played="", pl_lives=2,
+        Subgame.objects.create(parent=self.tg2, map_played="", pl_lives=2,
                                pr_lives=0, replay_file=None)
 
         # Every test needs access to the request factory.
@@ -401,10 +407,16 @@ class TestTournament(TestCase):
             password='top_secret')
 
     def test_distribute_points_open_tournament(self):
+        """
+        distribute_points() for an open tournament should fail
+        """
         with self.assertRaises(ValueError):
             self.t.distribute_points()
 
     def test_distribute_points_closed_tournament(self):
+        """
+        distribute_points() for a closed tournament should succeed
+        """
         p2_rp_before = self.p2.ranking_points
         p3_rp_before = self.p3.ranking_points
         self.t2.distribute_points()
@@ -415,3 +427,63 @@ class TestTournament(TestCase):
                            p2_rp_before)
         self.assertGreater(Player.objects.get(id=self.p3.pk).ranking_points,
                         p3_rp_before)
+
+    def test_games(self):
+        """
+        games() works correctly
+        """
+        self.assertEqual(list(self.t.games()), [self.tg1, self.tg2])
+        self.assertEqual(list(self.t2.games()), [])
+
+    def test_winner(self):
+        """
+        winner() works correctly
+        """
+        self.assertEqual(self.t.winner(), self.p1)
+        self.assertEqual(self.t2.winner(), self.p2)
+        self.assertEqual(self.t3.winner(), None)
+
+    def test_tournament_placing_antes(self):
+        """
+        tournament_placing_antes() works correctly
+        """
+        self.assertEqual(list(self.t.tournament_placing_antes()),
+                         [self.tpa11, self.tpa12])
+        self.assertEqual(list(self.t2.tournament_placing_antes()),
+                         [self.tpa21, self.tpa22])
+
+    def test_str(self):
+        self.assertEqual("Tourney_False_" + str(self.t.start_time) + "_0_0_0",
+                         str(self.t))
+
+class TestTournamentPlacingAnte(TestCase):
+    def setUp(self):
+        """
+        Creates various needed objects.
+        """
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                   real_name="", ranking_points=500,
+                                   pool_points=500, active=True,
+                                   comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                   real_name="", ranking_points=1500,
+                                   pool_points=0, active=True,
+                                   comment="")
+        self.t = Tournament.objects.create(finished=False,
+                                           start_time=timezone.now(),
+                                           name="Tourney",
+                                           ante=0, pool_points=0,
+                                           total_ante=0,
+                                           comment="")
+        self.t.players.add(self.p1, self.p2)
+        self.tpa11 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=1,
+                                                          ante=90,
+                                                          player=self.p1)
+        self.tpa12 = TournamentPlacingAnte.objects.create(tournament=self.t,
+                                                          placing=2,
+                                                          ante=10,
+                                                          player=self.p2)
+    def test_str(self):
+        self.assertEqual(str(self.t) + " 1 90 " + str(self.p1),
+                         str(self.tpa11))
