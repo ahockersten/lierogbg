@@ -2,9 +2,9 @@
 *~
 *.mo
 *.sqlite3
-build
-lierogbg/replays
-static
+/build
+/lierogbg/replays
+/static
 media/
 pyenv/
 .coverage
