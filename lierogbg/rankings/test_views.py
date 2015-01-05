@@ -707,7 +707,7 @@ class TestViewsNormalMatches(TestCase):
         response = add_game(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_add_game(self):
+    def test_add_game_anonymous(self):
         """
         add_game() doesn't work for anonymous user
         """
