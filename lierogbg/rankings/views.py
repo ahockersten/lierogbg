@@ -517,8 +517,8 @@ def get_players_list(request):
     Renders the list of players
     """
     if request.is_ajax():
-        all_time = request.POST['all_time']
-        active_only = request.POST['active_only']
+        all_time = request.GET['all_time']
+        active_only = request.GET['active_only']
         if all_time == "True":
             player_table = create_player_table(active_only,
                                                since=datetime.date(1970,

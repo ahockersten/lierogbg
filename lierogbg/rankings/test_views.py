@@ -586,7 +586,7 @@ class TestViews(TestCase):
         """
         form = {
             }
-        request = self.factory.post('/accounts/login', data=form)
+        request = self.factory.get('/accounts/login', data=form)
         request.user = AnonymousUser()
         with self.assertRaises(Http404):
             get_games_list(request)
@@ -597,8 +597,8 @@ class TestViews(TestCase):
         """
         form = {
             }
-        request = self.factory.post('/accounts/login', data=form,
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request = self.factory.get('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = AnonymousUser()
         response = get_games_list(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 200)
@@ -609,7 +609,7 @@ class TestViews(TestCase):
         """
         form = {
             }
-        request = self.factory.post('/accounts/login', data=form)
+        request = self.factory.get('/accounts/login', data=form)
         request.user = AnonymousUser()
         with self.assertRaises(Http404):
             get_players_list(request)
@@ -622,8 +622,8 @@ class TestViews(TestCase):
             'all_time' : 'True',
             'active_only' : 'True'
             }
-        request = self.factory.post('/accounts/login', data=form,
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request = self.factory.get('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = AnonymousUser()
         response = get_players_list(request)
         self.assertEqual(response.status_code, 200)
@@ -636,7 +636,7 @@ class TestViews(TestCase):
             'all_time' : 'False',
             'active_only' : 'False'
             }
-        request = self.factory.post('/accounts/login', data=form,
+        request = self.factory.get('/accounts/login', data=form,
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = self.user
         response = get_players_list(request)
