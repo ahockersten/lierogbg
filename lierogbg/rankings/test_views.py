@@ -16,7 +16,7 @@ from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
-from rankings.views import add_game, submit_game
+from rankings.views import add_game, submit_game, update_total_ante
 
 class TestViews(TestCase):
     """
@@ -1124,3 +1124,49 @@ class TestViewsSimilarPlayers(TestCase):
                            p1_rp_before)
         self.assertGreater(Player.objects.get(id=self.p2.pk).ranking_points,
                         p2_rp_before)
+
+    def test_update_total_ante_no_ajax(self):
+        """
+        update_total_ante() that is not AJAX fails
+        """
+        form = {
+            'ante' : '10',
+            'players' : [self.p1.pk, self.p2.pk],
+            'pool_points' : '10'
+            }
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        with self.assertRaises(Http404):
+            update_total_ante(request)
+
+    def test_update_total_ante_simple(self):
+        """
+        update_total_ante(), simple case
+        """
+        form = {
+            'ante' : '10',
+            'players' : [self.p1.pk, self.p2.pk],
+            'pool_points' : '10'
+            }
+        request = self.factory.post('/accounts/login', data=form,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = self.user
+        response = update_total_ante(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b'202')
+
+    def test_update_total_ante_invalid(self):
+        """
+        update_total_ante(), invalid case
+        """
+        form = {
+            'ante' : '10',
+            'players' : [self.p1.pk, self.p2.pk],
+            'pool_points' : 'a'
+            }
+        request = self.factory.post('/accounts/login', data=form,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = self.user
+        response = update_total_ante(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b'Error')
