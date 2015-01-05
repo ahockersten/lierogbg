@@ -16,7 +16,7 @@ from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
-from rankings.views import add_game
+from rankings.views import add_game, submit_game
 
 class TestViews(TestCase):
     """
@@ -183,29 +183,29 @@ class TestViews(TestCase):
         """
 
         tournament_table = create_tournament_table()
-        self.assertEquals(tournament_table[1]['pk'], self.t.pk)
-        self.assertEquals(tournament_table[1]['start_time'], self.t.start_time)
-        self.assertEquals(tournament_table[1]['name'], self.t.name)
-        self.assertEquals(tournament_table[1]['winner'], self.t.winner())
-        self.assertEquals(tournament_table[1]['players'],
+        self.assertEqual(tournament_table[1]['pk'], self.t.pk)
+        self.assertEqual(tournament_table[1]['start_time'], self.t.start_time)
+        self.assertEqual(tournament_table[1]['name'], self.t.name)
+        self.assertEqual(tournament_table[1]['winner'], self.t.winner())
+        self.assertEqual(tournament_table[1]['players'],
                           len(self.t.players.all()))
-        self.assertEquals(tournament_table[1]['games'], len(self.t.games()))
-        self.assertEquals(tournament_table[1]['ante'], self.t.ante)
-        self.assertEquals(tournament_table[1]['total_ante'],
+        self.assertEqual(tournament_table[1]['games'], len(self.t.games()))
+        self.assertEqual(tournament_table[1]['ante'], self.t.ante)
+        self.assertEqual(tournament_table[1]['total_ante'],
                           self.t.total_ante)
-        self.assertEquals(tournament_table[1]['finished'], self.t.finished)
+        self.assertEqual(tournament_table[1]['finished'], self.t.finished)
 
-        self.assertEquals(tournament_table[0]['pk'], self.t2.pk)
-        self.assertEquals(tournament_table[0]['start_time'], self.t2.start_time)
-        self.assertEquals(tournament_table[0]['name'], self.t2.name)
-        self.assertEquals(tournament_table[0]['winner'], self.t2.winner())
-        self.assertEquals(tournament_table[0]['players'],
+        self.assertEqual(tournament_table[0]['pk'], self.t2.pk)
+        self.assertEqual(tournament_table[0]['start_time'], self.t2.start_time)
+        self.assertEqual(tournament_table[0]['name'], self.t2.name)
+        self.assertEqual(tournament_table[0]['winner'], self.t2.winner())
+        self.assertEqual(tournament_table[0]['players'],
                           len(self.t2.players.all()))
-        self.assertEquals(tournament_table[0]['games'], len(self.t2.games()))
-        self.assertEquals(tournament_table[0]['ante'], self.t2.ante)
-        self.assertEquals(tournament_table[0]['total_ante'],
+        self.assertEqual(tournament_table[0]['games'], len(self.t2.games()))
+        self.assertEqual(tournament_table[0]['ante'], self.t2.ante)
+        self.assertEqual(tournament_table[0]['total_ante'],
                           self.t2.total_ante)
-        self.assertEquals(tournament_table[0]['finished'], self.t2.finished)
+        self.assertEqual(tournament_table[0]['finished'], self.t2.finished)
 
     def test_tournaments(self):
         """
@@ -456,7 +456,9 @@ class TestViews(TestCase):
 
     def test_save_tournament_no_mgmt_form(self):
         """
-        Saving a tournament with no management form fails
+        Saving a tournament with no management form fails.
+        This testcase will be obsolete in Django 1.8, see
+        https://code.djangoproject.com/ticket/22276
         """
         # no management form data
         management_form_data = {
@@ -516,35 +518,35 @@ class TestViewsNormalMatches(TestCase):
         """
         Creates various needed objects.
         """
-        p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
+        self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
+        self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
                                    comment="")
-        p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
-        p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
+        self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
                                    real_name="", ranking_points=1500,
                                    pool_points=0, active=False,
                                    comment="")
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
-                                       player_left=p1, player_right=p2,
-                                       winner=p1, comment="")
+                                       player_left=self.p1, player_right=self.p2,
+                                       winner=self.p1, comment="")
         g2 = PlayedGame.objects.create(tournament=None, ranked=True,
                                   start_time=timezone.now(),
-                                  player_left=p2, player_right=p1,
-                                  winner=p2, comment="")
+                                  player_left=self.p2, player_right=self.p1,
+                                  winner=self.p2, comment="")
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=3, replay_file=None)
         Subgame.objects.create(parent=g2, map_played="", pl_lives=0,
                                pr_lives=3, replay_file=None)
-        PointsChanged.objects.create(player=p1, game=g1, rp_before=600,
+        PointsChanged.objects.create(player=self.p1, game=g1, rp_before=600,
                                      rp_after=500, pp_before=0, pp_after=0)
-        PointsChanged.objects.create(player=p2, game=g1, rp_before=1400,
+        PointsChanged.objects.create(player=self.p2, game=g1, rp_before=1400,
                                      rp_after=1500, pp_before=0, pp_after=0)
 
 
@@ -583,3 +585,147 @@ class TestViewsNormalMatches(TestCase):
 
         response = add_game(request)
         self.assertEqual(response.status_code, 302)
+
+    def test_submit_game_valid(self):
+        """
+        Submit a game for a valid case.
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        management_form_data = {
+            'subgame_set-MIN_NUM_FORMS' : '0',
+            'subgame_set-INITIAL_FORMS' : '0',
+            'subgame_set-TOTAL_FORMS' : '1',
+            'subgame_set-MAX_NUM_FORMS' : '1000',
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : self.p1.pk,
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            'ranked' : 'on',
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_game(request, tournament_id=None)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankings')
+
+        # a ranked game means ranking points should have changed
+        self.assertGreater(Player.objects.get(id=self.p1.pk).ranking_points,
+                           p1_rp_before)
+        self.assertLess(Player.objects.get(id=self.p2.pk).ranking_points,
+                        p2_rp_before)
+
+    def test_submit_game_valid_unranked(self):
+        """
+        Submit a game for a valid unranked case.
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        management_form_data = {
+            'subgame_set-MIN_NUM_FORMS' : '0',
+            'subgame_set-INITIAL_FORMS' : '0',
+            'subgame_set-TOTAL_FORMS' : '1',
+            'subgame_set-MAX_NUM_FORMS' : '1000',
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : self.p1.pk,
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_game(request, tournament_id=None)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankings')
+
+        # an unranked game means ranking points should not have changed
+        self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
+                           p1_rp_before)
+        self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
+                        p2_rp_before)
+
+    def test_submit_game_no_mgmt_form(self):
+        """
+        Submit a game with no management form
+        This testcase will be obsolete in Django 1.8, see
+        https://code.djangoproject.com/ticket/22276
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        management_form_data = {
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : self.p1.pk,
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            'ranked' : 'on',
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        with self.assertRaises(ValidationError):
+            submit_game(request, tournament_id=None)
+
+        # error means no change
+        self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
+                         p1_rp_before)
+        self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
+                         p2_rp_before)
+
+    def test_submit_game_invalid(self):
+        """
+        Submit a game for an invalid case. This game's winner is different
+        than the participants.
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        p3_rp_before = self.p3.ranking_points
+        management_form_data = {
+            'subgame_set-MIN_NUM_FORMS' : '0',
+            'subgame_set-INITIAL_FORMS' : '0',
+            'subgame_set-TOTAL_FORMS' : '1',
+            'subgame_set-MAX_NUM_FORMS' : '1000',
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : self.p3.pk,
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            'ranked' : 'on',
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_game(request, tournament_id=None)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankingserror/')
+
+        # error means no change
+        self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
+                         p1_rp_before)
+        self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
+                         p2_rp_before)
+        self.assertEqual(Player.objects.get(id=self.p3.pk).ranking_points,
+                         p3_rp_before)
