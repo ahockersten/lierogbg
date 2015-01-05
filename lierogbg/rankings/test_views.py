@@ -844,19 +844,22 @@ class TestViewsNormalMatches(TestCase):
         p1_rp_before = self.p1.ranking_points
         p2_rp_before = self.p2.ranking_points
         p3_rp_before = self.p3.ranking_points
+        # remaining lives are < 0, which is an error
         management_form_data = {
             'subgame_set-MIN_NUM_FORMS' : '0',
             'subgame_set-INITIAL_FORMS' : '0',
             'subgame_set-TOTAL_FORMS' : '1',
             'subgame_set-MAX_NUM_FORMS' : '1000',
             'subgame_set-0-map' : 'Foo',
-            'subgame_set-0-pl_lives' : '0',
-            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-pl_lives' : '-1',
+            'subgame_set-0-pr_lives' : '-1',
             'subgame_set-0-replay_file' : '',
             }
         form = {
             'start_time' : '2014-01-01 07:00',
+            'winner' : self.p1.pk,
             'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
             'ranked' : 'on',
             }
         form.update(management_form_data)

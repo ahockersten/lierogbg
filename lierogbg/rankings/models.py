@@ -3,6 +3,7 @@ Models used in the rankings
 """
 from django.db import models
 from django.db.models import Q
+from django.forms import ValidationError
 from rankings import fields
 
 class PlayerManager(models.Manager):
@@ -242,6 +243,15 @@ class Subgame(models.Model):
 
     def __str__(self):
         return u'%i - %i' % (self.pl_lives, self.pr_lives)
+
+    def clean(self):
+        """
+        Custom clean. Make sure pl_lives and pr_lives are positive
+        """
+        if self.pl_lives < 0:
+            raise ValidationError('Player left lives may not be less than 0')
+        if self.pr_lives < 0:
+            raise ValidationError('Player right lives may not be less than 0')
 
 class PointsChanged(models.Model):
     """

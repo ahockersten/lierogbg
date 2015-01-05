@@ -354,7 +354,8 @@ def submit_game(request, tournament_id=None):
             # can't add games to finished tournaments
             if tournament.finished:
                 return redirect('rankings.views.error')
-        subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
+        subgame_formset = SubgameFormSet(request.POST, request.FILES,
+                                         instance=played_game)
 
         if not subgame_formset.is_valid():
             return redirect('rankings.views.error')
