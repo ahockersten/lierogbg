@@ -19,7 +19,7 @@ class ColorFormField(forms.IntegerField):
 
     def clean(self, value):
         if value == '' and not self.required:
-            return u''
+            return ''
         if not re.match('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$', value):
             raise forms.ValidationError(self.error_messages['invalid'])
         value = int(value[1:], 16)
