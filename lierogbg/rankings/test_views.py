@@ -797,3 +797,42 @@ class TestViewsNormalMatches(TestCase):
                          p2_rp_before)
         self.assertEqual(Player.objects.get(id=self.p3.pk).ranking_points,
                          p3_rp_before)
+
+    def test_submit_game_tied(self):
+        """
+        Submit a game for tied case. This game's winner is different
+        than the participants.
+        """
+        p1_rp_before = self.p1.ranking_points
+        p2_rp_before = self.p2.ranking_points
+        p3_rp_before = self.p3.ranking_points
+        management_form_data = {
+            'subgame_set-MIN_NUM_FORMS' : '0',
+            'subgame_set-INITIAL_FORMS' : '0',
+            'subgame_set-TOTAL_FORMS' : '1',
+            'subgame_set-MAX_NUM_FORMS' : '1000',
+            'subgame_set-0-map' : 'Mmmap',
+            'subgame_set-0-pl_lives' : '3',
+            'subgame_set-0-pr_lives' : '0',
+            'subgame_set-0-replay_file' : '',
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'winner' : '',
+            'player_left' : self.p1.pk,
+            'player_right' : self.p2.pk,
+            'ranked' : 'on',
+            }
+        form.update(management_form_data)
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = self.user
+        response = submit_game(request, tournament_id=None)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/rankings')
+
+        # a ranked game means ranking points should have changed, even in a
+        # tie, since p1 had less RP than p2
+        self.assertGreater(Player.objects.get(id=self.p1.pk).ranking_points,
+                           p1_rp_before)
+        self.assertLess(Player.objects.get(id=self.p2.pk).ranking_points,
+                        p2_rp_before)
