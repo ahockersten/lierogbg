@@ -17,7 +17,7 @@ from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
 from rankings.views import add_game, submit_game, update_total_ante
-from rankings.views import get_games_list
+from rankings.views import get_games_list, get_players_list
 
 class TestViews(TestCase):
     """
@@ -600,6 +600,45 @@ class TestViews(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = AnonymousUser()
         response = get_games_list(request, tournament_id=self.t.pk)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_players_list_no_ajax(self):
+        """
+        get_players_list() that is not AJAX fails
+        """
+        form = {
+            }
+        request = self.factory.post('/accounts/login', data=form)
+        request.user = AnonymousUser()
+        with self.assertRaises(Http404):
+            get_players_list(request)
+
+    def test_get_players_list_valid_all_time(self):
+        """
+        get_players_list() for valid all time data
+        """
+        form = {
+            'all_time' : 'True',
+            'active_only' : 'True'
+            }
+        request = self.factory.post('/accounts/login', data=form,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = AnonymousUser()
+        response = get_players_list(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_players_list_valid_not_all_time(self):
+        """
+        get_players_list() for valid data, not all time
+        """
+        form = {
+            'all_time' : 'False',
+            'active_only' : 'False'
+            }
+        request = self.factory.post('/accounts/login', data=form,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        request.user = self.user
+        response = get_players_list(request)
         self.assertEqual(response.status_code, 200)
 
 class TestViewsNormalMatches(TestCase):
