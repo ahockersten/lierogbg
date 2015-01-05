@@ -17,7 +17,8 @@ from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
 from rankings.views import add_game, submit_game, update_total_ante
-from rankings.views import get_games_list, get_players_list
+from rankings.views import get_games_list, get_players_list, error
+from rankings.views import internal_info
 
 class TestViews(TestCase):
     """
@@ -1294,4 +1295,22 @@ class TestViewsLotsOfMatches(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         request.user = AnonymousUser()
         response = get_games_list(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_error(self):
+        """
+        Error page is rendered correctly.
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+        response = error(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_internal_info(self):
+        """
+        Internal info page is rendered correctly.
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+        response = internal_info(request)
         self.assertEqual(response.status_code, 200)
