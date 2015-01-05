@@ -3,7 +3,6 @@ Views for the ranking module
 """
 
 import datetime
-import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
@@ -20,9 +19,7 @@ from rankings.models import Player
 from rankings.models import PointsChanged
 from rankings.models import Tournament
 
-"""
-Number of games to display per page in the game list
-"""
+# Number of games to display per page in the game list
 GAME_PAGE_LIMIT = 30
 
 def ranking(request, active_only):
@@ -98,7 +95,8 @@ def games(request):
     """
     Display data about all games.
     """
-    first_games_by_date = PlayedGame.objects.all().order_by('start_time').reverse()[:GAME_PAGE_LIMIT]
+    all_pg = PlayedGame.objects.all().order_by('start_time')
+    first_games_by_date = all_pg.reverse()[:GAME_PAGE_LIMIT]
     last_game = PlayedGame.objects.last_game()
     last_game_time = None
     if last_game != None:
@@ -340,6 +338,7 @@ def add_game(request):
 def submit_game(request, tournament_id=None):
     """
     Submit a game. Will calculate new rp/pp etc if this is a ranked game.
+    FIXME split this up somehow
     """
     tournament = None
     if tournament_id != None:
@@ -485,6 +484,7 @@ def get_tournament_games_list(request, tournament_id):
             context['games'] = create_games_table(all_games_in_tournament_by_date)
             return render(request, 'rankings/includes/list_games.html',
                           context)
+        # pylint: disable=no-member
         except Tournament.DoesNotExist:
             return HttpResponse('Error, incorrect parameters')
     else:

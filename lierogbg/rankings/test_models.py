@@ -2,7 +2,6 @@
 Tests for rankings models
 """
 import datetime
-from django.contrib.auth.models import User, AnonymousUser
 from django.forms import ValidationError
 from django.utils import timezone
 from django.test import TestCase
@@ -282,6 +281,7 @@ class TestPlayerAnteCalculation(TestCase):
         self.assertEqual(calculated_ante["rp"], 40)
         self.assertEqual(calculated_ante["pp"], 460)
 
+# pylint: disable=too-many-instance-attributes
 class TestTournament(TestCase):
     """
     Tests related to Tournament
@@ -291,18 +291,18 @@ class TestTournament(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         # an inactive player
         self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                       real_name="", ranking_points=1500,
-                                       pool_points=0, active=False,
-                                       comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=False,
+                                        comment="")
         # an inactive player
         self.p4 = Player.objects.create(name="Bar Foo", color="#00FFFF",
                                         real_name="", ranking_points=500,
@@ -423,7 +423,7 @@ class TestTournament(TestCase):
         self.assertGreater(Player.objects.get(id=self.p2.pk).ranking_points,
                            p2_rp_before)
         self.assertGreater(Player.objects.get(id=self.p3.pk).ranking_points,
-                        p3_rp_before)
+                           p3_rp_before)
 
     def test_games(self):
         """
@@ -450,6 +450,9 @@ class TestTournament(TestCase):
                          [self.tpa21, self.tpa22])
 
     def test_str(self):
+        """
+        __str__() for Tournament
+        """
         self.assertEqual("Tourney_False_" + str(self.t.start_time) + "_0_0_0",
                          str(self.t))
 
@@ -462,13 +465,13 @@ class TestTournamentPlacingAnte(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
                                            name="Tourney",
@@ -500,18 +503,18 @@ class TestPlayedGame(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         self.g1 = PlayedGame.objects.create(tournament=None, ranked=True,
-                                       start_time=timezone.now(),
-                                       player_left=self.p1,
-                                       player_right=self.p2,
-                                       winner=self.p1, comment="")
+                                            start_time=timezone.now(),
+                                            player_left=self.p1,
+                                            player_right=self.p2,
+                                            winner=self.p1, comment="")
         self.g2 = PlayedGame.objects.create(
             tournament=None, ranked=True,
             start_time=timezone.now() + datetime.timedelta(days=1),
@@ -546,8 +549,9 @@ class TestPlayedGame(TestCase):
         __str__() works correctly
         """
         self.assertEqual(
-            str(self.g1.start_time) + " " + str(self.p1) + " vs " + str(self.p2) + ", " + str(self.p1) + " won",
-            str(self.g1))
+            (str(self.g1.start_time) + ' ' + str(self.p1) + ' vs ',
+             str(self.p2) + ', ' + str(self.p1) + ' won', str(self.g1))
+            )
 
 class TestSubgame(TestCase):
     """
@@ -558,18 +562,18 @@ class TestSubgame(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         self.g1 = PlayedGame.objects.create(tournament=None, ranked=True,
-                                       start_time=timezone.now(),
-                                       player_left=self.p1,
-                                       player_right=self.p2,
-                                       winner=self.p1, comment="")
+                                            start_time=timezone.now(),
+                                            player_left=self.p1,
+                                            player_right=self.p2,
+                                            winner=self.p1, comment="")
         self.g2 = PlayedGame.objects.create(
             tournament=None, ranked=True,
             start_time=timezone.now() + datetime.timedelta(days=1),
@@ -613,6 +617,7 @@ class TestSubgame(TestCase):
         with self.assertRaises(ValidationError):
             sg5.clean()
 
+# pylint: disable=too-many-instance-attributes
 class TestPointsChanged(TestCase):
     """
     Tests related to PointsChanged
@@ -622,13 +627,13 @@ class TestPointsChanged(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
                                            name="Tourney",
@@ -644,12 +649,12 @@ class TestPointsChanged(TestCase):
                                                           placing=2,
                                                           ante=10,
                                                           player=self.p2)
-        self.pc1 = PointsChanged.objects.create(player=self.p1, tournament=self.t,
-                                                rp_before=500, rp_after=500,
-                                                pp_before=0, pp_after=0)
-        self.pc2 = PointsChanged.objects.create(player=self.p2, tournament=self.t,
-                                                rp_before=500, rp_after=500,
-                                                pp_before=0, pp_after=0)
+        self.pc1 = PointsChanged.objects.create(
+            player=self.p1, tournament=self.t, rp_before=500, rp_after=500,
+            pp_before=0, pp_after=0)
+        self.pc2 = PointsChanged.objects.create(
+            player=self.p2, tournament=self.t, rp_before=500, rp_after=500,
+            pp_before=0, pp_after=0)
         self.tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
                                              start_time=timezone.now(),
                                              player_left=self.p2,
