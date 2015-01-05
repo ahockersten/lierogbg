@@ -251,7 +251,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = submit_tournament(request)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingserror/')
+        self.assertEqual(response.url, '/rankings/error/')
 
     def test_submit_tournament_correct(self):
         """
@@ -281,7 +281,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = submit_tournament(request)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingsedit_tournament/3')
+        self.assertEqual(response.url, '/rankings/edit_tournament/3')
 
     def test_submit_tournament_incorrect_ante(self):
         """
@@ -311,7 +311,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = submit_tournament(request)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingserror/')
+        self.assertEqual(response.url, '/rankings/error/')
 
     def test_prepare_tournament_context_invalid_tournament(self):
         """
@@ -388,7 +388,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingstournaments/')
+        self.assertEqual(response.url, '/rankings/tournaments/')
 
     def test_save_tournament_valid(self):
         """
@@ -419,7 +419,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingstournaments/')
+        self.assertEqual(response.url, '/rankings/tournaments/')
 
     def test_save_tournament_already_finished(self):
         """
@@ -451,7 +451,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingserror/')
+        self.assertEqual(response.url, '/rankings/error/')
 
     def test_save_tournament_no_mgmt_form(self):
         """
@@ -535,7 +535,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankings')
+        self.assertEqual(response.url, '/rankings/')
 
         # an unranked game means ranking points should not have changed
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
@@ -570,7 +570,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=self.t2.pk)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingserror/')
+        self.assertEqual(response.url, '/rankings/error/')
 
         # an unranked game means ranking points should not have changed
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
@@ -682,7 +682,7 @@ class TestViewsNormalMatches(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=None)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankings')
+        self.assertEqual(response.url, '/rankings/')
 
         # a ranked game means ranking points should have changed
         self.assertGreater(Player.objects.get(id=self.p1.pk).ranking_points,
@@ -717,7 +717,7 @@ class TestViewsNormalMatches(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=None)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankings')
+        self.assertEqual(response.url, '/rankings/')
 
         # an unranked game means ranking points should not have changed
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
@@ -788,7 +788,7 @@ class TestViewsNormalMatches(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=None)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingserror/')
+        self.assertEqual(response.url, '/rankings/error/')
 
         # error means no change
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
@@ -828,7 +828,7 @@ class TestViewsNormalMatches(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=None)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankings')
+        self.assertEqual(response.url, '/rankings/')
 
         # a ranked game means ranking points should have changed, even in a
         # tie, since p1 had less RP than p2
@@ -867,7 +867,7 @@ class TestViewsNormalMatches(TestCase):
         request.user = self.user
         response = submit_game(request, tournament_id=None)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/rankingserror/')
+        self.assertEqual(response.url, '/rankings/error/')
 
         # error means no change
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
