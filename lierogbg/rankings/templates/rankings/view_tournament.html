@@ -59,7 +59,7 @@
             {% trans "Matches played" %}
         </div>
         <div class="panel-body">
-            {% include 'rankings/includes/list_games.html' with games=tournament_extra_data.games show_rp=False %}
+            {% include 'rankings/includes/list_games_tournament.html' with games=tournament_extra_data.games %}
         </div>
     </div>
     <div class="panel panel-success">

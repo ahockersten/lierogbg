@@ -80,7 +80,7 @@ $(document).ready(function () {
         var id_regex = new RegExp('id_tournament_(\\d+)');
         var replacement = "$1";
         var replaced = tournament_key.replace(id_regex, replacement);
-        window.location.href = {% url 'rankings.views.edit_tournament' '' %} + replaced;
+        window.location.href = "{% url 'rankings.views.edit_tournament' '' %}" + replaced;
     });
 
     $(".tournament_view_link").click(function() {
@@ -88,7 +88,7 @@ $(document).ready(function () {
         var id_regex = new RegExp('id_tournament_(\\d+)');
         var replacement = "$1";
         var replaced = tournament_key.replace(id_regex, replacement);
-        window.location.href = {% url 'rankings.views.view_tournament' '' %} + replaced;
+        window.location.href = "{% url 'rankings.views.view_tournament' '' %}" + replaced;
     });
 });
 </script>

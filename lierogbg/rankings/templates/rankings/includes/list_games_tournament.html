@@ -1,0 +1,67 @@
+{% load i18n %}
+<div class="row" id="id_list_games" data-current-match="{{ current_match }}" data-show-all="{{ show_all }}">
+    <div class="col-xs-12">
+        <table class="table" id="id_list_games_table">
+            <thead>
+                <tr>
+                    <th>{% trans "Time" %}</th>
+                    <th class="align_left">{% trans "Left player" %}</th>
+                    <th class="align_left">{% trans "Right player" %}</th>
+                    <th>{% trans "Winner" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in games %}
+                    <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
+                        <td>{{ g.game.start_time }}</td>
+                        <td class="align_left">
+                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                            {{ g.game.player_left }}
+                        </td>
+                        <td class="align_left">
+                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                            {{ g.game.player_right }}
+                        </td>
+                        <td>{{ g.game.winner }}</td>
+                    </tr>
+                    <tr class="collapse" id="more-info-{{forloop.counter}}">
+                        <td colspan="6">
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>{% trans "Round" %}</th>
+                                                <th>{% trans "Map" %}</th>
+                                                <th>{% trans "Score" %}</th>
+                                                <th>{% trans "Download" %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for sg in g.subgames %}
+                                                <tr>
+                                                    <td>{% trans "Round" %} {{ forloop.counter }}</td>
+                                                    <td>{{ sg.map_played }}</td>
+                                                    <td>
+                                                        <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
+                                                        {{ sg.pl_lives }} - {{ sg.pr_lives }}
+                                                        <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{{ STATIC_URL }}/img/lieroworm_pointing_left.svg"></img>
+                                                    </td>
+                                                    <td>
+                                                        {% if sg.replay_file %}
+                                                            <a href="{{ sg.replay_file.url }}"><span class="glyphicon glyphicon-save"></span></a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

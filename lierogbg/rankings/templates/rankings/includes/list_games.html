@@ -6,17 +6,11 @@
                 <tr>
                     <th>{% trans "Time" %}</th>
                     <th class="align_left">{% trans "Left player" %}</th>
-                    {% if full %}
-                        <th>{% trans "Left player RP" %}</th>
-                    {% endif %}
+                    <th>{% trans "Left player RP" %}</th>
                     <th class="align_left">{% trans "Right player" %}</th>
-                    {% if full %}
-                        <th>{% trans "Right player RP" %}</th>
-                    {% endif %}
+                    <th>{% trans "Right player RP" %}</th>
                     <th>{% trans "Winner" %}</th>
-                    {% if full %}
-                        <th>{% trans "Match type" %}</th>
-                    {% endif %}
+                    <th>{% trans "Match type" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,44 +21,38 @@
                             <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                             {{ g.game.player_left }}
                         </td>
-                        {% if full %}
-                            <td>
-                                {% if g.rp_pl_change > 0 %}
-                                    {{ g.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
-                                {% elif g.rp_pl_change < 0 %}
-                                    {{ g.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
-                                {% else %}
-                                    {{ g.rp_pl_after }} (-)
-                                {% endif %}
-                            </td>
-                        {% endif %}
+                        <td>
+                            {% if g.rp_pl_change > 0 %}
+                                {{ g.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
+                            {% elif g.rp_pl_change < 0 %}
+                                {{ g.rp_pl_after }} <span class="change_negative">({{ g.rp_pl_change }})</span>
+                            {% else %}
+                                {{ g.rp_pl_after }} (-)
+                            {% endif %}
+                        </td>
                         <td class="align_left">
                             <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{{ STATIC_URL }}/img/lieroworm_pointing_right.svg"></img>
                             {{ g.game.player_right }}
                         </td>
-                        {% if full %}
-                            <td>
-                                {% if g.rp_pr_change > 0 %}
-                                    {{ g.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
-                                {% elif g.rp_pr_change < 0%}
-                                    {{ g.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
-                                {% else %}
-                                    {{ g.rp_pr_after }} (-)
-                                {% endif %}
-                            </td>
-                        {% endif %}
+                        <td>
+                            {% if g.rp_pr_change > 0 %}
+                                {{ g.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>
+                            {% elif g.rp_pr_change < 0%}
+                                {{ g.rp_pr_after }} <span class="change_negative">({{ g.rp_pr_change }})</span>
+                            {% else %}
+                                {{ g.rp_pr_after }} (-)
+                            {% endif %}
+                        </td>
                         <td>{{ g.game.winner }}</td>
-                        {% if full %}
-                            <td>
-                                {% if g.game.tournament %}
-                                    {% trans "Tournament" %}
-                                {% elif g.game.ranked %}
-                                    {% trans "Ranked" %}
-                                {% else %}
-                                    {% trans "Unranked" %}
-                                {% endif %}
-                            </td>
-                        {% endif %}
+                        <td>
+                            {% if g.game.tournament %}
+                                {% trans "Tournament" %}
+                            {% elif g.game.ranked %}
+                                {% trans "Ranked" %}
+                            {% else %}
+                                {% trans "Unranked" %}
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr class="collapse" id="more-info-{{forloop.counter}}">
                         <td colspan="6">

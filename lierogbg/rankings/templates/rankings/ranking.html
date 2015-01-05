@@ -98,12 +98,11 @@ $(document).ready(function() {
         } else {
             data.all_time = "False";
         }
-        var str = JSON.stringify(data);
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: url,
             traditional: true,
-            data: str,
+            data: data,
             success: function(data) {
                 $("#id_ranking_table").replaceWith(data);
                 update_images();

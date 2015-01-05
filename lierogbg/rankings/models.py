@@ -3,6 +3,7 @@ Models used in the rankings
 """
 from django.db import models
 from django.db.models import Q
+from django.forms import ValidationError
 from rankings import fields
 
 class PlayerManager(models.Manager):
@@ -150,7 +151,10 @@ class Tournament(models.Model):
         Returns the winner of this tournament, or None if there is no winner.
         """
         tpas = TournamentPlacingAnte.objects.all()
-        return tpas.filter(tournament=self).filter(placing=1)[0].player
+        try:
+            return tpas.filter(tournament=self).filter(placing=1)[0].player
+        except IndexError:
+            return None
 
     def tournament_placing_antes(self):
         """
@@ -177,7 +181,7 @@ class TournamentPlacingAnte(models.Model):
     player = models.ForeignKey(Player, null=True, blank=True)
 
     def __str__(self):
-        return u'%s %s %s %s' % (self.tournament, self.placing, self.ante,
+        return '%s %s %s %s' % (self.tournament, self.placing, self.ante,
                                  self.player)
 
 class PlayedGameManager(models.Manager):
@@ -238,7 +242,16 @@ class Subgame(models.Model):
     replay_file = models.FileField(blank=True, upload_to="replays/")
 
     def __str__(self):
-        return u'%i - %i' % (self.pl_lives, self.pr_lives)
+        return '%i - %i' % (self.pl_lives, self.pr_lives)
+
+    def clean(self):
+        """
+        Custom clean. Make sure pl_lives and pr_lives are positive
+        """
+        if self.pl_lives < 0:
+            raise ValidationError('Player left lives may not be less than 0')
+        if self.pr_lives < 0:
+            raise ValidationError('Player right lives may not be less than 0')
 
 class PointsChanged(models.Model):
     """
@@ -263,7 +276,7 @@ class PointsChanged(models.Model):
     pp_after = models.IntegerField()
 
     def __str__(self):
-        return u'%s_%s_%s_%s_%s_%s_%s' % (self.player, self.tournament,
+        return '%s_%s_%s_%s_%s_%s_%s' % (self.player, self.tournament,
                                           self.game, self.rp_before,
                                           self.rp_after, self.pp_before,
                                           self.pp_after)

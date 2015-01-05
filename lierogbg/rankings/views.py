@@ -123,11 +123,13 @@ def create_games_table(games_list):
         tmp["winner"] = _('Tied') if g.winner == None else g.winner
         all_pc = PointsChanged.objects.all()
         pc_pl = all_pc.filter(game=g).filter(player=g.player_left)
-        tmp["rp_pl_after"] = pc_pl[0].rp_after
-        tmp["rp_pl_change"] = pc_pl[0].rp_after - pc_pl[0].rp_before
+        if pc_pl.exists():
+            tmp["rp_pl_after"] = pc_pl[0].rp_after
+            tmp["rp_pl_change"] = pc_pl[0].rp_after - pc_pl[0].rp_before
         pc_pr = all_pc.filter(game=g).filter(player=g.player_right)
-        tmp["rp_pr_after"] = pc_pr[0].rp_after
-        tmp["rp_pr_change"] = pc_pr[0].rp_after - pc_pr[0].rp_before
+        if pc_pl.exists():
+            tmp["rp_pr_after"] = pc_pr[0].rp_after
+            tmp["rp_pr_change"] = pc_pr[0].rp_after - pc_pr[0].rp_before
         tmp["subgames"] = g.subgames()
         ret.append(tmp)
     return ret
@@ -244,7 +246,7 @@ def prepare_tournament_context(tournament_id, form):
     """
     Prepares the context for a tournament.
     """
-    instance = get_object_or_404(Tournament, pk=tournament_id)
+    instance = Tournament.objects.get(pk=tournament_id)
     tournament_form = form(instance=instance)
     played_game_form = PlayedGameForm(initial={'tournament' : instance},
                                       available_players=instance.players.all())
@@ -321,7 +323,7 @@ def save_tournament(request, tournament_id):
 @login_required
 def add_game(request):
     """
-    Adds a game from a given form and formset
+    Renders the "add game" page.
     """
     played_game_form = PlayedGameForm(
         available_players=Player.objects.active_players())
@@ -349,7 +351,11 @@ def submit_game(request, tournament_id=None):
         played_game.tournament = tournament
         if tournament != None:
             played_game.ranked = False
-        subgame_formset = SubgameFormSet(request.POST, request.FILES, instance=played_game)
+            # can't add games to finished tournaments
+            if tournament.finished:
+                return redirect('rankings.views.error')
+        subgame_formset = SubgameFormSet(request.POST, request.FILES,
+                                         instance=played_game)
 
         if not subgame_formset.is_valid():
             return redirect('rankings.views.error')
@@ -467,10 +473,9 @@ def update_total_ante(request):
     else:
         raise Http404
 
-def get_games_list(request, tournament_id=None):
+def get_tournament_games_list(request, tournament_id):
     """
-    Renders a list of games.
-    FIXME this does too much!
+    Renders a list of for the tournament view.
     """
     if request.is_ajax():
         context = {}
@@ -478,31 +483,44 @@ def get_games_list(request, tournament_id=None):
             tournament = Tournament.objects.get(id=tournament_id)
             all_games_in_tournament_by_date = tournament.games().order_by('start_time').reverse()
             context['games'] = create_games_table(all_games_in_tournament_by_date)
-            context['full'] = True
-            return render(request, 'rankings/includes/list_games.html', context)
+            return render(request, 'rankings/includes/list_games.html',
+                          context)
         except Tournament.DoesNotExist:
-            games_to_load = 0
-            try:
-                games_to_load = int(request.GET['games'])
-            except MultiValueDictKeyError:
-                pass
-            context['show_all'] = request.GET['show_all']
-            all_games = PlayedGame.objects.all()
-            games_by_date = []
-            next_match = games_to_load + GAME_PAGE_LIMIT
-            games_by_date = all_games.order_by('start_time').reverse()[games_to_load:next_match]
-            context['games'] = create_games_table(games_by_date)
-            context['current_match'] = games_to_load
-            if next_match < len(all_games):
-                context['next_match'] = next_match
-            prev_match = games_to_load - GAME_PAGE_LIMIT
-            if prev_match > -1:
-                context['prev_match'] = prev_match
-            context['full'] = True
-            if context['show_all'] == "True":
-                return render(request, 'rankings/includes/list_games.html', context)
-            else:
-                return render(request, 'rankings/includes/list_games_hidden.html', context)
+            return HttpResponse('Error, incorrect parameters')
+    else:
+        raise Http404
+
+def get_games_list(request):
+    """
+    Renders a list of games.
+    :param request.GET['games']: the (newest - x) games to load.
+                                 Defaults to 0.
+    :param request.GET['show_all']: Whether or not to show full information
+                                    about all games.
+    """
+    if request.is_ajax():
+        context = {}
+        games_to_load = 0
+        try:
+            games_to_load = int(request.GET['games'])
+        except MultiValueDictKeyError:
+            pass
+        context['show_all'] = request.GET['show_all']
+        all_games = PlayedGame.objects.all()
+        games_by_date = []
+        next_match = games_to_load + GAME_PAGE_LIMIT
+        games_by_date = all_games.order_by('start_time').reverse()[games_to_load:next_match]
+        context['games'] = create_games_table(games_by_date)
+        context['current_match'] = games_to_load
+        if next_match < len(all_games):
+            context['next_match'] = next_match
+        prev_match = games_to_load - GAME_PAGE_LIMIT
+        if prev_match > -1:
+            context['prev_match'] = prev_match
+        if context['show_all'] == "True":
+            return render(request, 'rankings/includes/list_games.html', context)
+        else:
+            return render(request, 'rankings/includes/list_games_hidden.html', context)
     else:
         raise Http404
 
@@ -511,11 +529,8 @@ def get_players_list(request):
     Renders the list of players
     """
     if request.is_ajax():
-        str_body = request.body.decode('utf-8')
-        data = json.loads(str_body)
-        all_time = data['all_time']
-        active_only = data['active_only']
-        print(all_time)
+        all_time = request.GET['all_time']
+        active_only = request.GET['active_only']
         if all_time == "True":
             player_table = create_player_table(active_only,
                                                since=datetime.date(1970,

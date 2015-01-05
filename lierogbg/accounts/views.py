@@ -2,11 +2,10 @@
 Views for the accounts app. These views handle login, logout and
 authentication.
 """
-
+from django.contrib import auth
 from django.shortcuts import render
 from django.shortcuts import redirect
-
-from django.contrib import auth
+from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import ugettext_lazy as _
 
 def authenticate(request):
@@ -17,10 +16,12 @@ def authenticate(request):
     :type request: HttpRequest
     :returns: A HttpResponse
     """
-    username = request.POST['username']
-    password = request.POST['password']
-
-    user = auth.authenticate(username=username, password=password)
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+        user = auth.authenticate(username=username, password=password)
+    except MultiValueDictKeyError:
+        user = None
 
     if user is not None:
         if user.is_active:
@@ -70,4 +71,3 @@ def logout(request):
         auth.logout(request)
 
     return redirect('rankings.views.ranking')
-
