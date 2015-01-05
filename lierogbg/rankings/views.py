@@ -323,7 +323,7 @@ def save_tournament(request, tournament_id):
 @login_required
 def add_game(request):
     """
-    Adds a game from a given form and formset
+    Renders the "add game" page.
     """
     played_game_form = PlayedGameForm(
         available_players=Player.objects.active_players())

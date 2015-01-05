@@ -16,6 +16,7 @@ from rankings.views import create_player_table, games, ranking
 from rankings.views import create_tournament_table, tournaments
 from rankings.views import prepare_tournament_context
 from rankings.views import edit_tournament, view_tournament, save_tournament
+from rankings.views import add_game
 
 class TestViews(TestCase):
     """
@@ -505,7 +506,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = save_tournament(request, tournament_id=self.t.pk)
         self.assertEqual(response.status_code, 302)
-        s
+
 
 class TestViewsNormalMatches(TestCase):
     """
@@ -562,3 +563,23 @@ class TestViewsNormalMatches(TestCase):
 
         response = games(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_add_game(self):
+        """
+        add_game() works
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = self.user
+
+        response = add_game(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_add_game(self):
+        """
+        add_game() doesn't work for anonymous user
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+
+        response = add_game(request)
+        self.assertEqual(response.status_code, 302)
