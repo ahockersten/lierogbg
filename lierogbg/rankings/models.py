@@ -41,9 +41,9 @@ class Player(models.Model):
     def calculate_ante_percentage(self, percentage, pool_points):
         """
         Calculates the ante according to the given formula for a certain
-        ante percentage and a pool point unlock
-        returns a dictionary consisting of the ante, the new rp (without removing
-        the ante) and the new pp.
+        ante percentage and a pool point unlock returns a dictionary
+        consisting of the ante, the new rp (without removing the ante)
+        and the new pp.
         """
         rp = self.ranking_points
         pp = self.pool_points
@@ -62,8 +62,8 @@ class Player(models.Model):
     def calculate_ranked_ante(self):
         """
         Calculates the ante for a ranked match for this player
-        returns a dictionary consisting of the ante, the new rp (without removing
-        the ante) and the new pp.
+        returns a dictionary consisting of the ante, the new rp
+        (without removing the ante) and the new pp.
         """
         return self.calculate_ante_percentage(2, 40)
 
@@ -76,9 +76,9 @@ class Player(models.Model):
 
     def ranked_and_tournament_games(self, since):
         """
-        Returns all games with this player that earned or lost them ranking
-        points, in other words: ranked and tournament games, but not unranked
-        games.
+        Returns all games with this player that earned or lost
+        them ranking points, in other words: ranked and tournament
+        games, but not unranked games.
         """
         games = self.all_games().exclude(Q(ranked=False) &
                                          Q(tournament=None))
@@ -102,9 +102,10 @@ class Player(models.Model):
 
 class Tournament(models.Model):
     """
-    Describes a tournament. When initially created, it takes the ante from and
-    adds pool points to all players. When it is recorded as finished, "finished"
-    is set to True and it hands out the ante to the winners.
+    Describes a tournament. When initially created, it takes
+    the ante from and adds pool points to all players. When
+    it is recorded as finished, "finished" is set to True and
+    it hands out the ante to the winners.
     """
     # when True, this tournament has ended and points from it have been recorded
     finished = models.BooleanField(default=False)
@@ -125,8 +126,9 @@ class Tournament(models.Model):
 
     def distribute_points(self):
         """
-        Distributes points to all players in this tournament. It is an error
-        to call this without finished being set to true.
+        Distributes points to all players in this tournament.
+        It is an error to call this without finished being set
+        to true.
         """
         # not allowed to distribute points for unfinished tournaments
         if not self.finished:
@@ -142,13 +144,14 @@ class Tournament(models.Model):
 
     def games(self):
         """
-        Returns all played games in this tournament
+        Returns all played games in this tournament.
         """
         return PlayedGame.objects.all().filter(tournament=self)
 
     def winner(self):
         """
-        Returns the winner of this tournament, or None if there is no winner.
+        Returns the winner of this tournament, or None if
+        there is no winner.
         """
         tpas = TournamentPlacingAnte.objects.all()
         try:
@@ -158,7 +161,8 @@ class Tournament(models.Model):
 
     def tournament_placing_antes(self):
         """
-        Returns all tournament placing antes belonging to this tournament
+        Returns all tournament placing antes belonging to
+        this tournament.
         """
         return TournamentPlacingAnte.objects.all().filter(tournament=self)
 
@@ -169,7 +173,8 @@ class Tournament(models.Model):
 
 class TournamentPlacingAnte(models.Model):
     """
-    This is the number of points given to each placing in a tournament.
+    This is the number of points given to each placing in
+    a tournament.
     """
     # the tournament this ante belongs to
     tournament = models.ForeignKey(Tournament)
@@ -182,7 +187,7 @@ class TournamentPlacingAnte(models.Model):
 
     def __str__(self):
         return '%s %s %s %s' % (self.tournament, self.placing, self.ante,
-                                 self.player)
+                                self.player)
 
 class PlayedGameManager(models.Manager):
     """
@@ -206,11 +211,14 @@ class PlayedGame(models.Model):
     # the start time of the game
     start_time = models.DateTimeField()
     # the left player
-    player_left = models.ForeignKey(Player, related_name="playedgame_player_left")
+    player_left = models.ForeignKey(Player,
+                                    related_name="playedgame_player_left")
     # the right player
-    player_right = models.ForeignKey(Player, related_name="playedgame_player_right")
+    player_right = models.ForeignKey(Player,
+                                     related_name="playedgame_player_right")
     # winner of this game
-    winner = models.ForeignKey(Player, related_name="winner", blank=True, null=True)
+    winner = models.ForeignKey(Player, related_name="winner",
+                               blank=True, null=True)
     # a written comment for this game
     comment = models.CharField(blank=True, max_length=100000)
 
@@ -277,6 +285,6 @@ class PointsChanged(models.Model):
 
     def __str__(self):
         return '%s_%s_%s_%s_%s_%s_%s' % (self.player, self.tournament,
-                                          self.game, self.rp_before,
-                                          self.rp_after, self.pp_before,
-                                          self.pp_after)
+                                         self.game, self.rp_before,
+                                         self.rp_after, self.pp_before,
+                                         self.pp_after)

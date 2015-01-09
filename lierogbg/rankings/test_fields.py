@@ -1,10 +1,7 @@
 """
 Tests for rankings fields
 """
-import datetime
-from django.contrib.auth.models import User, AnonymousUser
 from django.forms import ValidationError
-from django.utils import timezone
 from django.test import TestCase
 from rankings.fields import ColorFormField, ColorField
 

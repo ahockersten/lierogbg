@@ -21,7 +21,7 @@
                     {{ tournament_form.name.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ tournament_form.name|addcss:'form-control' }}
+                    {{ tournament_form.name|add_class:'form-control' }}
                 </div>
             </div>
             <div class="form-group">
@@ -41,7 +41,7 @@
                     {{ tournament_form.total_ante.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ tournament_form.total_ante|addcss:'form-control' }}
+                    {{ tournament_form.total_ante|add_class:'form-control' }}
                 </div>
             </div>
             <div class="form-group">
@@ -49,7 +49,7 @@
                     {{ tournament_form.finished.label_tag }}
                 </div>
                 <div class="col-xs-9">
-                    {{ tournament_form.finished|addcss:'form-control' }}
+                    {{ tournament_form.finished|add_class:'form-control' }}
                 </div>
             </div>
         </div>
@@ -75,19 +75,19 @@
                             {{ form.placing.label_tag }}
                         </div>
                         <div class="col-xs-3">
-                            {{ form.placing|addcss:'form-control placing' }}
+                            {{ form.placing|add_class:'form-control placing' }}
                         </div>
                         <div class="col-xs-1">
                             {{ form.ante.label_tag }}
                         </div>
                         <div class="col-xs-3">
-                            {{ form.ante|addcss:'form-control placing_ante' }}
+                            {{ form.ante|add_class:'form-control placing_ante' }}
                         </div>
                         <div class="col-xs-1">
                             {{ form.player.label_tag }}
                         </div>
                         <div class="col-xs-3">
-                            {{ form.player|addcss:'form-control' }}
+                            {{ form.player|add_class:'form-control' }}
                         </div>
                     </div>
                     {% for field in form.hidden_fields %}

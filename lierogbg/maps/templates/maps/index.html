@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load staticfiles %}
 {% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{% trans "About LieroGBG" %}{% endblock %}
@@ -18,7 +19,7 @@
         </p>
     </div>
     <div class="col-xs-9">
-        <a href="{{ STATIC_URL }}/maps/pokol2.lev"><img src="{{ STATIC_URL }}/img/maps/pokol2.png"></img></a>
+        <a href="{% static 'maps/pokol2.lev' %}"><img src="{% static 'img/maps/pokol2.png' %}"></img></a>
     </div>
 </div>
 <div class="row">
@@ -30,7 +31,7 @@
         </p>
     </div>
     <div class="col-xs-9">
-        <a href="{{ STATIC_URL }}/maps/DIAMOND.LEV"><img src="{{ STATIC_URL }}/img/maps/diamond.png"></img></a>
+        <a href="{% static 'maps/DIAMOND.LEV' %}"><img src="{% static 'img/maps/diamond.png' %}"></img></a>
     </div>
 </div>
 <div class="row">
@@ -45,7 +46,7 @@
     </p>
     </div>
     <div class="col-xs-9">
-        <a href="{{ STATIC_URL }}/maps/TEMPLE27.LEV"><img src="{{ STATIC_URL }}/img/maps/TEMPLE27.png"></img></a>
+        <a href="{% static 'maps/TEMPLE27.LEV' %}"><img src="{% static 'img/maps/TEMPLE27.png' %}"></img></a>
     </div>
 </div>
 <div class="row">
@@ -57,7 +58,7 @@
         </p>
     </div>
     <div class="col-xs-9">
-        <a href="{{ STATIC_URL }}/maps/INDIA2.LEV"><img src="{{ STATIC_URL }}/img/maps/INDIA2.png"></img></a>
+        <a href="{% static 'maps/INDIA2.LEV' %}"><img src="{% static 'img/maps/INDIA2.png' %}"></img></a>
     </div>
 </div>
 <div class="row">
@@ -69,7 +70,7 @@
         </p>
     </div>
     <div class="col-xs-9">
-        <a href="{{ STATIC_URL }}/maps/BEAM2.LEV"><img src="{{ STATIC_URL }}/img/maps/BEAM2.png"></img></a>
+        <a href="{% static 'maps/BEAM2.LEV' %}"><img src="{% static 'img/maps/BEAM2.png' %}"></img></a>
     </div>
 </div>
 {% endblock %}

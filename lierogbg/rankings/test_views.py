@@ -1,13 +1,11 @@
 """
 Tests for rankings views
 """
-import datetime
 from django.contrib.auth.models import User, AnonymousUser
 from django.forms import ValidationError
 from django.http import Http404
 from django.utils import timezone
-from django.test import TestCase
-from django.test import Client, TestCase, RequestFactory
+from django.test import TestCase, RequestFactory
 from rankings.forms import TournamentEditForm
 from rankings.models import Player, Tournament, TournamentPlacingAnte
 from rankings.models import PlayedGame, Subgame, PointsChanged
@@ -20,6 +18,7 @@ from rankings.views import add_game, submit_game, update_total_ante
 from rankings.views import get_games_list, get_players_list, error
 from rankings.views import get_tournament_games_list, internal_info
 
+# pylint: disable=too-many-instance-attributes,too-many-public-methods
 class TestViews(TestCase):
     """
     Test views
@@ -29,18 +28,18 @@ class TestViews(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         # an inactive player
         self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                       real_name="", ranking_points=1500,
-                                       pool_points=0, active=False,
-                                       comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=False,
+                                        comment="")
         # an inactive player
         self.p4 = Player.objects.create(name="Bar Foo", color="#00FFFF",
                                         real_name="", ranking_points=500,
@@ -190,23 +189,24 @@ class TestViews(TestCase):
         self.assertEqual(tournament_table[1]['name'], self.t.name)
         self.assertEqual(tournament_table[1]['winner'], self.t.winner())
         self.assertEqual(tournament_table[1]['players'],
-                          len(self.t.players.all()))
+                         len(self.t.players.all()))
         self.assertEqual(tournament_table[1]['games'], len(self.t.games()))
         self.assertEqual(tournament_table[1]['ante'], self.t.ante)
         self.assertEqual(tournament_table[1]['total_ante'],
-                          self.t.total_ante)
+                         self.t.total_ante)
         self.assertEqual(tournament_table[1]['finished'], self.t.finished)
 
         self.assertEqual(tournament_table[0]['pk'], self.t2.pk)
-        self.assertEqual(tournament_table[0]['start_time'], self.t2.start_time)
+        self.assertEqual(tournament_table[0]['start_time'],
+                         self.t2.start_time)
         self.assertEqual(tournament_table[0]['name'], self.t2.name)
         self.assertEqual(tournament_table[0]['winner'], self.t2.winner())
         self.assertEqual(tournament_table[0]['players'],
-                          len(self.t2.players.all()))
+                         len(self.t2.players.all()))
         self.assertEqual(tournament_table[0]['games'], len(self.t2.games()))
         self.assertEqual(tournament_table[0]['ante'], self.t2.ante)
         self.assertEqual(tournament_table[0]['total_ante'],
-                          self.t2.total_ante)
+                         self.t2.total_ante)
         self.assertEqual(tournament_table[0]['finished'], self.t2.finished)
 
     def test_tournaments(self):
@@ -271,13 +271,16 @@ class TestViews(TestCase):
             'tournamentplacingante_set-1-id' : '',
             'tournamentplacingante_set-1-placing' : '2',
             'tournamentplacingante_set-1-ante' : '1',
-            'tournamentplacingante_set-1-tournament' : '' }
-        form = { 'start_time' : '2014-01-01 07:00',
-                 'name' : 'Fools tournament',
-                 'players' : [self.p1.pk, self.p2.pk],
-                 'ante' : 0, # FIXME what does this do?
-                 'pool_points' : 0,
-                 'total_ante' : 2 }
+            'tournamentplacingante_set-1-tournament' : ''
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'name' : 'Fools tournament',
+            'players' : [self.p1.pk, self.p2.pk],
+            'ante' : 0, # FIXME what does this do?
+            'pool_points' : 0,
+            'total_ante' : 2
+            }
         form.update(management_form_data)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
@@ -301,13 +304,16 @@ class TestViews(TestCase):
             'tournamentplacingante_set-1-id' : '',
             'tournamentplacingante_set-1-placing' : '2',
             'tournamentplacingante_set-1-ante' : '2',
-            'tournamentplacingante_set-1-tournament' : '' }
-        form = { 'start_time' : '2014-01-01 07:00',
-                 'name' : 'Fools tournament',
-                 'players' : [self.p1.pk, self.p2.pk],
-                 'ante' : 0, # FIXME what does this do?
-                 'pool_points' : 0,
-                 'total_ante' : 2 }
+            'tournamentplacingante_set-1-tournament' : ''
+            }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'name' : 'Fools tournament',
+            'players' : [self.p1.pk, self.p2.pk],
+            'ante' : 0, # FIXME what does this do?
+            'pool_points' : 0,
+            'total_ante' : 2
+            }
         form.update(management_form_data)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
@@ -319,6 +325,7 @@ class TestViews(TestCase):
         """
         prepare_tournament_context() for no tournament
         """
+        # pylint: disable=no-member
         with self.assertRaises(Tournament.DoesNotExist):
             prepare_tournament_context(None, None)
 
@@ -410,12 +417,14 @@ class TestViews(TestCase):
             'tournamentplacingante_set-1-ante' : self.tpa12.ante,
             'tournamentplacingante_set-1-tournament' : self.t.pk
             }
-        form = { 'start_time' : '2014-01-01 07:00',
-                 'name' : 'Fools tournament',
-                 'players' : [self.p1.pk, self.p2.pk],
-                 'ante' : 100, # FIXME what does this do?
-                 'pool_points' : 0,
-                 'total_ante' : 100 }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'name' : 'Fools tournament',
+            'players' : [self.p1.pk, self.p2.pk],
+            'ante' : 100, # FIXME what does this do?
+            'pool_points' : 0,
+            'total_ante' : 100
+            }
         form.update(management_form_data)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
@@ -442,12 +451,14 @@ class TestViews(TestCase):
             'tournamentplacingante_set-1-ante' : self.tpa22.ante,
             'tournamentplacingante_set-1-tournament' : self.t2.pk
             }
-        form = { 'start_time' : '2014-01-01 07:00',
-                 'name' : 'Fools tournament',
-                 'players' : [self.p2.pk, self.p3.pk],
-                 'ante' : 50, # FIXME what does this do?
-                 'pool_points' : 0,
-                 'total_ante' : 50 }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'name' : 'Fools tournament',
+            'players' : [self.p2.pk, self.p3.pk],
+            'ante' : 50, # FIXME what does this do?
+            'pool_points' : 0,
+            'total_ante' : 50
+            }
         form.update(management_form_data)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
@@ -472,12 +483,14 @@ class TestViews(TestCase):
             'tournamentplacingante_set-1-ante' : self.tpa22.ante,
             'tournamentplacingante_set-1-tournament' : self.t2.pk
             }
-        form = { 'start_time' : '2014-01-01 07:00',
-                 'name' : 'Fools tournament',
-                 'players' : [self.p2.pk, self.p3.pk],
-                 'ante' : 50, # FIXME what does this do?
-                 'pool_points' : 0,
-                 'total_ante' : 50 }
+        form = {
+            'start_time' : '2014-01-01 07:00',
+            'name' : 'Fools tournament',
+            'players' : [self.p2.pk, self.p3.pk],
+            'ante' : 50, # FIXME what does this do?
+            'pool_points' : 0,
+            'total_ante' : 50
+            }
         form.update(management_form_data)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
@@ -503,7 +516,7 @@ class TestViews(TestCase):
             'tournamentplacingante_set-1-ante' : self.tpa22.ante,
             'tournamentplacingante_set-1-tournament' : self.t2.pk
             }
-        form = {  }
+        form = {}
         form.update(management_form_data)
         request = self.factory.post('/accounts/login', data=form)
         request.user = self.user
@@ -541,9 +554,9 @@ class TestViews(TestCase):
 
         # an unranked game means ranking points should not have changed
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
-                           p1_rp_before)
+                         p1_rp_before)
         self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
-                        p2_rp_before)
+                         p2_rp_before)
 
     def test_submit_game_tournament_already_finished(self):
         """
@@ -576,9 +589,9 @@ class TestViews(TestCase):
 
         # an unranked game means ranking points should not have changed
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
-                           p1_rp_before)
+                         p1_rp_before)
         self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
-                        p2_rp_before)
+                         p2_rp_before)
 
     def test_get_players_list_no_ajax(self):
         """
@@ -646,19 +659,21 @@ class TestViewsNormalMatches(TestCase):
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
                                         real_name="", ranking_points=1500,
                                         pool_points=0, active=True,
-                                   comment="")
+                                        comment="")
         self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=False,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=False,
+                                        comment="")
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
-                                       player_left=self.p1, player_right=self.p2,
-                                       winner=self.p1, comment="")
+                                       player_left=self.p1,
+                                       player_right=self.p2, winner=self.p1,
+                                       comment="")
         g2 = PlayedGame.objects.create(tournament=None, ranked=True,
-                                  start_time=timezone.now(),
-                                  player_left=self.p2, player_right=self.p1,
-                                  winner=self.p2, comment="")
+                                       start_time=timezone.now(),
+                                       player_left=self.p2,
+                                       player_right=self.p1, winner=self.p2,
+                                       comment="")
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
                                pr_lives=0, replay_file=None)
         Subgame.objects.create(parent=g1, map_played="", pl_lives=3,
@@ -848,9 +863,9 @@ class TestViewsNormalMatches(TestCase):
 
         # an unranked game means ranking points should not have changed
         self.assertEqual(Player.objects.get(id=self.p1.pk).ranking_points,
-                           p1_rp_before)
+                         p1_rp_before)
         self.assertEqual(Player.objects.get(id=self.p2.pk).ranking_points,
-                        p2_rp_before)
+                         p2_rp_before)
 
     def test_submit_game_no_mgmt_form(self):
         """
@@ -1127,13 +1142,13 @@ class TestViewsSimilarPlayers(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=1000,
-                                   pool_points=29, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1000,
+                                        pool_points=29, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1000,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1000,
+                                        pool_points=0, active=True,
+                                        comment="")
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
         self.user = User.objects.create_user(
@@ -1175,7 +1190,7 @@ class TestViewsSimilarPlayers(TestCase):
         self.assertGreater(Player.objects.get(id=self.p1.pk).ranking_points,
                            p1_rp_before)
         self.assertGreater(Player.objects.get(id=self.p2.pk).ranking_points,
-                        p2_rp_before)
+                           p2_rp_before)
 
     def test_update_total_ante_no_ajax(self):
         """
@@ -1225,23 +1240,20 @@ class TestViewsSimilarPlayers(TestCase):
 
 class TestViewsLotsOfMatches(TestCase):
     """
-    Test with *lots* of games
-    """
-    """
-    Test views
+    Test view with *lots* of games
     """
     def setUp(self):
         """
         Creates a huge amount of games
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=500,
+                                        pool_points=500, active=True,
+                                        comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
-                                   comment="")
+                                        real_name="", ranking_points=1500,
+                                        pool_points=0, active=True,
+                                        comment="")
         i = 0
         while i < 100:
             g = PlayedGame.objects.create(tournament=None, ranked=True,

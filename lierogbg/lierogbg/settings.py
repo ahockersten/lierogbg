@@ -211,4 +211,5 @@ LOGGING = {
 
 ALLOWED_HOSTS = [
     '.maskinskrift.com',
+    '.orbmit.org'
 ]
