@@ -549,9 +549,8 @@ class TestPlayedGame(TestCase):
         __str__() works correctly
         """
         self.assertEqual(
-            (str(self.g1.start_time) + ' ' + str(self.p1) + ' vs ',
-             str(self.p2) + ', ' + str(self.p1) + ' won', str(self.g1))
-            )
+            str(self.g1.start_time) + ' ' + str(self.p1) + ' vs ' + str(self.p2) + ', ' + str(self.p1) + ' won'
+            , str(self.g1))
 
 class TestSubgame(TestCase):
     """
