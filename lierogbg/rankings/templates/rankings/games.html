@@ -55,11 +55,6 @@ function init() {
             $(this).show();
         });
     });
-    $('.show-result-btn').each(function() {
-        $(".game-" + $(this).data('game-id') + "-show-result").each(function() {
-            $(this).hide();
-        });
-    });
 
     $('.show-subgame-result-btn').click(function() {
         $(".subgame-" + $(this).data('subgame-id') + "-show-result").each(function() {
