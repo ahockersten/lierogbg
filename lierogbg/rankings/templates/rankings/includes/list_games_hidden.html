@@ -90,7 +90,7 @@
                                             <button type="button" class="btn btn-block show-result-btn" data-game-id="{{ g.game.id }}">{% trans "Show results" %}</button>
                                         </div>
                                     </div>
-                                    <div class="row game-{{ g.game.id }}-show-result">
+                                    <div class="row game-{{ g.game.id }}-show-result unimportant-hide">
                                         <div class="col-xs-4">
                                             <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
                                                 {{ g.game.player_left }}
