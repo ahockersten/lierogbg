@@ -59,7 +59,11 @@
                                         </div>
                                     </div>
                                     {% for sg in g.subgames %}
-                                        <div class="row">
+                                        {% if forloop.counter > 3 %}
+                                            <div class="row game-{{ g.game.id }}-show-result unimportant-hide">
+                                        {% else %}
+                                            <div class="row">
+                                        {% endif %}
                                             <div class="col-xs-3">
                                                 {% trans "Round" %} {{ forloop.counter }}
                                             </div>
