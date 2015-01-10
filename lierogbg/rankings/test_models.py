@@ -453,8 +453,9 @@ class TestTournament(TestCase):
         """
         __str__() for Tournament
         """
-        self.assertEqual("Tourney_False_" + str(self.t.start_time) + "_0_0_0",
-                         str(self.t))
+        self.assertEqual(
+            "Tourney_False_{}_0_0_0".format(str(self.t.start_time)),
+            str(self.t))
 
 class TestTournamentPlacingAnte(TestCase):
     """
@@ -491,7 +492,7 @@ class TestTournamentPlacingAnte(TestCase):
         """
         __str__() works correctly
         """
-        self.assertEqual(str(self.t) + " 1 90 " + str(self.p1),
+        self.assertEqual("{} 1 90 {}".format(str(self.t), str(self.p1)),
                          str(self.tpa11))
 
 class TestPlayedGame(TestCase):
@@ -548,9 +549,11 @@ class TestPlayedGame(TestCase):
         """
         __str__() works correctly
         """
-        self.assertEqual(
-            str(self.g1.start_time) + ' ' + str(self.p1) + ' vs ' + str(self.p2) + ', ' + str(self.p1) + ' won'
-            , str(self.g1))
+        self.assertEqual("{} {} vs {}, {} won".format(str(self.g1.start_time),
+                                                      str(self.p1),
+                                                      str(self.p2),
+                                                      str(self.p1)),
+                         str(self.g1))
 
 class TestSubgame(TestCase):
     """
@@ -673,5 +676,6 @@ class TestPointsChanged(TestCase):
         """
         __str__() works correctly
         """
-        self.assertEqual(str(self.p1) + "_" + str(self.t) + "_None_500_500_0_0",
+        self.assertEqual("{}_{}_None_500_500_0_0".format(str(self.p1),
+                                                         self.t),
                          str(self.pc1))

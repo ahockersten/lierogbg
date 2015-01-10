@@ -59,14 +59,18 @@
                                         </div>
                                     </div>
                                     {% for sg in g.subgames %}
-                                        <div class="row">
+                                        {% if forloop.counter > 3 %}
+                                            <div class="row game-{{ g.game.id }}-show-result unimportant-hide">
+                                        {% else %}
+                                            <div class="row">
+                                        {% endif %}
                                             <div class="col-xs-3">
                                                 {% trans "Round" %} {{ forloop.counter }}
                                             </div>
                                             <div class="col-xs-3">
                                                 {{ sg.map_played }}
                                             </div>
-                                            <div class="col-xs-3 subgame-{{ sg.id }}-show-result game-{{ g.game.id }}-show-result">
+                                            <div class="col-xs-3 subgame-{{ sg.id }}-show-result game-{{ g.game.id }}-show-result unimportant-hide">
                                                 <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
                                                 {{ sg.pl_lives }} - {{ sg.pr_lives }}
                                                 <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{% static '/img/lieroworm_pointing_left.svg' %}"></img>

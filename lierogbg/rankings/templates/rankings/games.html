@@ -55,25 +55,18 @@ function init() {
             $(this).show();
         });
     });
-    $('.show-result-btn').each(function() {
-        $(".game-" + $(this).data('game-id') + "-show-result").each(function() {
-            $(this).hide();
-        });
-    });
 
     $('.show-subgame-result-btn').click(function() {
         $(".subgame-" + $(this).data('subgame-id') + "-show-result").each(function() {
             $(this).show();
+            // show next subgame, if any
+            $(this).parent().next().show();
         });
         $(".subgame-" + $(this).data('subgame-id') + "-hide-result").each(function() {
             $(this).hide();
         });
     });
-    $('.show-subgame-result-btn').each(function() {
-        $(".subgame-" + $(this).data('subgame-id') + "-show-result").each(function() {
-            $(this).hide();
-        });
-    });
+
     $('#id-show-all-results-btn').click(function() {
         var data = {'games' : $('#id_list_games').data('current-match'),
                     'show_all' : 'True'};
