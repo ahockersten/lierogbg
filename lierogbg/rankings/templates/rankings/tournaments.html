@@ -46,9 +46,9 @@
             <tbody>
             {% for t in tournaments %}
                 {% if t.finished %}
-                    <tr class="tournament_view_link" id="id_tournament_{{ t.pk }}">
+                    <tr class="tournament_view_link" data-tournament-id="{{ t.pk }}">
                 {% else %}
-                    <tr class="tournament_edit_link" id="id_tournament_{{ t.pk }}">
+                    <tr class="tournament_edit_link" data-tournament-id="{{ t.pk }}">
                 {% endif %}
                     <td>{{ t.start_time }}</td>
                     <td>{{ t.name }}</td>
@@ -76,19 +76,13 @@
 $(document).ready(function () {
     'use strict';
     $(".tournament_edit_link").click(function() {
-        var tournament_key = $(this).attr("id")
-        var id_regex = new RegExp('id_tournament_(\\d+)');
-        var replacement = "$1";
-        var replaced = tournament_key.replace(id_regex, replacement);
-        window.location.href = "{% url 'rankings.views.edit_tournament' '' %}" + replaced;
+        var tournament_key = $(this).data("tournament-id");
+        window.location.href = "{% url 'rankings.views.edit_tournament' '' %}" + tournament_key;
     });
 
     $(".tournament_view_link").click(function() {
-        var tournament_key = $(this).attr("id")
-        var id_regex = new RegExp('id_tournament_(\\d+)');
-        var replacement = "$1";
-        var replaced = tournament_key.replace(id_regex, replacement);
-        window.location.href = "{% url 'rankings.views.view_tournament' '' %}" + replaced;
+        var tournament_key = $(this).data("tournament-id");
+        window.location.href = "{% url 'rankings.views.view_tournament' '' %}" + tournament_key;
     });
 });
 </script>
