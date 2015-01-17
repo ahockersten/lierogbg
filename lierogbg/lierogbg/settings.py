@@ -209,6 +209,8 @@ LOGGING = {
     }
 }
 
+SERVER_EMAIL = 'django@orbmit.org'
+
 ALLOWED_HOSTS = [
     '.maskinskrift.com',
     '.orbmit.org'
