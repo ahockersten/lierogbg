@@ -278,18 +278,24 @@ def edit_tournament(request, tournament_id):
     """
     Renders the edit page for a tournament.
     """
-    return render(request, 'rankings/edit_tournament.html',
-                  prepare_tournament_context(tournament_id,
-                                             TournamentEditForm))
+    try:
+        context = prepare_tournament_context(tournament_id,
+                                             TournamentEditForm)
+        return render(request, 'rankings/edit_tournament.html', context)
+    except ValueError:
+        return redirect('rankings.views.error')
+
 
 def view_tournament(request, tournament_id):
     """
     Renders the viewing page for a tournament.
     """
-    return render(request, 'rankings/view_tournament.html',
-                  prepare_tournament_context(tournament_id,
-                                             TournamentEditForm))
-
+    try:
+        context = prepare_tournament_context(tournament_id,
+                                             TournamentEditForm)
+        return render(request, 'rankings/view_tournament.html', context)
+    except ValueError:
+        return redirect('rankings.views.error')
 @login_required
 def save_tournament(request, tournament_id):
     """

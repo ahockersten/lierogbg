@@ -343,6 +343,16 @@ class TestViews(TestCase):
         result = prepare_tournament_context(self.t.pk, TournamentEditForm)
         self.assertNotEqual(result, {})
 
+    def test_edit_tournament_invalid(self):
+        """
+        The edit_tournament() output on invalid data
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = self.user
+
+        response = edit_tournament(request, '')
+        self.assertEqual(response.status_code, 302)
+
     def test_edit_tournament(self):
         """
         The edit_tournament() output
@@ -352,6 +362,16 @@ class TestViews(TestCase):
 
         response = edit_tournament(request, self.t.pk)
         self.assertEqual(response.status_code, 200)
+
+    def test_view_tournament_invalid(self):
+        """
+        The view_tournament() output on invalid data
+        """
+        request = self.factory.get('/accounts/login')
+        request.user = AnonymousUser()
+
+        response = view_tournament(request, '')
+        self.assertEqual(response.status_code, 302)
 
     def test_view_tournament(self):
         """
