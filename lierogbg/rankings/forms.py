@@ -2,7 +2,6 @@
 Custom forms
 """
 # pylint: disable=bad-super-call
-from datetimewidget.widgets import DateTimeWidget
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _

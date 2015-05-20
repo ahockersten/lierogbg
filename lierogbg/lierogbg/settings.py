@@ -159,9 +159,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    # external stuff
-    'datetimewidget',
-
     # the nose test runner
     'django_nose',
 
