@@ -2,7 +2,6 @@
 {% load i18n %}
 
 {% block title %}{% trans "LieroGBG" %} {% trans "add match" %}{% endblock %}
-{% block custom_css %}{{ played_game_form.media.css }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -18,8 +17,4 @@
         </form>
     </div>
 </div>
-{% endblock %}
-
-{% block custom_scripts %}
-{{ played_game_form.media.js }}
 {% endblock %}

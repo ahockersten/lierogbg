@@ -21,11 +21,11 @@
                     <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
                         <td>{{ g.game.start_time }}</td>
                         <td class="align_left">
-                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                             {{ g.game.player_left }}
                         </td>
                         <td class="align_left">
-                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                             {{ g.game.player_right }}
                         </td>
                         {% if full %}
@@ -71,9 +71,9 @@
                                                 {{ sg.map_played }}
                                             </div>
                                             <div class="col-xs-3 subgame-{{ sg.id }}-show-result game-{{ g.game.id }}-show-result unimportant-hide">
-                                                <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                                                <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                                                 {{ sg.pl_lives }} - {{ sg.pr_lives }}
-                                                <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{% static '/img/lieroworm_pointing_left.svg' %}"></img>
+                                                <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{% static 'img/lieroworm_pointing_left.svg' %}"></img>
                                             </div>
                                             <div class="col-xs-3 subgame-{{ sg.id }}-hide-result game-{{ g.game.id }}-hide-result">
                                                 <button type="button" class="btn btn-block show-subgame-result-btn" data-subgame-id="{{ sg.id }}">{% trans "Show" %}</button>
@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="row game-{{ g.game.id }}-show-result unimportant-hide">
                                         <div class="col-xs-4">
-                                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                                                 {{ g.game.player_left }}
                                                 {% if g.rp_pl_change > 0 %}
                                                     {{ g.rp_pl_after }} <span class="change_positive">(+{{ g.rp_pl_change }})</span>
@@ -103,7 +103,7 @@
                                                 {% endif %}
                                         </div>
                                         <div class="col-xs-4">
-                                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                                                 {{ g.game.player_right }}
                                                 {% if g.rp_pr_change > 0 %}
                                                     {{ g.rp_pr_after }} <span class="change_positive">(+{{ g.rp_pr_change }})</span>

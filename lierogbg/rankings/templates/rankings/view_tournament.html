@@ -3,10 +3,6 @@
 {% load myfilters %}
 
 {% block title %}{% trans "LieroGBG" %} {% trans "view tournament" %}{% endblock %}
-{% block custom_css %}
-{{ tournament_form.media.css }}
-{{ played_game_form.media.css }}
-{% endblock %}
 
 {% block content %}
 <form action="" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
@@ -93,8 +89,6 @@
 {% endblock %}
 
 {% block custom_scripts %}
-{{ tournament_form.media.js }}
-{{ played_game_form.media.js }}
 <script type="text/javascript">
 $(document).ready(function () {
     'use strict';

@@ -296,6 +296,7 @@ def view_tournament(request, tournament_id):
         return render(request, 'rankings/view_tournament.html', context)
     except ValueError:
         return redirect('rankings.views.error')
+
 @login_required
 def save_tournament(request, tournament_id):
     """
