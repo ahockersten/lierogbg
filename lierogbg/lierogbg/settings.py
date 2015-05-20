@@ -100,7 +100,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    here('..', '..', 'locale'),
+    here('..', 'locale'),
 )
 
 # List of finder classes that know how to find static files in
@@ -158,9 +158,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-
-    # external stuff
-    'datetimewidget',
 
     # the nose test runner
     'django_nose',
