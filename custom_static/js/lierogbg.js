@@ -150,5 +150,11 @@ $(document).ready(function () {
         return deleteSubgameForm(this, "subgame_set");
     });
 
+    $('.datepicker-input').datetimepicker({
+        format: "YYYY-MM-DD HH:mm",
+        defaultDate: moment(),
+        sideBySide: true,
+    });
+
     update_images();
 });

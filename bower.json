@@ -17,6 +17,7 @@
     "jquery": "~2.1.4",
     "bootstrap": "~3.3.4",
     "jquery-cookie": "~1.4.1",
-    "jquery-timeago": "~1.4.1"
+    "jquery-timeago": "~1.4.1",
+    "eonasdan-bootstrap-datetimepicker": "~4.7.14"
   }
 }

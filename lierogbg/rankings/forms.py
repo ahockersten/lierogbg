@@ -6,7 +6,9 @@ from datetimewidget.widgets import DateTimeWidget
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
+
 from rankings import models
+from .widgets import CalendarWidget
 
 class TournamentCreateForm(ModelForm):
     """
@@ -32,10 +34,7 @@ class TournamentCreateForm(ModelForm):
             'pool_points'  : _('Pool points unlocked'),
         }
         widgets = {
-            'start_time' : DateTimeWidget(usel10n=True,
-                                          bootstrap_version=3,
-                                          options={'format' : 'yyyy-mm-dd hh:ii',
-                                                   'weekStart' : '1'})
+            'start_time' : CalendarWidget()
         }
     def __init__(self, *args, **kwargs):
         super(ModelForm, self).__init__(*args, **kwargs)
@@ -164,10 +163,7 @@ class PlayedGameForm(ModelForm):
             'ranked'       : _('Ranked'),
         }
         widgets = {
-            'start_time' : DateTimeWidget(usel10n=True,
-                                          bootstrap_version=3,
-                                          options={'format' : 'yyyy-mm-dd hh:ii',
-                                                   'weekStart' : '1'})
+            'start_time' : CalendarWidget()
         }
 
     def __init__(self, *args, **kwargs):

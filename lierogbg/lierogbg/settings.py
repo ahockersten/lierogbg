@@ -82,6 +82,9 @@ STATICFILES_DIRS = (
     here('..', '..', 'bower_components/jquery/dist'),
     here('..', '..', 'bower_components/jquery-cookie'),
     here('..', '..', 'bower_components/jquery-timeago'),
+    here('..', '..', 'bower_components/eonasdan-bootstrap-datetimepicker/build'),
+    here('..', '..', 'bower_components/eonasdan-bootstrap-datetimepicker/src'),
+    here('..', '..', 'bower_components/moment/min'),
     here('..', '..', 'build'),
     here('..', '..', 'custom_static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
