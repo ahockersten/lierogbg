@@ -154,6 +154,8 @@ $(document).ready(function () {
         format: "YYYY-MM-DD HH:mm",
         defaultDate: moment(),
         sideBySide: true,
+        locale: moment.locale(window.navigator.userLanguage ||
+                              window.navigator.language),
     });
 
     update_images();
