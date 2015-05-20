@@ -100,7 +100,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    here('..', '..', 'locale'),
+    here('..', 'locale'),
 )
 
 # List of finder classes that know how to find static files in
