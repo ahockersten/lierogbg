@@ -8,3 +8,4 @@
 media/
 pyenv/
 .coverage
+bower_components

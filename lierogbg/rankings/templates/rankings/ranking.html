@@ -56,11 +56,6 @@
 {% endblock %}
 
 {% block custom_scripts %}
-<script src="{% static 'js/jquery.timeago.js' %}" type="text/javascript"></script>
-{% with 'js/jquery.timeago.'|add:LANGUAGE_CODE|add:'.js' as timeago_static %}
-    <script src="{% static timeago_static %}" type="text/javascript"></script>
-{% endwith %}
-<script src="{% static 'js/jquery.cookie.js' %}"></script>
 <script type="text/javascript">
 /* setup a proper CSRF cvookie for the form */
 var csrftoken = $.cookie('csrftoken');

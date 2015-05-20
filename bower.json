@@ -1,0 +1,22 @@
+{
+  "name": "lierogbg",
+  "version": "1.0.0",
+  "authors": [
+    "Anders Höckersten <chucky@orbmit.org>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.4",
+    "jquery-cookie": "~1.4.1",
+    "jquery-timeago": "~1.4.1"
+  }
+}

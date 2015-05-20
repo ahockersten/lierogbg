@@ -16,11 +16,11 @@
                     <tr data-toggle="collapse" data-target="#more-info-{{forloop.counter}}">
                         <td>{{ g.game.start_time }}</td>
                         <td class="align_left">
-                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                            <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                             {{ g.game.player_left }}
                         </td>
                         <td class="align_left">
-                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                            <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                             {{ g.game.player_right }}
                         </td>
                         <td>{{ g.game.winner }}</td>
@@ -44,9 +44,9 @@
                                                     <td>{% trans "Round" %} {{ forloop.counter }}</td>
                                                     <td>{{ sg.map_played }}</td>
                                                     <td>
-                                                        <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static '/img/lieroworm_pointing_right.svg' %}"></img>
+                                                        <img id={{ g.game.player_left.color }} class="svg lieroworm lieroworm_right" src="{% static 'img/lieroworm_pointing_right.svg' %}"></img>
                                                         {{ sg.pl_lives }} - {{ sg.pr_lives }}
-                                                        <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{% static '/img/lieroworm_pointing_left.svg' %}"></img>
+                                                        <img id={{ g.game.player_right.color }} class="svg lieroworm lieroworm_left" src="{% static 'img/lieroworm_pointing_left.svg' %}"></img>
                                                     </td>
                                                     <td>
                                                         {% if sg.replay_file %}

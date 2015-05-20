@@ -78,8 +78,10 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    here('..', '..', 'bootstrap/dist'),
-    here('..', '..', 'jquery'),
+    here('..', '..', 'bower_components/bootstrap/dist'),
+    here('..', '..', 'bower_components/jquery/dist'),
+    here('..', '..', 'bower_components/jquery-cookie'),
+    here('..', '..', 'bower_components/jquery-timeago'),
     here('..', '..', 'build'),
     here('..', '..', 'custom_static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".

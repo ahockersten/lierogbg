@@ -7,28 +7,33 @@ A live deployment of this is currently available at http://lierogbg.maskinskrift
 Install instructions
 ====================
 
-Installing LESS
----------------
-* $ sudo apt-get install nodejs-legacy npm
-* $ sudo npm install -g less
-
 Installing dependencies for the virtual environment
 ---------------------------------------------------
 
 * First, install pyenv if you don't have it
 * $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 * Setup your shell as directed by the installer
+* Install prerequisites
+* (Ubuntu) $ sudo apt-get install libsqlite3-dev libreadline6-dev libbz2-dev
+* (Fedora) $ sudo yum install readline-devel bzip2-devel sqlite-devel openssl-devel
 * Install latest Python
-* $ pyenv install 3.4.2
+* $ pyenv install 3.4.3
 
 Setting up the virtual environment
 ----------------------------------
 
 * Go to the root directory of the project
 * Create virtual environment
-* $ pyenv virtualenv 3.4.2 lierogbg-env
+* $ pyenv virtualenv 3.4.3 lierogbg-env
 * $ pyenv activate lierogbg-env
 * $ pip install -r requirements.txt
+* $ bower install
+
+Installing LESS and Bower
+---------------
+* (Ubuntu) $ sudo apt-get install nodejs-legacy npm
+* (Fedora) $ sudo yum install npm
+* $ sudo npm install -g bower less
 
 Optional
 --------
@@ -42,7 +47,9 @@ Usage
 Using the virtual environment and running developer builds
 ----------------------------------------------------------
 * $ pyenv activate lierogbg-env
+* $ make
 * $ cd lierogbg
+* $ ./manage.py migrate
 * $ ./manage.py runserver
 
 Deployment instructions
@@ -57,22 +64,14 @@ for your installation.
 * $ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 * $ eval "$(pyenv init -)"
 * $ eval "$(pyenv virtualenv-init -)"
-* $ pyenv install 3.4.2
+* $ pyenv install 3.4.3
 * Create virtual environment
-* $ pyenv virtualenv 3.4.2 lierogbg-env
+* $ pyenv virtualenv 3.4.3 lierogbg-env
 * $ pyenv activate lierogbg-env
 * $ pip install -r requirements.txt
 
-For every update, run these commands:
-* $ export PYENV_ROOT="/var/www/lierogbg/pyenv"
-* $ export PATH="$PYENV_ROOT/bin:$PATH"
-* $ eval "$(pyenv init -)"
-* $ eval "$(pyenv virtualenv-init -)"
-* $ pyenv activate lierogbg-env
-* $ make
-* $ cd lierogbg
-* $ ./manage.py collectstatic
-* $ sudo service apache2 reload
+For every update, run the handy script "deploy.sh" to update everything and
+reload the server.
 
 Running the various tests
 =========================
