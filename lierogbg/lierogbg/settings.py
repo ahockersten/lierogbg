@@ -165,6 +165,7 @@ INSTALLED_APPS = (
     # our own apps
     'accounts',
     'about',
+    'hypermeet',
     'maps',
     'rankings',
     'rules',
