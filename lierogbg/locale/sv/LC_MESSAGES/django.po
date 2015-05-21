@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-20 15:52+0200\n"
+"POT-Creation-Date: 2015-05-21 17:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr "Om LieroGBG"
 #: lierogbg/rankings/templates/rankings/ranking.html:6
 #: lierogbg/rankings/templates/rankings/tournaments.html:4
 #: lierogbg/rankings/templates/rankings/view_tournament.html:5
-#: templates/base.html:8 templates/base.html.py:52
+#: templates/base.html:8 templates/base.html.py:55
 msgid "LieroGBG"
 msgstr "LieroGBG"
 
@@ -43,7 +43,7 @@ msgstr "LieroGBG"
 msgid "Error"
 msgstr "Fel"
 
-#: lierogbg/accounts/templates/accounts/login.html:4 templates/base.html:72
+#: lierogbg/accounts/templates/accounts/login.html:4 templates/base.html:75
 msgid "Login"
 msgstr "Logga in"
 
@@ -70,6 +70,10 @@ msgstr "Användaren avstängd"
 #: lierogbg/accounts/views.py:38
 msgid "User does not exist"
 msgstr "Användaren finns inte"
+
+#: lierogbg/hypermeet/templates/hypermeet/index.html:5 templates/base.html:52
+msgid "HyperMeet 2015"
+msgstr "HyperMeet 2015"
 
 #: lierogbg/lierogbg/settings.py:98
 msgid "Swedish"
@@ -421,22 +425,22 @@ msgstr "Oavgjort"
 msgid "Django site admin"
 msgstr "Djangos administration"
 
-#: templates/base.html:55
+#: templates/base.html:58
 msgid "Rankings"
 msgstr "Rankingar"
 
-#: templates/base.html:58
+#: templates/base.html:61
 msgid "Rules"
 msgstr "Regler"
 
-#: templates/base.html:61
+#: templates/base.html:64
 msgid "Maps"
 msgstr "Kartor"
 
-#: templates/base.html:65
+#: templates/base.html:68
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:68
+#: templates/base.html:71
 msgid "Logout"
 msgstr "Logga ut"

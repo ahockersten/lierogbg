@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans "HyperMeet 2015" %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Introduction</h2>
+        <p>
+        HyperMeet is a Liero Championship held every summer since 2007 (with the exception of 2010 and 2011) that is known as the semi-official World Championship in Liero. Last year it was held in Poland and was won by MrEvil from Germany. In 2015 we are proud to announce that LieroGBG will be hosting this spectacular event!
+        </p>
+        <h2>Time & Place</h2>
+        <p>
+        The tournament will be held in a house located in Göteborg in Sweden on June 27-28. Specific directions and a more detailed schedule will be posted later.
+        </p>
+        <h2>Rules</h2>
+        <p>
+        The settings that will be used are the same as the ones found in our <a href="{% url 'rules.views.index' %}">rules</a> section. (Rounds of <strong>Kill 'em All</strong> with <strong>8</strong> lives, <strong>20%</strong> Loading times, with the Minimap and Load+Change on <strong>Yes</strong>.)
+        The specific layout of rounds and matches will be decided upon once we have a clear idea of the amount of contenders that will enter and the amount of computers we will have access. It will probably consist of a Group Play qualifier with several matches each consisting of a Best-Of-3, followed by a Playoff-section with eliminating matches each consisting of a Best-Of-5.
+        </p>
+        <h2>Map Pool</h2>
+        <p>
+        The map pool will be voted on at the start of the tournament. You will be able to vote for any map that has been nominated at least a week before the start of the event. To nominate a map email it to <a href="mailto:lierogbg@gmail.com">lierogbg@gmail.com</a> or send a link to it (for instance to maps found at <a href="http://liero.nl">Liero Hellhole</a>).
+        The currently nominated maps are the ones posted in our <a href="{% url 'maps.views.index' %}">maps</a> section (<emph>BEAM2, DIAMOND, HUSK, INDIA2, pokol2, TEMPLE27</emph>).
+        </p>
+        <h2>Prizes</h2>
+        <p>
+        There will be prices for top placements that will be revealed at the tournament! Additional contributions to the prize pool are welcome.
+        </p>
+        <h2>Registration & Fees</h2>
+        <p>
+        To register to the tournament, send an email to <a href="mailto:lierogbg@gmail.com">lierogbg@gmail.com</a> with your <strong>Full Name</strong> and <strong>Nickname</strong> for the tournament. Entering the tournament is free for people visiting Göteborg, but we ask locals to contribute 50 SEK.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+{% endblock %}
+

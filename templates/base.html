@@ -48,6 +48,9 @@
             <nav class="navbar navbar-default" role="navigation">
                 <div class="container-fluid">
                     <ul class="nav navbar-nav nav-pills navbar-right">
+                        <li id="hypermeet">
+                            <a href="{% url 'hypermeet.views.index' %}"><strong>{% trans "HyperMeet 2015" %}</strong></a>
+                        </li>
                         <li id="about">
                             <a href="{% url 'about.views.index' %}">{% trans "LieroGBG" %}</a>
                         </li>

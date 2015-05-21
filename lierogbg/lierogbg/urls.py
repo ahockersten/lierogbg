@@ -15,6 +15,7 @@ urlpatterns = patterns(
     url(r'^admin', include(admin.site.urls)),
     url(r'^about/', include('about.urls')),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^hypermeet/', include('hypermeet.urls')),
     url(r'^maps/', include('maps.urls')),
     url(r'^rankings/', include('rankings.urls')),
     url(r'^rules/', include('rules.urls')),
