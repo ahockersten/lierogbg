@@ -69,6 +69,7 @@ for your installation.
 * $ pyenv virtualenv 3.4.3 lierogbg-env
 * $ pyenv activate lierogbg-env
 * $ pip install -r requirements.txt
+* $ bower install
 
 For every update, run the handy script "deploy.sh" to update everything and
 reload the server.
