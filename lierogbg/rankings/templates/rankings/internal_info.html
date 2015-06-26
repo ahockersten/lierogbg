@@ -28,5 +28,16 @@
         {{ rp_per_player }}
     </div>
 </div>
-
+{% for v in validations %}
+    <div class="row">
+        <div class="col-xs-2">
+            Player name: {{ v.name }}
+        </div>
+        <div class="col-xs-2">
+        </div>
+        <div class="col-xs-2">
+            Validation status: {{ v.validation }}
+        </div>
+    </div>
+{% endfor %}
 {% endblock %}

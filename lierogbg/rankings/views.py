@@ -50,7 +50,7 @@ def create_player_table(active_only,
         shown_players = Player.objects.active_players()
     else:
         shown_players = Player.objects.all()
-    player_list = shown_players.order_by('ranking_points').reverse()
+    player_list = sorted(shown_players, key=lambda p: p.ranking_points, reverse=True)
     players = []
     current_rank = 1
     for p in player_list:
@@ -521,7 +521,8 @@ def get_games_list(request):
         all_games = PlayedGame.objects.all()
         games_by_date = []
         next_match = games_to_load + GAME_PAGE_LIMIT
-        games_by_date = all_games.order_by('start_time').reverse()[games_to_load:next_match]
+        games_by_date = all_games.order_by('start_time'). \
+            reverse()[games_to_load:next_match]
         context['games'] = create_games_table(games_by_date)
         context['current_match'] = games_to_load
         if next_match < len(all_games):
@@ -530,11 +531,14 @@ def get_games_list(request):
         if prev_match > -1:
             context['prev_match'] = prev_match
         if context['show_all'] == "True":
-            return render(request, 'rankings/includes/list_games.html', context)
+            return render(request, 'rankings/includes/list_games.html',
+                          context)
         else:
-            return render(request, 'rankings/includes/list_games_hidden.html', context)
+            return render(request, 'rankings/includes/list_games_hidden.html',
+                          context)
     else:
         raise Http404
+
 
 def get_players_list(request):
     """
@@ -550,17 +554,19 @@ def get_players_list(request):
         else:
             player_table = create_player_table(active_only)
         context = {
-            'players' : player_table,
+            'players': player_table,
         }
         return render(request, 'rankings/includes/list_players.html', context)
     else:
         raise Http404
+
 
 def error(request):
     """
     Renders a very generic error page
     """
     return render(request, 'rankings/error.html')
+
 
 def internal_info(request):
     """
@@ -570,9 +576,14 @@ def internal_info(request):
                                 for p in Player.objects.all()])
     num_players = len(Player.objects.all())
     rp_per_player = total_ranking_points / num_players
+    validations = []
+    for p in Player.objects.all():
+        validations.append({'name': p.name,
+                            'validation': p.validate()})
     context = {
-        'num_players' : num_players,
-        'total_ranking_points' : total_ranking_points,
-        'rp_per_player' : rp_per_player,
+        'num_players': num_players,
+        'total_ranking_points': total_ranking_points,
+        'rp_per_player': rp_per_player,
+        'validations': validations,
     }
     return render(request, 'rankings/internal_info.html', context)
