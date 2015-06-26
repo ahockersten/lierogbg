@@ -53,7 +53,7 @@ def create_player_table(active_only,
     else:
         shown_players = Player.objects.all()
     player_list = sorted(shown_players, key=lambda p: p.ranking_points,
-                         reverse=True)
+                         reverse=True) if shown_players else []
     players = []
     current_rank = 1
     for p in player_list:
@@ -215,11 +215,10 @@ def submit_tournament(request):
                                            pp_before=p.pool_points)
             calculated_ante = p.calculate_ante_percentage(
                 tournament.ante, tournament.pool_points)
-            p.ranking_points = calculated_ante["rp"] - calculated_ante["ante"]
-            p.pool_points = calculated_ante["pp"]
             # this will be set to a correct value when the tournament
             # is saved
-            points_changed.rp_after = calculated_ante["rp"]
+            points_changed.rp_after = calculated_ante["rp"] - \
+                calculated_ante["ante"]
             points_changed.pp_after = calculated_ante["pp"]
             total_ante = total_ante + calculated_ante["ante"]
             points_changed_list.append(points_changed)
@@ -395,12 +394,12 @@ def submit_game(request, tournament_id=None):
         for form in subgame_formset.forms:
             subgames.append(form.save(commit=False))
 
-        points_changed_pl = PointsChanged(tournament=tournament, player=pl,
-                                          rp_before=pl.ranking_points,
-                                          pp_before=pl.pool_points)
-        points_changed_pr = PointsChanged(tournament=tournament, player=pr,
-                                          rp_before=pr.ranking_points,
-                                          pp_before=pr.pool_points)
+        pc_pl = PointsChanged(tournament=tournament, player=pl,
+                              rp_before=pl.ranking_points,
+                              pp_before=pl.pool_points)
+        pc_pr = PointsChanged(tournament=tournament, player=pr,
+                              rp_before=pr.ranking_points,
+                              pp_before=pr.pool_points)
 
         if played_game.ranked:
             if winner is None:
@@ -411,13 +410,16 @@ def submit_game(request, tournament_id=None):
                 # are still equal, give it to the left player
                 pl_ante = pl.calculate_ranked_ante()
                 pr_ante = pr.calculate_ranked_ante()
-                pl.pool_points = pl_ante["pp"]
-                pr.pool_points = pr_ante["pp"]
-
+                pc_pl.pp_after = pl_ante["pp"]
+                pc_pr.pp_after = pr_ante["pp"]
+                print(pl_ante)
+                print(pr_ante)
                 ante = (pl_ante["ante"] + pr_ante["ante"]) / 2
                 ante_rem = (pl_ante["ante"] + pr_ante["ante"]) % 2
-                pl.ranking_points = pl_ante["rp"] - pl_ante["ante"] + ante
-                pr.ranking_points = pr_ante["rp"] - pr_ante["ante"] + ante
+                pc_pl.rp_after = pl_ante["rp"] - pl_ante["ante"] + ante
+                pc_pr.rp_after = pr_ante["rp"] - pr_ante["ante"] + ante
+                print(pc_pl)
+                print(pc_pr)
                 if ante_rem != 0:
                     pl_lives = 0
                     pr_lives = 0
@@ -425,44 +427,48 @@ def submit_game(request, tournament_id=None):
                         pl_lives = pl_lives + subgame.pl_lives
                         pr_lives = pr_lives + subgame.pr_lives
                     if pl_lives == pr_lives:
-                        if pl.ranking_points >= pr.ranking_points:
-                            pl.ranking_points = pl.ranking_points + 1
+                        if pc_pl.rp_after >= pc_pr.rp_after:
+                            pc_pl.rp_after = pc_pl.rp_after + 1
                         else:
-                            pr.ranking_points = pr.ranking_points + 1
+                            pc_pr.rp_after = pc_pr.rp_after + 1
                     elif pl_lives > pr_lives:
-                        pl.ranking_points = pl.ranking_points + 1
+                        pc_pl.rp_after = pc_pl.rp_after
                     else:
-                        pr.ranking_points = pr.ranking_points + 1
+                        pc_pr.rp_after = pc_pr.rp_after + 1
             else:
                 # if there is a winner, this calculation is used
                 loser = pl if winner == pr else pr
+                pc_loser = pc_pl if winner == pr else pc_pr
                 # the line below is needed due to winner and (pl|pr) not
                 # actually pointing to the same thing somehow, which messes
                 # up ranking points and pool points
                 winner = pl if winner == pl else pr
+                pc_winner = pc_pl if winner == pl else pc_pr
 
                 winner_ante = winner.calculate_ranked_ante()
                 loser_ante = loser.calculate_ranked_ante()
-                winner.pool_points = winner_ante["pp"]
-                loser.pool_points = loser_ante["pp"]
+                pc_winner.pp_after = winner_ante["pp"]
+                pc_loser.pp_after = loser_ante["pp"]
 
-                winner.ranking_points = winner_ante["rp"] + loser_ante["ante"]
-                loser.ranking_points = loser_ante["rp"] - loser_ante["ante"]
-
-        points_changed_pl.pp_after = pl.pool_points
-        points_changed_pl.rp_after = pl.ranking_points
-        points_changed_pr.pp_after = pr.pool_points
-        points_changed_pr.rp_after = pr.ranking_points
+                pc_winner.rp_after = winner_ante["rp"] + loser_ante["ante"]
+                pc_loser.rp_after = loser_ante["rp"] - loser_ante["ante"]
+        else:
+            pc_pl.pp_after = pl.pool_points
+            pc_pl.rp_after = pl.ranking_points
+            pc_pr.pp_after = pr.pool_points
+            pc_pr.rp_after = pr.ranking_points
 
         pl.save()
         pr.save()
         played_game.save()
         played_game_form.save_m2m()
 
-        points_changed_pl.game = played_game
-        points_changed_pr.game = played_game
-        points_changed_pl.save()
-        points_changed_pr.save()
+        pc_pl.game = played_game
+        pc_pr.game = played_game
+        pc_pl.save()
+        pc_pr.save()
+        print(pc_pl)
+        print(pc_pr)
 
         for subgame in subgames:
             subgame.parent = played_game

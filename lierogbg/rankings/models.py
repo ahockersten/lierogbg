@@ -68,7 +68,7 @@ class Player(models.Model):
         try:
             last_game_with_player = PlayedGame.objects.filter(
                 Q(player_left=self) | Q(player_right=self)). \
-                latest('start_time')
+                filter(ranked=True).latest('start_time')
         except PlayedGame.DoesNotExist:
             last_game_with_player = None
         try:
@@ -84,7 +84,8 @@ class Player(models.Model):
                 tournament=last_tournament_with_player).filter(player=self)
         elif last_tournament_with_player is None:
             pcs = PointsChanged.objects.filter(
-                game=last_game_with_player).filter(player=self)
+                game=last_game_with_player,
+                player=self)
         elif last_game_with_player.start_time < \
                 last_tournament_with_player.start_time:
             pcs = PointsChanged.objects.filter(
@@ -215,11 +216,9 @@ class Tournament(models.Model):
             raise ValueError
         tpas = self.tournament_placing_antes()
         for tpa in tpas:
-            tpa.player.ranking_points = tpa.player.ranking_points + tpa.ante
-            tpa.player.save()
             pcs = PointsChanged.objects.all()
             points_changed = pcs.filter(tournament=self, player=tpa.player)[0]
-            points_changed.rp_after = tpa.player.ranking_points
+            points_changed.rp_after = tpa.player.ranking_points + tpa.ante
             points_changed.save()
 
     def games(self):
@@ -314,8 +313,14 @@ class PlayedGame(models.Model):
         return Subgame.objects.all().filter(parent=self)
 
     def __str__(self):
-        return '%s %s vs %s, %s won' % (self.start_time, self.player_left,
-                                        self.player_right, self.winner)
+        match_type = "ranked" if self.ranked else ("tournament"
+                                                   if self.tournament else
+                                                   "unranked")
+        return '%s %s vs %s, (%s) %s won' % (self.start_time,
+                                             self.player_left,
+                                             self.player_right,
+                                             match_type,
+                                             self.winner)
 
 
 class Subgame(models.Model):

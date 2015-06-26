@@ -8,6 +8,7 @@ from django.test import TestCase
 from rankings.models import Player, PlayedGame, Subgame, Tournament
 from rankings.models import TournamentPlacingAnte, PointsChanged
 
+
 class TestPlayer(TestCase):
     """
     Tests the Player model
@@ -17,12 +18,12 @@ class TestPlayer(TestCase):
         Creates various needed objects.
         """
         p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                   real_name="", ranking_points=500,
-                                   pool_points=500, active=True,
+                                   real_name="", start_ranking_points=500,
+                                   start_pool_points=500, active=True,
                                    comment="")
         p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                   real_name="", ranking_points=1500,
-                                   pool_points=0, active=True,
+                                   real_name="", start_ranking_points=1500,
+                                   start_pool_points=0, active=True,
                                    comment="")
         t = Tournament.objects.create(finished=True,
                                       start_time=timezone.now(),
@@ -111,25 +112,25 @@ class TestPlayerAnteCalculation(TestCase):
         Creates various needed objects.
         """
         Player.objects.create(name="Foo Bar", color="#00FF00", real_name="",
-                              ranking_points=500, pool_points=500,
+                              start_ranking_points=500, start_pool_points=500,
                               active=True, comment="")
         Player.objects.create(name="Bar Baz", color="#FF0000", real_name="",
-                              ranking_points=1500, pool_points=0, active=True,
+                              start_ranking_points=1500, start_pool_points=0, active=True,
                               comment="")
         Player.objects.create(name="Baz Qux", color="#0000FF", real_name="",
-                              ranking_points=2095, pool_points=0, active=True,
+                              start_ranking_points=2095, start_pool_points=0, active=True,
                               comment="")
         Player.objects.create(name="Inactive", color="#000000", real_name="",
-                              ranking_points=1900, pool_points=0,
+                              start_ranking_points=1900, start_pool_points=0,
                               active=False, comment="")
         Player.objects.create(name="No RP no PP", color="#00AA00",
-                              real_name="", ranking_points=0, pool_points=0,
+                              real_name="", start_ranking_points=0, start_pool_points=0,
                               active=True, comment="")
         Player.objects.create(name="No RP some PP", color="#00BB00",
-                              real_name="", ranking_points=0, pool_points=500,
+                              real_name="", start_ranking_points=0, start_pool_points=500,
                               active=True, comment="")
         Player.objects.create(name="No RP minimal PP", color="#00BB00",
-                              real_name="", ranking_points=0, pool_points=5,
+                              real_name="", start_ranking_points=0, start_pool_points=5,
                               active=True, comment="")
 
     def test_setup(self):
@@ -291,22 +292,22 @@ class TestTournament(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         # an inactive player
         self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=False,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=False,
                                         comment="")
         # an inactive player
         self.p4 = Player.objects.create(name="Bar Foo", color="#00FFFF",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=False,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=False,
                                         comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
@@ -466,12 +467,12 @@ class TestTournamentPlacingAnte(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
@@ -504,12 +505,12 @@ class TestPlayedGame(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         self.g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                             start_time=timezone.now(),
@@ -549,7 +550,7 @@ class TestPlayedGame(TestCase):
         """
         __str__() works correctly
         """
-        self.assertEqual("{} {} vs {}, {} won".format(str(self.g1.start_time),
+        self.assertEqual("{} {} vs {}, (ranked) {} won".format(str(self.g1.start_time),
                                                       str(self.p1),
                                                       str(self.p2),
                                                       str(self.p1)),
@@ -564,12 +565,12 @@ class TestSubgame(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         self.g1 = PlayedGame.objects.create(tournament=None, ranked=True,
                                             start_time=timezone.now(),
@@ -629,12 +630,12 @@ class TestPointsChanged(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
