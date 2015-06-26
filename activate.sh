@@ -7,4 +7,4 @@ export PYENV_ROOT="`pwd`/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-pyenv activate web-env
+pyenv activate lierogbg-env

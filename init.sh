@@ -7,8 +7,8 @@ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 pyenv install 3.4.3
-pyenv virtualenv 3.4.3 web-env
-pyenv activate web-env
+pyenv virtualenv 3.4.3 lierogbg-env
+pyenv activate lierogbg-env
 pip install --upgrade pip
 pip install -r requirements.txt
 bower install
