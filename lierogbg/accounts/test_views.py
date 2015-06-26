@@ -9,8 +9,8 @@ from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.models import User, AnonymousUser
 from django.http import QueryDict
 from django.test import Client, TestCase, RequestFactory
-
 from accounts.views import authenticate, login, logout
+
 
 def add_session_to_request(request):
     """
@@ -19,6 +19,7 @@ def add_session_to_request(request):
     middleware = SessionMiddleware()
     middleware.process_request(request)
     request.session.save()
+
 
 class ViewTest(TestCase):
     """

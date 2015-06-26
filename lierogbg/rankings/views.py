@@ -22,20 +22,22 @@ from rankings.models import Tournament
 # Number of games to display per page in the game list
 GAME_PAGE_LIMIT = 30
 
+
 def ranking(request, active_only):
     """
     Displays the current ranking
     """
     last_game_time = None
     last_game = PlayedGame.objects.last_game()
-    if last_game != None:
+    if last_game is not None:
         last_game_time = last_game.start_time.isoformat()
     context = {
-        'players' : create_player_table(active_only),
-        'last_game_time' : last_game_time,
+        'players': create_player_table(active_only),
+        'last_game_time': last_game_time,
     }
 
     return render(request, 'rankings/ranking.html', context)
+
 
 def create_player_table(active_only,
                         since=datetime.datetime(
@@ -50,7 +52,8 @@ def create_player_table(active_only,
         shown_players = Player.objects.active_players()
     else:
         shown_players = Player.objects.all()
-    player_list = sorted(shown_players, key=lambda p: p.ranking_points, reverse=True)
+    player_list = sorted(shown_players, key=lambda p: p.ranking_points,
+                         reverse=True) if shown_players else []
     players = []
     current_rank = 1
     for p in player_list:
@@ -91,6 +94,7 @@ def create_player_table(active_only,
         current_rank = current_rank + 1
     return players
 
+
 def games(request):
     """
     Display data about the latest GAME_PAGE_LIMIT number of games.
@@ -99,16 +103,17 @@ def games(request):
     first_games_by_date = all_pg.reverse()[:GAME_PAGE_LIMIT]
     last_game = PlayedGame.objects.last_game()
     last_game_time = None
-    if last_game != None:
+    if last_game is not None:
         last_game_time = last_game.start_time.isoformat()
     context = {
-        'games' : create_games_table(first_games_by_date),
-        'current_match' : 0,
-        'next_match' : GAME_PAGE_LIMIT,
-        'last_game_time' : last_game_time,
-        'show_all' : False,
+        'games': create_games_table(first_games_by_date),
+        'current_match': 0,
+        'next_match': GAME_PAGE_LIMIT,
+        'last_game_time': last_game_time,
+        'show_all': False,
     }
     return render(request, 'rankings/games.html', context)
+
 
 def create_games_table(games_list):
     """
@@ -118,7 +123,7 @@ def create_games_table(games_list):
     for g in games_list:
         tmp = {}
         tmp["game"] = g
-        tmp["winner"] = _('Tied') if g.winner == None else g.winner
+        tmp["winner"] = _('Tied') if g.winner is None else g.winner
         all_pc = PointsChanged.objects.all()
         pc_pl = all_pc.filter(game=g).filter(player=g.player_left)
         if pc_pl.exists():
@@ -131,6 +136,7 @@ def create_games_table(games_list):
         tmp["subgames"] = g.subgames()
         ret.append(tmp)
     return ret
+
 
 def create_tournament_table():
     """
@@ -153,14 +159,16 @@ def create_tournament_table():
         ret.append(tmp)
     return ret
 
+
 def tournaments(request):
     """
     Renders a list of all tournaments.
     """
     context = {
-        'tournaments' : create_tournament_table()
+        'tournaments': create_tournament_table()
     }
     return render(request, 'rankings/tournaments.html', context)
+
 
 @login_required
 def add_tournament(request):
@@ -171,10 +179,11 @@ def add_tournament(request):
     tournament_placing_ante_formset = TournamentPlacingAnteFormSet(
         instance=Tournament())
     context = {
-        'tournament_form'                 : tournament_form,
-        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
+        'tournament_form': tournament_form,
+        'tournament_placing_ante_formset': tournament_placing_ante_formset,
     }
     return render(request, 'rankings/add_tournament.html', context)
+
 
 @login_required
 def submit_tournament(request):
@@ -187,9 +196,9 @@ def submit_tournament(request):
         tournament = tournament_form.save(commit=False)
         tournament_placing_ante_formset = TournamentPlacingAnteFormSet(
             request.POST, instance=tournament)
-        # FIXME this is not valid here, since the tournament for each tpa has not
-        # been setup yet
-        #if not tournament_placing_ante_formset.is_valid():
+        # FIXME this is not valid here, since the tournament for each tpa has
+        # not been setup yet
+        # if not tournament_placing_ante_formset.is_valid():
         #    return redirect('rankings.views.error')
 
         tournament.total_ante = 0
@@ -206,11 +215,10 @@ def submit_tournament(request):
                                            pp_before=p.pool_points)
             calculated_ante = p.calculate_ante_percentage(
                 tournament.ante, tournament.pool_points)
-            p.ranking_points = calculated_ante["rp"] - calculated_ante["ante"]
-            p.pool_points = calculated_ante["pp"]
             # this will be set to a correct value when the tournament
             # is saved
-            points_changed.rp_after = calculated_ante["rp"]
+            points_changed.rp_after = calculated_ante["rp"] - \
+                calculated_ante["ante"]
             points_changed.pp_after = calculated_ante["pp"]
             total_ante = total_ante + calculated_ante["ante"]
             points_changed_list.append(points_changed)
@@ -242,6 +250,7 @@ def submit_tournament(request):
     else:
         return redirect('rankings.views.error')
 
+
 def prepare_tournament_context(tournament_id, form):
     """
     Prepares the context for a tournament.
@@ -249,7 +258,7 @@ def prepare_tournament_context(tournament_id, form):
     instance = Tournament.objects.get(pk=tournament_id)
     tournament_form = form(instance=instance)
     played_game_form = PlayedGameForm(
-        initial={'tournament' : instance},
+        initial={'tournament': instance},
         available_players=instance.players.all())
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
@@ -265,13 +274,14 @@ def prepare_tournament_context(tournament_id, form):
     games_in_tournament = instance.games().order_by('start_time').reverse()
     tournament_extra_data["games"] = create_games_table(games_in_tournament)
     context = {
-        'played_game_form'                : played_game_form,
-        'subgame_formset'                 : subgame_formset,
-        'tournament_form'                 : tournament_form,
-        'tournament_placing_ante_formset' : tournament_placing_ante_formset,
-        'tournament_extra_data'           : tournament_extra_data,
+        'played_game_form': played_game_form,
+        'subgame_formset': subgame_formset,
+        'tournament_form': tournament_form,
+        'tournament_placing_ante_formset': tournament_placing_ante_formset,
+        'tournament_extra_data': tournament_extra_data,
     }
     return context
+
 
 @login_required
 def edit_tournament(request, tournament_id):
@@ -296,6 +306,7 @@ def view_tournament(request, tournament_id):
         return render(request, 'rankings/view_tournament.html', context)
     except ValueError:
         return redirect('rankings.views.error')
+
 
 @login_required
 def save_tournament(request, tournament_id):
@@ -330,6 +341,7 @@ def save_tournament(request, tournament_id):
     else:
         return redirect('rankings.views.error')
 
+
 @login_required
 def add_game(request):
     """
@@ -340,11 +352,12 @@ def add_game(request):
     subgame_formset = SubgameFormSet(instance=PlayedGame())
 
     context = {
-        'played_game_form' : played_game_form,
-        'subgame_formset'  : subgame_formset,
+        'played_game_form': played_game_form,
+        'subgame_formset': subgame_formset,
     }
 
     return render(request, 'rankings/add_game.html', context)
+
 
 @login_required
 def submit_game(request, tournament_id=None):
@@ -353,14 +366,14 @@ def submit_game(request, tournament_id=None):
     FIXME split this up somehow
     """
     tournament = None
-    if tournament_id != None:
+    if tournament_id is not None:
         tournament = get_object_or_404(Tournament, id=tournament_id)
     played_game_form = PlayedGameForm(request.POST)
 
     if played_game_form.is_valid():
         played_game = played_game_form.save(commit=False)
         played_game.tournament = tournament
-        if tournament != None:
+        if tournament is not None:
             played_game.ranked = False
             # can't add games to finished tournaments
             if tournament.finished:
@@ -374,22 +387,22 @@ def submit_game(request, tournament_id=None):
         pl = played_game.player_left
         pr = played_game.player_right
         winner = played_game.winner
-        if pl == pr or (winner != pl and winner != pr and winner != None):
+        if pl == pr or (winner != pl and winner != pr and winner is not None):
             return redirect('rankings.views.error')
 
         subgames = []
         for form in subgame_formset.forms:
             subgames.append(form.save(commit=False))
 
-        points_changed_pl = PointsChanged(tournament=tournament, player=pl,
-                                          rp_before=pl.ranking_points,
-                                          pp_before=pl.pool_points)
-        points_changed_pr = PointsChanged(tournament=tournament, player=pr,
-                                          rp_before=pr.ranking_points,
-                                          pp_before=pr.pool_points)
+        pc_pl = PointsChanged(tournament=tournament, player=pl,
+                              rp_before=pl.ranking_points,
+                              pp_before=pl.pool_points)
+        pc_pr = PointsChanged(tournament=tournament, player=pr,
+                              rp_before=pr.ranking_points,
+                              pp_before=pr.pool_points)
 
         if played_game.ranked:
-            if winner == None:
+            if winner is None:
                 # if there is no winner, each player gets half of the ante
                 # if this is not an even sum, give the remainder to the player
                 # who had the most lives left in the match. If both are equal,
@@ -397,13 +410,16 @@ def submit_game(request, tournament_id=None):
                 # are still equal, give it to the left player
                 pl_ante = pl.calculate_ranked_ante()
                 pr_ante = pr.calculate_ranked_ante()
-                pl.pool_points = pl_ante["pp"]
-                pr.pool_points = pr_ante["pp"]
-
+                pc_pl.pp_after = pl_ante["pp"]
+                pc_pr.pp_after = pr_ante["pp"]
+                print(pl_ante)
+                print(pr_ante)
                 ante = (pl_ante["ante"] + pr_ante["ante"]) / 2
                 ante_rem = (pl_ante["ante"] + pr_ante["ante"]) % 2
-                pl.ranking_points = pl_ante["rp"] - pl_ante["ante"] + ante
-                pr.ranking_points = pr_ante["rp"] - pr_ante["ante"] + ante
+                pc_pl.rp_after = pl_ante["rp"] - pl_ante["ante"] + ante
+                pc_pr.rp_after = pr_ante["rp"] - pr_ante["ante"] + ante
+                print(pc_pl)
+                print(pc_pr)
                 if ante_rem != 0:
                     pl_lives = 0
                     pr_lives = 0
@@ -411,44 +427,48 @@ def submit_game(request, tournament_id=None):
                         pl_lives = pl_lives + subgame.pl_lives
                         pr_lives = pr_lives + subgame.pr_lives
                     if pl_lives == pr_lives:
-                        if pl.ranking_points >= pr.ranking_points:
-                            pl.ranking_points = pl.ranking_points + 1
+                        if pc_pl.rp_after >= pc_pr.rp_after:
+                            pc_pl.rp_after = pc_pl.rp_after + 1
                         else:
-                            pr.ranking_points = pr.ranking_points + 1
+                            pc_pr.rp_after = pc_pr.rp_after + 1
                     elif pl_lives > pr_lives:
-                        pl.ranking_points = pl.ranking_points + 1
+                        pc_pl.rp_after = pc_pl.rp_after
                     else:
-                        pr.ranking_points = pr.ranking_points + 1
+                        pc_pr.rp_after = pc_pr.rp_after + 1
             else:
                 # if there is a winner, this calculation is used
                 loser = pl if winner == pr else pr
-                # the line below is needed due to winner and (pl|pr) not actually
-                # pointing to the same thing somehow, which messes up ranking points
-                # and pool points
+                pc_loser = pc_pl if winner == pr else pc_pr
+                # the line below is needed due to winner and (pl|pr) not
+                # actually pointing to the same thing somehow, which messes
+                # up ranking points and pool points
                 winner = pl if winner == pl else pr
+                pc_winner = pc_pl if winner == pl else pc_pr
 
                 winner_ante = winner.calculate_ranked_ante()
                 loser_ante = loser.calculate_ranked_ante()
-                winner.pool_points = winner_ante["pp"]
-                loser.pool_points = loser_ante["pp"]
+                pc_winner.pp_after = winner_ante["pp"]
+                pc_loser.pp_after = loser_ante["pp"]
 
-                winner.ranking_points = winner_ante["rp"] + loser_ante["ante"]
-                loser.ranking_points = loser_ante["rp"] - loser_ante["ante"]
-
-        points_changed_pl.pp_after = pl.pool_points
-        points_changed_pl.rp_after = pl.ranking_points
-        points_changed_pr.pp_after = pr.pool_points
-        points_changed_pr.rp_after = pr.ranking_points
+                pc_winner.rp_after = winner_ante["rp"] + loser_ante["ante"]
+                pc_loser.rp_after = loser_ante["rp"] - loser_ante["ante"]
+        else:
+            pc_pl.pp_after = pl.pool_points
+            pc_pl.rp_after = pl.ranking_points
+            pc_pr.pp_after = pr.pool_points
+            pc_pr.rp_after = pr.ranking_points
 
         pl.save()
         pr.save()
         played_game.save()
         played_game_form.save_m2m()
 
-        points_changed_pl.game = played_game
-        points_changed_pr.game = played_game
-        points_changed_pl.save()
-        points_changed_pr.save()
+        pc_pl.game = played_game
+        pc_pr.game = played_game
+        pc_pl.save()
+        pc_pr.save()
+        print(pc_pl)
+        print(pc_pr)
 
         for subgame in subgames:
             subgame.parent = played_game
@@ -462,6 +482,7 @@ def submit_game(request, tournament_id=None):
             return redirect('rankings.views.ranking')
     else:
         return redirect('rankings.views.error')
+
 
 @login_required
 def update_total_ante(request):
@@ -480,9 +501,10 @@ def update_total_ante(request):
                     ante_percentage, pool_points)["ante"]
             return HttpResponse(str(total_ante))
         except ValueError:
-            return HttpResponse('Error') # incorrect post
+            return HttpResponse('Error')
     else:
         raise Http404
+
 
 def get_tournament_games_list(request, tournament_id):
     """
@@ -501,6 +523,7 @@ def get_tournament_games_list(request, tournament_id):
             return HttpResponse('Error, incorrect parameters')
     else:
         raise Http404
+
 
 def get_games_list(request):
     """

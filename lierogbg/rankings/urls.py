@@ -16,7 +16,7 @@ urlpatterns = patterns(
         'get_tournament_games_list', name="get_tournament_games_list"),
     url(r'^get_players_list\/$', 'get_players_list', name="get_players_list"),
     url(r'^internal_info\/$', 'internal_info', name="internal_info"),
-    url(r'^ranking\/$', 'ranking', {'active_only' : 'True'}, name="ranking"),
+    url(r'^ranking\/$', 'ranking', {'active_only': 'True'}, name="ranking"),
     url(r'^ranking\/(?P<active_only>.*)', 'ranking', name="ranking"),
     url(r'^save_tournament\/(?P<tournament_id>.*)', 'save_tournament',
         name="save_tournament"),
@@ -30,6 +30,5 @@ urlpatterns = patterns(
         name="update_total_ante"),
     url(r'^view_tournament\/(?P<tournament_id>.*)', 'view_tournament',
         name='view_tournament'),
-    url(r'^\/*$', 'ranking', {'active_only' : 'True'}, name="ranking"),
+    url(r'^\/*$', 'ranking', {'active_only': 'True'}, name="ranking"),
 )
-

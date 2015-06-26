@@ -1,8 +1,8 @@
 """
 Render the about page
 """
-
 from django.shortcuts import render
+
 
 def index(request):
     """

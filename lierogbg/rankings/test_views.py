@@ -17,6 +17,9 @@ from rankings.views import edit_tournament, view_tournament, save_tournament
 from rankings.views import add_game, submit_game, update_total_ante
 from rankings.views import get_games_list, get_players_list, error
 from rankings.views import get_tournament_games_list, internal_info
+import datetime
+import random
+
 
 # pylint: disable=too-many-instance-attributes,too-many-public-methods
 class TestViews(TestCase):
@@ -28,22 +31,25 @@ class TestViews(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="",
+                                        start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         # an inactive player
         self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=False,
+                                        real_name="",
+                                        start_ranking_points=1500,
+                                        start_pool_points=0, active=False,
                                         comment="")
         # an inactive player
         self.p4 = Player.objects.create(name="Bar Foo", color="#00FFFF",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=False,
+                                        real_name="",
+                                        start_ranking_points=500,
+                                        start_pool_points=500, active=False,
                                         comment="")
         self.t = Tournament.objects.create(finished=False,
                                            start_time=timezone.now(),
@@ -92,23 +98,47 @@ class TestViews(TestCase):
                                        player_left=self.p1,
                                        player_right=self.p2,
                                        winner=self.p1, comment="")
+        PointsChanged.objects.create(player=self.p1, game=g1,
+                                     rp_before=500, rp_after=515,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p2, game=g1,
+                                     rp_before=500, rp_after=485,
+                                     pp_before=0, pp_after=0)
         g2 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=self.p2,
                                        player_right=self.p1,
                                        winner=self.p2, comment="")
+        PointsChanged.objects.create(player=self.p1, game=g2,
+                                     rp_before=515, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p2, game=g2,
+                                     rp_before=485, rp_after=500,
+                                     pp_before=0, pp_after=0)
         # a tied game
         g3 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=self.p2,
                                        player_right=self.p1,
                                        winner=None, comment="")
+        PointsChanged.objects.create(player=self.p1, game=g3,
+                                     rp_before=500, rp_after=500,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p2, game=g3,
+                                     rp_before=500, rp_after=500,
+                                     pp_before=0, pp_after=0)
         # played between two inactive players
         g4 = PlayedGame.objects.create(tournament=None, ranked=True,
                                        start_time=timezone.now(),
                                        player_left=self.p3,
                                        player_right=self.p4,
                                        winner=self.p4, comment="")
+        PointsChanged.objects.create(player=self.p3, game=g4,
+                                     rp_before=500, rp_after=485,
+                                     pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p4, game=g4,
+                                     rp_before=500, rp_after=515,
+                                     pp_before=0, pp_after=0)
         tg1 = PlayedGame.objects.create(tournament=self.t, ranked=False,
                                         start_time=timezone.now(),
                                         player_left=self.p2,
@@ -163,10 +193,10 @@ class TestViews(TestCase):
         self.assertEqual(active_players[1]['games'], 4)
         all_players = create_player_table(active_only='False')
         self.assertEqual(len(all_players), 4)
-        self.assertEqual(all_players[0]['games'], 5)
-        self.assertEqual(all_players[1]['games'], 2)
+        self.assertEqual(all_players[0]['games'], 1)
+        self.assertEqual(all_players[1]['games'], 5)
         self.assertEqual(all_players[2]['games'], 4)
-        self.assertEqual(all_players[3]['games'], 1)
+        self.assertEqual(all_players[3]['games'], 2)
 
     def test_games(self):
         """
@@ -673,24 +703,24 @@ class TestViewsNormalMatches(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="", start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         self.p3 = Player.objects.create(name="Qux Quux", color="#0000FF",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=False,
+                                        real_name="", start_ranking_points=1500,
+                                        start_pool_points=0, active=False,
                                         comment="")
         g1 = PlayedGame.objects.create(tournament=None, ranked=True,
-                                       start_time=timezone.now(),
+                                       start_time=datetime.date(2010, 1, 1),
                                        player_left=self.p1,
                                        player_right=self.p2, winner=self.p1,
                                        comment="")
         g2 = PlayedGame.objects.create(tournament=None, ranked=True,
-                                       start_time=timezone.now(),
+                                       start_time=datetime.date(2010, 1, 2),
                                        player_left=self.p2,
                                        player_right=self.p1, winner=self.p2,
                                        comment="")
@@ -704,7 +734,10 @@ class TestViewsNormalMatches(TestCase):
                                      rp_after=500, pp_before=0, pp_after=0)
         PointsChanged.objects.create(player=self.p2, game=g1, rp_before=1400,
                                      rp_after=1500, pp_before=0, pp_after=0)
-
+        PointsChanged.objects.create(player=self.p1, game=g2, rp_before=500,
+                                     rp_after=400, pp_before=0, pp_after=0)
+        PointsChanged.objects.create(player=self.p2, game=g2, rp_before=1500,
+                                     rp_after=1600, pp_before=0, pp_after=0)
 
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
@@ -810,7 +843,7 @@ class TestViewsNormalMatches(TestCase):
 
         # a ranked game means ranking points should have changed
         # both increase due to PP being unlocked
-        self.assertGreater(Player.objects.get(id=self.p1.pk).ranking_points,
+        self.assertLess(Player.objects.get(id=self.p1.pk).ranking_points,
                            p1_rp_before)
         self.assertGreater(Player.objects.get(id=self.p2.pk).ranking_points,
                            p2_rp_before)
@@ -999,7 +1032,7 @@ class TestViewsNormalMatches(TestCase):
         self.assertEqual(Player.objects.get(id=self.p3.pk).ranking_points,
                          p3_rp_before)
 
-    def test_submit_game_tied(self):
+    def test_submit_game_ied(self):
         """
         Submit a game for tied case.
         """
@@ -1162,12 +1195,12 @@ class TestViewsSimilarPlayers(TestCase):
         Creates various needed objects.
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=1000,
-                                        pool_points=29, active=True,
+                                        real_name="", start_ranking_points=1000,
+                                        start_pool_points=29, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1000,
-                                        pool_points=0, active=True,
+                                        real_name="", start_ranking_points=1000,
+                                        start_pool_points=0, active=True,
                                         comment="")
         # Every test needs access to the request factory.
         self.factory = RequestFactory()
@@ -1267,22 +1300,45 @@ class TestViewsLotsOfMatches(TestCase):
         Creates a huge amount of games
         """
         self.p1 = Player.objects.create(name="Foo Bar", color="#00FF00",
-                                        real_name="", ranking_points=500,
-                                        pool_points=500, active=True,
+                                        real_name="",
+                                        start_ranking_points=500,
+                                        start_pool_points=500, active=True,
                                         comment="")
         self.p2 = Player.objects.create(name="Bar Baz", color="#FF0000",
-                                        real_name="", ranking_points=1500,
-                                        pool_points=0, active=True,
+                                        real_name="",
+                                        start_ranking_points=1500,
+                                        start_pool_points=0, active=True,
                                         comment="")
         i = 0
         while i < 100:
+            winner = random.choice([self.p1, self.p2])
+            p1_rp = self.p1.ranking_points
+            p2_rp = self.p2.ranking_points
             g = PlayedGame.objects.create(tournament=None, ranked=True,
                                           start_time=timezone.now(),
                                           player_left=self.p1,
                                           player_right=self.p2,
-                                          winner=self.p1, comment="")
+                                          winner=winner, comment="")
             Subgame.objects.create(parent=g, map_played="", pl_lives=3,
                                    pr_lives=0, replay_file=None)
+            if winner == self.p1:
+                PointsChanged.objects.create(
+                    player=self.p1, game=g,
+                    rp_before=p1_rp, rp_after=p1_rp + 10,
+                    pp_before=0, pp_after=0)
+                PointsChanged.objects.create(
+                    player=self.p2, game=g,
+                    rp_before=p2_rp, rp_after=p2_rp - 10,
+                    pp_before=0, pp_after=0)
+            else:
+                PointsChanged.objects.create(
+                    player=self.p1, game=g,
+                    rp_before=p1_rp, rp_after=p1_rp - 10,
+                    pp_before=0, pp_after=0)
+                PointsChanged.objects.create(
+                    player=self.p2, game=g,
+                    rp_before=p2_rp, rp_after=p2_rp + 10,
+                    pp_before=0, pp_after=0)
             i = i + 1
 
         # Every test needs access to the request factory.

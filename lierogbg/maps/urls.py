@@ -7,4 +7,3 @@ urlpatterns = patterns(
     'maps.views',
     url(r'^$', 'index', name="index"),
 )
-

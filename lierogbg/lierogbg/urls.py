@@ -20,4 +20,3 @@ urlpatterns = patterns(
     url(r'^rankings/', include('rankings.urls')),
     url(r'^rules/', include('rules.urls')),
 )
-
