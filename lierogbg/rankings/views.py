@@ -50,7 +50,7 @@ def create_player_table(active_only,
         shown_players = Player.objects.active_players()
     else:
         shown_players = Player.objects.all()
-    player_list = shown_players.order_by('ranking_points').reverse()
+    player_list = sorted(shown_players, key=lambda p: p.ranking_points, reverse=True)
     players = []
     current_rank = 1
     for p in player_list:
