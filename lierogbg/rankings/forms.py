@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from rankings import models
 from .widgets import CalendarWidget
 
+
 class TournamentCreateForm(ModelForm):
     """
     Form used for creating a new tournament.
@@ -26,18 +27,21 @@ class TournamentCreateForm(ModelForm):
             'pool_points',
         )
         labels = {
-            'start_time'   : _('Start time'),
-            'name'         : _('Name'),
-            'players'      : _('Players'),
-            'ante'         : _('Ante (in %)'),
-            'pool_points'  : _('Pool points unlocked'),
+            'start_time': _('Start time'),
+            'name': _('Name'),
+            'players': _('Players'),
+            'ante': _('Ante (in %)'),
+            'pool_points': _('Pool points unlocked'),
         }
         widgets = {
             'start_time' : CalendarWidget()
         }
+
     def __init__(self, *args, **kwargs):
         super(ModelForm, self).__init__(*args, **kwargs)
-        self.fields['players'].queryset = models.Player.objects.active_players()
+        self.fields['players'].queryset = \
+            models.Player.objects.active_players()
+
 
 class TournamentEditForm(ModelForm):
     """
@@ -54,10 +58,11 @@ class TournamentEditForm(ModelForm):
             'finished',
         )
         labels = {
-            'name'         : _('Name'),
-            'total_ante'   : _('Total ante'),
-            'finished'     : _('Finished'),
+            'name': _('Name'),
+            'total_ante': _('Total ante'),
+            'finished': _('Finished'),
         }
+
 
 class TournamentPlacingAnteForm(ModelForm):
     """
@@ -73,13 +78,14 @@ class TournamentPlacingAnteForm(ModelForm):
             'ante',
         )
         labels = {
-            'placing' : _('Placing'),
-            'ante'    : _('Received ante'),
+            'placing': _('Placing'),
+            'ante'   : _('Received ante'),
         }
 
 TournamentPlacingAnteFormSet = inlineformset_factory(
     models.Tournament, models.TournamentPlacingAnte, extra=1,
     can_delete=False, form=TournamentPlacingAnteForm)
+
 
 class TournamentPlacingAnteSubmitForm(ModelForm):
     """
@@ -96,10 +102,11 @@ class TournamentPlacingAnteSubmitForm(ModelForm):
             'player'
         )
         labels = {
-            'placing' : _('Placing'),
-            'ante'    : _('Received ante'),
-            'player'  : _('Player'),
+            'placing': _('Placing'),
+            'ante': _('Received ante'),
+            'player': _('Player'),
         }
+
     def __init__(self, *args, **kwargs):
         available_players = kwargs.pop('available_players', None)
         super(ModelForm, self).__init__(*args, **kwargs)
@@ -110,6 +117,7 @@ class TournamentPlacingAnteSubmitForm(ModelForm):
 TournamentPlacingAnteSubmitFormSet = inlineformset_factory(
     models.Tournament, models.TournamentPlacingAnte, extra=0,
     can_delete=False, form=TournamentPlacingAnteSubmitForm)
+
 
 class SubgameForm(ModelForm):
     """
@@ -128,15 +136,16 @@ class SubgameForm(ModelForm):
         )
 
         labels = {
-            'map_played'   : _('Map played'),
-            'pl_lives'     : _('Left player lives left'),
-            'pr_lives'     : _('Right player lives left'),
-            'replay_file'  : _('Replay file')
+            'map_played': _('Map played'),
+            'pl_lives': _('Left player lives left'),
+            'pr_lives': _('Right player lives left'),
+            'replay_file': _('Replay file')
         }
 
 SubgameFormSet = inlineformset_factory(models.PlayedGame, models.Subgame,
                                        max_num=10, extra=1, can_delete=False,
                                        form=SubgameForm)
+
 
 class PlayedGameForm(ModelForm):
     """
@@ -155,14 +164,14 @@ class PlayedGameForm(ModelForm):
             'ranked'
         )
         labels = {
-            'start_time'   : _('Start time'),
-            'player_left'  : _('Left player'),
-            'player_right' : _('Right player'),
-            'winner'       : _('Winner'),
-            'ranked'       : _('Ranked'),
+            'start_time': _('Start time'),
+            'player_left': _('Left player'),
+            'player_right': _('Right player'),
+            'winner': _('Winner'),
+            'ranked': _('Ranked'),
         }
         widgets = {
-            'start_time' : CalendarWidget()
+            'start_time': CalendarWidget()
         }
 
     def __init__(self, *args, **kwargs):

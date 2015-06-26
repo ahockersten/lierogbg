@@ -1,8 +1,8 @@
 """
-Render the about page
+Render the hypermeet page
 """
-
 from django.shortcuts import render
+
 
 def index(request):
     """

@@ -6,6 +6,7 @@ from django import forms
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+
 class ColorFormField(forms.IntegerField):
     """
     A form field for describing a color as hex.
@@ -25,6 +26,7 @@ class ColorFormField(forms.IntegerField):
         value = int(value[1:], 16)
         super(ColorFormField, self).clean(value)
         return value
+
 
 class ColorField(models.PositiveIntegerField):
     """
@@ -48,7 +50,8 @@ class ColorField(models.PositiveIntegerField):
 
     def get_prep_value(self, value):
         try:
-            # hex to int, save the int representation of the Color hex code to the database
+            # hex to int, save the int representation of the Color hex code
+            # to the database
             return value
         except ValueError:
             return None

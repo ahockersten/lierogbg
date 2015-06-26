@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.forms import ValidationError
 from rankings import fields
 
+
 class PlayerManager(models.Manager):
     """
     Model manager for Player.
@@ -15,6 +16,7 @@ class PlayerManager(models.Manager):
         Returns all active players.
         """
         return self.all().filter(active=True)
+
 
 class Player(models.Model):
     """
@@ -45,7 +47,7 @@ class Player(models.Model):
         Current ranking points for this player
         """
         latest_pcs = self.get_latest_pcs()
-        if latest_pcs == None:
+        if latest_pcs is None:
             return self.start_ranking_points
         return latest_pcs.rp_after
 
@@ -55,7 +57,7 @@ class Player(models.Model):
         Current pool points for this player
         """
         latest_pcs = self.get_latest_pcs()
-        if latest_pcs == None:
+        if latest_pcs is None:
             return self.start_pool_points
         return latest_pcs.pp_after
 
@@ -64,8 +66,9 @@ class Player(models.Model):
         Returns the latest PointsChanged that applied to this player
         """
         try:
-            last_game_with_player = PlayedGame.objects.filter(Q(player_left=self) |
-                Q(player_right=self)).latest('start_time')
+            last_game_with_player = PlayedGame.objects.filter(
+                Q(player_left=self) | Q(player_right=self)). \
+                latest('start_time')
         except PlayedGame.DoesNotExist:
             last_game_with_player = None
         try:
@@ -73,17 +76,22 @@ class Player(models.Model):
                 players=self).latest('start_time')
         except Tournament.DoesNotExist:
             last_tournament_with_player = None
-        if last_game_with_player == None and \
-           last_tournament_with_player == None:
+        if last_game_with_player is None and \
+           last_tournament_with_player is None:
             return None
-        elif last_game_with_player == None:
-            pcs = PointsChanged.objects.filter(tournament=last_tournament_with_player).filter(player=self)
-        elif last_tournament_with_player == None:
-            pcs = PointsChanged.objects.filter(game=last_game_with_player).filter(player=self)
-        elif last_game_with_player.start_time < last_tournament_with_player.start_time:
-            pcs = PointsChanged.objects.filter(game=last_game_with_player).filter(player=self)
+        elif last_game_with_player is None:
+            pcs = PointsChanged.objects.filter(
+                tournament=last_tournament_with_player).filter(player=self)
+        elif last_tournament_with_player is None:
+            pcs = PointsChanged.objects.filter(
+                game=last_game_with_player).filter(player=self)
+        elif last_game_with_player.start_time < \
+                last_tournament_with_player.start_time:
+            pcs = PointsChanged.objects.filter(
+                game=last_game_with_player).filter(player=self)
         else:
-            pcs = PointsChanged.objects.filter(tournament=last_tournament_with_player).filter(player=self)
+            pcs = PointsChanged.objects.filter(
+                tournament=last_tournament_with_player).filter(player=self)
         return pcs[0]
 
     def validate(self):
@@ -170,6 +178,7 @@ class Player(models.Model):
         """
         ordering = ['name']
 
+
 class Tournament(models.Model):
     """
     Describes a tournament. When initially created, it takes
@@ -177,7 +186,8 @@ class Tournament(models.Model):
     it is recorded as finished, "finished" is set to True and
     it hands out the ante to the winners.
     """
-    # when True, this tournament has ended and points from it have been recorded
+    # when True, this tournament has ended and points from it have been
+    # recorded
     finished = models.BooleanField(default=False)
     # time and date when the tournament started
     start_time = models.DateTimeField()
@@ -241,6 +251,7 @@ class Tournament(models.Model):
                                       self.start_time, self.ante,
                                       self.pool_points, self.total_ante)
 
+
 class TournamentPlacingAnte(models.Model):
     """
     This is the number of points given to each placing in
@@ -259,6 +270,7 @@ class TournamentPlacingAnte(models.Model):
         return '%s %s %s %s' % (self.tournament, self.placing, self.ante,
                                 self.player)
 
+
 class PlayedGameManager(models.Manager):
     """
     Manager for the PlayedGame class
@@ -268,6 +280,7 @@ class PlayedGameManager(models.Manager):
         The last game that was played
         """
         return self.all().order_by('start_time').reverse().first()
+
 
 class PlayedGame(models.Model):
     """
@@ -304,6 +317,7 @@ class PlayedGame(models.Model):
         return '%s %s vs %s, %s won' % (self.start_time, self.player_left,
                                         self.player_right, self.winner)
 
+
 class Subgame(models.Model):
     """
     A subgame to a game that has been played
@@ -330,6 +344,7 @@ class Subgame(models.Model):
             raise ValidationError('Player left lives may not be less than 0')
         if self.pr_lives < 0:
             raise ValidationError('Player right lives may not be less than 0')
+
 
 class PointsChanged(models.Model):
     """

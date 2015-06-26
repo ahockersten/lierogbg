@@ -9,4 +9,3 @@ urlpatterns = patterns(
     url(r'^authenticate\/$', 'authenticate', name='authenticate'),
     url(r'^logout\/$', 'logout', name='logout'),
 )
-

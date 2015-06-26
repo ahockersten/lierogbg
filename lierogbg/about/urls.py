@@ -8,4 +8,3 @@ urlpatterns = patterns(
     'about.views',
     url(r'^$', 'index', name="index"),
 )
-

@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.translation import ugettext_lazy as _
 
+
 def authenticate(request):
     """
     This view will perform the actual authentication of a user.
@@ -29,15 +30,16 @@ def authenticate(request):
             return redirect('rankings.views.ranking')
         else:
             context = {
-                'error_msg' : _('User disabled')
+                'error_msg': _('User disabled')
             }
 
             return render(request, 'accounts/error.html', context)
     else:
         context = {
-            'error_msg' : _('User does not exist')
+            'error_msg': _('User does not exist')
         }
         return render(request, 'accounts/error.html', context)
+
 
 def login(request):
     """
@@ -56,6 +58,7 @@ def login(request):
         return redirect(next_view)
     else:
         return render(request, 'accounts/login.html')
+
 
 def logout(request):
     """
