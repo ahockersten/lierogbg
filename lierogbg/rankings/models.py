@@ -74,8 +74,8 @@ class Player(models.Model):
         except Tournament.DoesNotExist:
             last_tournament_with_player = None
         if last_game_with_player == None and \
-            last_tournament_with_player == None:
-           return None
+           last_tournament_with_player == None:
+            return None
         elif last_game_with_player == None:
             pcs = PointsChanged.objects.filter(tournament=last_tournament_with_player).filter(player=self)
         elif last_tournament_with_player == None:
@@ -85,6 +85,28 @@ class Player(models.Model):
         else:
             pcs = PointsChanged.objects.filter(tournament=last_tournament_with_player).filter(player=self)
         return pcs[0]
+
+    def validate(self):
+        """
+        Ensures that a player's match history is correct. Does this by going
+        through all the matches and tournaments for the player, in order,
+        and checking that their RP/PP before/after are all correct.
+        """
+        pcs = PointsChanged.objects.filter(player=self)
+        sorted_pcs = sorted(pcs, key=lambda pc: pc.game.start_time if pc.game
+                            else pc.tournament.start_time)
+        if sorted_pcs == []:
+            return "No matches played"
+        rp_last = self.start_ranking_points
+        pp_last = self.start_pool_points
+        for pc in sorted_pcs:
+            if pc.rp_before != rp_last or \
+               pc.pp_before != pp_last:
+                returned = pc.game if pc.game is not None else pc.tournament
+                return "Failed for {match}".format(match=str(returned))
+            rp_last = pc.rp_after
+            pp_last = pc.pp_after
+        return "No errors found"
 
     def calculate_ante_percentage(self, percentage, pool_points):
         """
@@ -130,7 +152,7 @@ class Player(models.Model):
         """
         games = self.all_games().exclude(Q(ranked=False) &
                                          Q(tournament=None))
-        if since != None:
+        if since is not None:
             return games.filter(start_time__gt=since)
 
     def total_points(self):
