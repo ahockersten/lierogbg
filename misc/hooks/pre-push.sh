@@ -60,6 +60,13 @@ function pop_stash() {
     fi
 }
 
+function fail() {
+    pop_stash
+    echo ""
+    echo $1
+    exit 1
+}
+
 if [ "$CURRENT_BRANCH" == "master" ] || [ "$CURRENT_BRANCH" == "stable" ]; then
     echo "-= Running various tests before pushing to this branch. =-"
     push_stash
@@ -68,28 +75,19 @@ if [ "$CURRENT_BRANCH" == "master" ] || [ "$CURRENT_BRANCH" == "stable" ]; then
     echo "-= Running makemigrations to make sure you haven't forgotten any migrations. =-"
     manage makemigrations -e
     if [ $RESULT -ne 1 ]; then
-        pop_stash
-        echo ""
-        echo $ERRORMSG_MIGRATIONS
-        exit 1
+        fail $ERRORMSG_MIGRATIONS
     fi
     echo ""
     echo "-= Running backend test suite. =-"
     manage test --failfast
     if [ $RESULT -ne 0 ]; then
-        pop_stash
-        echo ""
-        echo $ERRORMSG_TESTS
-        exit 1
+        fail $ERRORMSG_TESTS
     fi
     echo ""
     echo "-= Running frontend test suite. =-"
     npm test
     if [ $? -ne 0 ]; then
-        pop_stash
-        echo ""
-        echo $ERRORMSG_TESTS
-        exit 1
+        fail $ERRORMSG_TESTS
     fi
     pop_stash
     echo ""
