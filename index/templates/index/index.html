@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %}{% trans "LieroGBG" %}{% endblock %}
+
+{% block custom_css %}
+  {% render_bundle 'main' 'css' %}
+{% endblock %}
+
+{% block content %}
+  <div id="app"></div>
+{% endblock %}
+
+{% block custom_scripts %}
+  {% render_bundle 'main' 'js' %}
+{% endblock %}

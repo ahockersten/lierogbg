@@ -10,3 +10,5 @@
 /node_modules
 /htmlcov
 /.coverage
+/npm-debug.log
+/webpack-stats.json

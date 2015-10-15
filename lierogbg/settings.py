@@ -81,11 +81,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     here('node_modules/bootstrap/dist'),
     here('node_modules/jquery/dist'),
-    here('node_modules/jquery.cookie'),
-    here('node_modules/timeago'),
-    here('node_modules/eonasdan-bootstrap-datetimepicker/build'),
-    here('node_modules/eonasdan-bootstrap-datetimepicker/src'),
-    here('node_modules/moment/min'),
+#    here('node_modules/jquery.cookie'),
+#    here('node_modules/timeago'),
+#    here('node_modules/eonasdan-bootstrap-datetimepicker/build'),
+#    here('node_modules/eonasdan-bootstrap-datetimepicker/src'),
+#    here('node_modules/moment/min'),
     here('build'),
     here('assets'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -157,13 +157,15 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    # the nose test runner
+    # installed apps
     'django_nose',
+    'webpack_loader',
 
     # our own apps
     'accounts',
     'about',
     'hypermeet',
+    'index',
     'maps',
     'rankings',
     'rules',
