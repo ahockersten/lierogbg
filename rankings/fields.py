@@ -35,7 +35,6 @@ class ColorField(models.PositiveIntegerField):
     description = _("Hex value for a color")
 
     def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = 6
         super(ColorField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
