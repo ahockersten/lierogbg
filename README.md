@@ -18,8 +18,6 @@ Installing dependencies for the virtual environment
 * Install prerequisites
 * (Ubuntu) $ sudo apt-get install libsqlite3-dev libreadline6-dev libbz2-dev
 * (Fedora) $ sudo yum install readline-devel bzip2-devel sqlite-devel openssl-devel
-* Install pyenv and Python
-* $ source ./init.sh
 
 Optional
 --------
@@ -30,23 +28,23 @@ requests:
 Usage
 =====
 
+Setting up the dev environment
+------------------
+* Run ./init_dev.sh
+
 Using the virtual environment and running developer builds
 ----------------------------------------------------------
 * $ source activate.sh
-* $ ./update
-* $ cd lierogbg
+* $ ./update.sh
 * $ ./manage.py runserver
 
 Deployment instructions
 ===================
 First, edit SECRET_KEY in lierogbg/lierogbg/settings.py and set it to something unique
 for your installation.
+* Run ./init_production.sh
 
-* Go to the root directory of the project
-* Install pyenv and python:
-* $ ./init.sh
-
-For every update, run the handy script "deploy.sh" to update everything and
+For every update, run the script "deploy.sh" to update everything and
 reload the server.
 
 Running the various tests
@@ -54,8 +52,6 @@ Running the various tests
 
 Unit tests
 ----------
-The unit tests will do model testing, form testing and some basic view
-testing for the various apps. Run with:
 $ ./manage.py test
 
 Coverage
@@ -65,8 +61,6 @@ $ ./coverage.sh
 
 PyLINT
 ------
-PyLINT will check for syntax errors and coding standard errors. A configuration
-is present in .pylintrc to make pylint and django play nicely together.
 Run a full pylint test suite with:
 $ ./pylint.sh
 
