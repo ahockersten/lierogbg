@@ -1,5 +1,7 @@
 #!/bin/bash
 
+FIXME update for webpack/react
+
 export PYENV_ROOT="`pwd`/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"

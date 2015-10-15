@@ -37,6 +37,7 @@ Using the virtual environment and running developer builds
 * $ source activate.sh
 * $ ./update.sh
 * $ ./manage.py runserver
+* $ ./start_watcher.sh
 
 Deployment instructions
 ===================
