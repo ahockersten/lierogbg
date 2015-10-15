@@ -82,15 +82,15 @@ if [ "$CURRENT_BRANCH" == "master" ] || [ "$CURRENT_BRANCH" == "stable" ]; then
         echo $ERRORMSG_TESTS
         exit 1
     fi
-    #echo ""
-    #echo "-= Running frontend test suite. =-"
-    #./karma_test.sh --single-run
-    #if [ $? -ne 0 ]; then
-    #    pop_stash
-    #    echo ""
-    #    echo $ERRORMSG_TESTS
-    #    exit 1
-    #fi
+    echo ""
+    echo "-= Running frontend test suite. =-"
+    npm test
+    if [ $? -ne 0 ]; then
+        pop_stash
+        echo ""
+        echo $ERRORMSG_TESTS
+        exit 1
+    fi
     pop_stash
     echo ""
     echo "-= All tests successful! Going through with push =-"
