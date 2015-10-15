@@ -412,14 +412,10 @@ def submit_game(request, tournament_id=None):
                 pr_ante = pr.calculate_ranked_ante()
                 pc_pl.pp_after = pl_ante["pp"]
                 pc_pr.pp_after = pr_ante["pp"]
-                print(pl_ante)
-                print(pr_ante)
                 ante = (pl_ante["ante"] + pr_ante["ante"]) / 2
                 ante_rem = (pl_ante["ante"] + pr_ante["ante"]) % 2
                 pc_pl.rp_after = pl_ante["rp"] - pl_ante["ante"] + ante
                 pc_pr.rp_after = pr_ante["rp"] - pr_ante["ante"] + ante
-                print(pc_pl)
-                print(pc_pr)
                 if ante_rem != 0:
                     pl_lives = 0
                     pr_lives = 0
@@ -467,8 +463,6 @@ def submit_game(request, tournament_id=None):
         pc_pr.game = played_game
         pc_pl.save()
         pc_pr.save()
-        print(pc_pl)
-        print(pc_pr)
 
         for subgame in subgames:
             subgame.parent = played_game
