@@ -1,0 +1,442 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-15 10:29+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: about/templates/about/index.html:5 maps/templates/maps/index.html:6
+#: rules/templates/rules/index.html:5
+msgid "About LieroGBG"
+msgstr "Om LieroGBG"
+
+#: accounts/templates/accounts/error.html:4
+#: accounts/templates/accounts/login.html:4
+#: rankings/templates/rankings/add_game.html:4
+#: rankings/templates/rankings/add_tournament.html:6
+#: rankings/templates/rankings/edit_tournament.html:5
+#: rankings/templates/rankings/error.html:4
+#: rankings/templates/rankings/games.html:6
+#: rankings/templates/rankings/internal_info.html:4
+#: rankings/templates/rankings/ranking.html:6
+#: rankings/templates/rankings/tournaments.html:4
+#: rankings/templates/rankings/view_tournament.html:5 templates/base.html:8
+#: templates/base.html.py:55
+msgid "LieroGBG"
+msgstr "LieroGBG"
+
+#: accounts/templates/accounts/error.html:4
+#: rankings/templates/rankings/error.html:4
+msgid "Error"
+msgstr "Fel"
+
+#: accounts/templates/accounts/login.html:4 templates/base.html:75
+msgid "Login"
+msgstr "Logga in"
+
+#: accounts/templates/accounts/login.html:12
+msgid "Username"
+msgstr "Användarnamn"
+
+#: accounts/templates/accounts/login.html:13
+msgid "Password"
+msgstr "Lösenord"
+
+#: accounts/templates/accounts/login.html:16
+msgid "Remember me"
+msgstr "Kom ihåg mig"
+
+#: accounts/templates/accounts/login.html:20
+msgid "Sign in"
+msgstr "Logga in"
+
+#: accounts/views.py:33
+msgid "User disabled"
+msgstr "Användaren avstängd"
+
+#: accounts/views.py:39
+msgid "User does not exist"
+msgstr "Användaren finns inte"
+
+#: hypermeet/templates/hypermeet/index.html:5 templates/base.html:52
+msgid "HyperMeet 2015"
+msgstr "HyperMeet 2015"
+
+#: lierogbg/settings.py:99
+msgid "Swedish"
+msgstr "Svenska"
+
+#: lierogbg/settings.py:100
+msgid "English"
+msgstr "Engelska"
+
+#: rankings/fields.py:15
+msgid "Enter a valid Color value: e.g. \"#ff0022\""
+msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
+
+#: rankings/fields.py:35
+msgid "Hex value for a color"
+msgstr "Hex-värde för en färg"
+
+#: rankings/forms.py:30 rankings/forms.py:167
+msgid "Start time"
+msgstr "Starttid"
+
+#: rankings/forms.py:31 rankings/forms.py:61
+#: rankings/templates/rankings/tournaments.html:37
+msgid "Name"
+msgstr "Namn"
+
+#: rankings/forms.py:32 rankings/templates/rankings/edit_tournament.html:31
+#: rankings/templates/rankings/view_tournament.html:25
+msgid "Players"
+msgstr "Spelare"
+
+#: rankings/forms.py:33
+msgid "Ante (in %)"
+msgstr "Ante (i %)"
+
+#: rankings/forms.py:34
+msgid "Pool points unlocked"
+msgstr "Pool-poäng upplåsta"
+
+#: rankings/forms.py:62 rankings/templates/rankings/tournaments.html:42
+msgid "Total ante"
+msgstr "Total ante"
+
+#: rankings/forms.py:63 rankings/templates/rankings/tournaments.html:43
+msgid "Finished"
+msgstr "Slutförd"
+
+#: rankings/forms.py:81 rankings/forms.py:105
+msgid "Placing"
+msgstr "Placering"
+
+#: rankings/forms.py:82 rankings/forms.py:106
+msgid "Received ante"
+msgstr "Mottagen ante"
+
+#: rankings/forms.py:107
+#: rankings/templates/rankings/includes/list_players.html:7
+msgid "Player"
+msgstr "Spelare"
+
+#: rankings/forms.py:139
+msgid "Map played"
+msgstr "Spelad karta"
+
+#: rankings/forms.py:140
+msgid "Left player lives left"
+msgstr "Antal liv kvar för vänster spelare"
+
+#: rankings/forms.py:141
+msgid "Right player lives left"
+msgstr "Antal liv kvar för höger spelare"
+
+#: rankings/forms.py:142
+msgid "Replay file"
+msgstr "Replay-fil"
+
+#: rankings/forms.py:168
+#: rankings/templates/rankings/includes/list_games.html:9
+#: rankings/templates/rankings/includes/list_games_hidden.html:12
+#: rankings/templates/rankings/includes/list_games_tournament.html:9
+msgid "Left player"
+msgstr "Vänster spelare"
+
+#: rankings/forms.py:169
+#: rankings/templates/rankings/includes/list_games.html:11
+#: rankings/templates/rankings/includes/list_games_hidden.html:13
+#: rankings/templates/rankings/includes/list_games_tournament.html:10
+msgid "Right player"
+msgstr "Höger spelare"
+
+#: rankings/forms.py:170
+#: rankings/templates/rankings/includes/list_games.html:13
+#: rankings/templates/rankings/includes/list_games_tournament.html:11
+#: rankings/templates/rankings/tournaments.html:38
+msgid "Winner"
+msgstr "Vinnare"
+
+#: rankings/forms.py:171
+#: rankings/templates/rankings/includes/list_games.html:52
+#: rankings/templates/rankings/includes/list_games_hidden.html:36
+msgid "Ranked"
+msgstr "Rankad"
+
+#: rankings/templates/rankings/add_game.html:4
+msgid "add match"
+msgstr "lägg till match"
+
+#: rankings/templates/rankings/add_game.html:14
+#: rankings/templates/rankings/edit_tournament.html:114
+#: rankings/templates/rankings/edit_tournament.html:122
+#: rankings/templates/rankings/games.html:12
+#: rankings/templates/rankings/ranking.html:27
+#: rankings/templates/rankings/tournaments.html:10
+msgid "Add match"
+msgstr "Lägg till match"
+
+#: rankings/templates/rankings/add_tournament.html:6
+msgid "add tournament"
+msgstr "lägg till turnering"
+
+#: rankings/templates/rankings/add_tournament.html:16
+#: rankings/templates/rankings/edit_tournament.html:18
+#: rankings/templates/rankings/view_tournament.html:12
+msgid "Tournament info"
+msgstr "Turnerings-info"
+
+#: rankings/templates/rankings/add_tournament.html:34
+msgid "Total Ante:"
+msgstr "Total Ante:"
+
+#: rankings/templates/rankings/add_tournament.html:44
+msgid "Ante per placing"
+msgstr "Ante per placering"
+
+#: rankings/templates/rankings/add_tournament.html:72
+#: rankings/templates/rankings/games.html:15
+#: rankings/templates/rankings/ranking.html:30
+#: rankings/templates/rankings/tournaments.html:13
+msgid "Add tournament"
+msgstr "Lägg till turnering"
+
+#: rankings/templates/rankings/edit_tournament.html:5
+msgid "edit tournament"
+msgstr "editera turnering"
+
+#: rankings/templates/rankings/edit_tournament.html:61
+#: rankings/templates/rankings/view_tournament.html:47
+msgid "Matches played"
+msgstr "Spelade matcher"
+
+#: rankings/templates/rankings/edit_tournament.html:69
+#: rankings/templates/rankings/view_tournament.html:55
+msgid "Final placings"
+msgstr "Slutplacering"
+
+#: rankings/templates/rankings/edit_tournament.html:104
+msgid "Save tournament"
+msgstr "Spara turnering"
+
+#: rankings/templates/rankings/games.html:6
+msgid "matches"
+msgstr "matcher"
+
+#: rankings/templates/rankings/games.html:21
+#: rankings/templates/rankings/ranking.html:36
+#: rankings/templates/rankings/tournaments.html:19
+msgid "Ranking"
+msgstr "Ranking"
+
+#: rankings/templates/rankings/games.html:24
+#: rankings/templates/rankings/includes/list_players.html:12
+#: rankings/templates/rankings/ranking.html:39
+#: rankings/templates/rankings/tournaments.html:22
+msgid "Matches"
+msgstr "Matcher"
+
+#: rankings/templates/rankings/games.html:27
+#: rankings/templates/rankings/ranking.html:42
+#: rankings/templates/rankings/tournaments.html:25
+msgid "Tournaments"
+msgstr "Turneringar"
+
+#: rankings/templates/rankings/games.html:38
+#: rankings/templates/rankings/ranking.html:53
+msgid "The last match was played "
+msgstr "Den senaste matchen spelades "
+
+#: rankings/templates/rankings/includes/add_game_form_contents.html:6
+msgid "Match info"
+msgstr "Match-info"
+
+#: rankings/templates/rankings/includes/add_game_form_contents.html:60
+msgid "Round info"
+msgstr "Info om runda"
+
+#: rankings/templates/rankings/includes/add_game_form_contents.html:99
+msgid "Add round"
+msgstr "Lägg till runda"
+
+#: rankings/templates/rankings/includes/add_game_form_contents.html:100
+msgid "Delete round"
+msgstr "Ta bort runda"
+
+#: rankings/templates/rankings/includes/list_games.html:8
+#: rankings/templates/rankings/includes/list_games_hidden.html:11
+#: rankings/templates/rankings/includes/list_games_tournament.html:8
+msgid "Time"
+msgstr "Tid"
+
+#: rankings/templates/rankings/includes/list_games.html:10
+msgid "Left player RP"
+msgstr "Vänster spelares RP"
+
+#: rankings/templates/rankings/includes/list_games.html:12
+msgid "Right player RP"
+msgstr "Höger spelares RP"
+
+#: rankings/templates/rankings/includes/list_games.html:14
+#: rankings/templates/rankings/includes/list_games_hidden.html:15
+msgid "Match type"
+msgstr "Match-typ"
+
+#: rankings/templates/rankings/includes/list_games.html:50
+#: rankings/templates/rankings/includes/list_games_hidden.html:34
+msgid "Tournament"
+msgstr "Turnering"
+
+#: rankings/templates/rankings/includes/list_games.html:54
+#: rankings/templates/rankings/includes/list_games_hidden.html:38
+msgid "Unranked"
+msgstr "Orankad"
+
+#: rankings/templates/rankings/includes/list_games.html:65
+#: rankings/templates/rankings/includes/list_games.html:74
+#: rankings/templates/rankings/includes/list_games_hidden.html:49
+#: rankings/templates/rankings/includes/list_games_hidden.html:68
+#: rankings/templates/rankings/includes/list_games_tournament.html:35
+#: rankings/templates/rankings/includes/list_games_tournament.html:44
+msgid "Round"
+msgstr "Runda"
+
+#: rankings/templates/rankings/includes/list_games.html:66
+#: rankings/templates/rankings/includes/list_games_hidden.html:52
+#: rankings/templates/rankings/includes/list_games_tournament.html:36
+msgid "Map"
+msgstr "Karta"
+
+#: rankings/templates/rankings/includes/list_games.html:67
+#: rankings/templates/rankings/includes/list_games_hidden.html:55
+#: rankings/templates/rankings/includes/list_games_tournament.html:37
+msgid "Score"
+msgstr "Slutställning"
+
+#: rankings/templates/rankings/includes/list_games.html:68
+#: rankings/templates/rankings/includes/list_games_hidden.html:58
+#: rankings/templates/rankings/includes/list_games_tournament.html:38
+msgid "Download"
+msgstr "Ladda ner"
+
+#: rankings/templates/rankings/includes/list_games_hidden.html:5
+msgid "Show all results"
+msgstr "Visa alla resultat"
+
+#: rankings/templates/rankings/includes/list_games_hidden.html:79
+#: rankings/templates/rankings/ranking.html:12
+msgid "Show"
+msgstr "Visa"
+
+#: rankings/templates/rankings/includes/list_games_hidden.html:90
+msgid "Show results"
+msgstr "Visa resultat"
+
+#: rankings/templates/rankings/includes/list_games_hidden.html:117
+msgid "Winner:"
+msgstr "Vinnare:"
+
+#: rankings/templates/rankings/includes/list_players.html:8
+msgid "Ranking points"
+msgstr "Ranking-poäng"
+
+#: rankings/templates/rankings/includes/list_players.html:9
+msgid "Wins"
+msgstr "Vinster"
+
+#: rankings/templates/rankings/includes/list_players.html:10
+msgid "Losses"
+msgstr "Förluster"
+
+#: rankings/templates/rankings/includes/list_players.html:11
+msgid "Ties"
+msgstr "Oavgjorda"
+
+#: rankings/templates/rankings/includes/list_players.html:13
+msgid "Lives"
+msgstr "Liv"
+
+#: rankings/templates/rankings/includes/list_players.html:14
+msgid "Ante"
+msgstr "Ante"
+
+#: rankings/templates/rankings/internal_info.html:4
+msgid "Internal info"
+msgstr "Intern information"
+
+#: rankings/templates/rankings/ranking.html:6
+msgid "ranking"
+msgstr "ranking"
+
+#: rankings/templates/rankings/ranking.html:17
+msgid "Inactive players"
+msgstr "Inaktiva spelare"
+
+#: rankings/templates/rankings/ranking.html:20
+msgid "All time"
+msgstr "All time"
+
+#: rankings/templates/rankings/tournaments.html:4
+msgid "tournaments"
+msgstr "turneringar"
+
+#: rankings/templates/rankings/tournaments.html:36
+msgid "Date"
+msgstr "Datum"
+
+#: rankings/templates/rankings/tournaments.html:39
+msgid "Number of players"
+msgstr "Antal spelare"
+
+#: rankings/templates/rankings/tournaments.html:40
+msgid "Number of matches"
+msgstr "Antal matcher"
+
+#: rankings/templates/rankings/tournaments.html:41
+msgid "Ante percentage"
+msgstr "Ante i procent"
+
+#: rankings/templates/rankings/view_tournament.html:5
+msgid "view tournament"
+msgstr "visa turnering"
+
+#: rankings/views.py:126
+msgid "Tied"
+msgstr "Oavgjort"
+
+#: templates/admin/base_site.html:4
+msgid "Django site admin"
+msgstr "Djangos administration"
+
+#: templates/base.html:58
+msgid "Rankings"
+msgstr "Rankingar"
+
+#: templates/base.html:61
+msgid "Rules"
+msgstr "Regler"
+
+#: templates/base.html:64
+msgid "Maps"
+msgstr "Kartor"
+
+#: templates/base.html:68
+msgid "Administration"
+msgstr "Administration"
+
+#: templates/base.html:71
+msgid "Logout"
+msgstr "Logga ut"

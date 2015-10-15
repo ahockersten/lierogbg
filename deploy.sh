@@ -8,7 +8,6 @@ pyenv activate lierogbg-env
 pip install -r requirements.txt
 npm install
 make
-cd lierogbg
 ./manage.py collectstatic
 ./manage.py migrate
 sudo service apache2 reload

@@ -1,13 +1,15 @@
 .PHONY: all
 .DEFAULT: all
 
-PYFILES = $(wildcard lierogbg/*/*.py)
+PYFILES = $(wildcard */*.py)
 PYCFILES = $(patsubst %.py,%.pyc,$(PYFILES))
 
-POFILES = $(wildcard lierogbg/locale/*/LC_MESSAGES/django.po)
+POFILES = $(wildcard locale/*/LC_MESSAGES/django.po)
 MOFILES = $(patsubst %.po,%.mo,$(POFILES))
 
-TEMPLATEFILES = templates/*.html templates/*/*.html lierogbg/*/templates/*/*.html
+TEMPLATEFILES = templates/*.html templates/*/*.html */templates/*/*.html
+
+LESSC = node_modules/less/bin/lessc
 
 # these are not meaningful to build, as they are only meant for including into other LESS files
 LESS_IMPORTS = less/variables.less
@@ -24,17 +26,17 @@ $(CSS_FILES): $(LESS_FILES) $(LESS_IMPORTS)
 
 $(CSS_OUTPUT_DIR)/%.css: less/%.less
 	@mkdir -p $(CSS_OUTPUT_DIR)
-	lessc $< > $@
+	$(LESSC) $< > $@
 
 django-compile-translations: $(MOFILES)
 
 $(MOFILES): $(POFILES)
-	python lierogbg/manage.py compilemessages
+	./manage.py compilemessages
 
 django-prepare-translations: $(POFILES)
 
 $(POFILES): $(PYFILES) $(TEMPLATEFILES)
-	python lierogbg/manage.py makemessages -i pyenv -a
+	./manage.py makemessages -i pyenv -i node_modules -a
 	@echo Don\'t forget to run \"make django-compile-translations\" after editing the new translations
 
 clean:

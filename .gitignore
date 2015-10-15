@@ -8,3 +8,5 @@
 /media/
 /pyenv/
 /node_modules
+/htmlcov
+/.coverage
