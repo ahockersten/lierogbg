@@ -7,11 +7,11 @@ A live deployment of this is currently available at http://lierogbg.orbmit.org
 Install instructions
 ====================
 
-Installing LESS and Bower
+Installing npm and less
 ---------------
 * (Ubuntu) $ sudo apt-get install nodejs-legacy npm
 * (Fedora) $ sudo yum install npm
-* $ sudo npm install -g bower less
+* $ sudo npm install -g less
 
 Installing dependencies for the virtual environment
 ---------------------------------------------------

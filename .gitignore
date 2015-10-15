@@ -5,7 +5,6 @@
 /build
 /lierogbg/replays
 /static
-media/
-pyenv/
-.coverage
-bower_components
+/media/
+/pyenv/
+/node_modules

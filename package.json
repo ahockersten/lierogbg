@@ -1,0 +1,23 @@
+{
+  "name": "lierogbg",
+  "version": "1.1.0",
+  "description": "A ranking system for Liero leagues",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ahockersten/lierogbg.git"
+  },
+  "author": "Anders Höckersten",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "bootstrap": "^3.3.5",
+    "eonasdan-bootstrap-datetimepicker": "^4.15.35",
+    "jquery": "^2.1.4",
+    "jquery.cookie": "^1.4.1",
+    "moment": "^2.10.6",
+    "timeago": "^1.4.3"
+  }
+}

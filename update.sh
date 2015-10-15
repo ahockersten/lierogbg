@@ -7,4 +7,4 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 pyenv activate lierogbg-env
 pip install -r requirements.txt
-bower install
+npm install

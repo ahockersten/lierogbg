@@ -11,4 +11,4 @@ pyenv virtualenv 3.4.3 lierogbg-env
 pyenv activate lierogbg-env
 pip install --upgrade pip
 pip install -r requirements.txt
-bower install
+npm install
