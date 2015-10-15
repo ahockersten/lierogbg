@@ -12,3 +12,4 @@
 /.coverage
 /npm-debug.log
 /webpack-stats.json
+/assets/bundles

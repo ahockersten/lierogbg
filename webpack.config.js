@@ -3,10 +3,7 @@ var webpack = require('webpack');
 var BundleTracker = require('webpack-bundle-tracker');
 
 module.exports = {
-  devtool: 'eval',
   entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
     './assets/js/app'
   ],
   output: {
@@ -14,16 +11,17 @@ module.exports = {
     filename: 'bundle.js'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
     new BundleTracker({filename: './webpack-stats.json'})
   ],
   module: {
     loaders: [{
-      test: /\.js$/,
-      loaders: ['react-hot', 'babel'],
+      test: /\.jsx?$/,
       exclude: /node_modules/,
-      include: __dirname
+      loader: 'babel-loader',
     }]
-  }
+  },
+  resolve: {
+    modulesDirectories: ['node_modules'],
+    extensions: ['', '.js', '.jsx']
+  },
 };

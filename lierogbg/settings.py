@@ -218,3 +218,9 @@ ALLOWED_HOSTS = [
     '.maskinskrift.com',
     '.orbmit.org'
 ]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+    }
+}
