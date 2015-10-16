@@ -51,11 +51,15 @@ reload the server.
 Running the various tests
 =========================
 
-Unit tests
+Unit tests for Django
 ----------
 $ ./manage.py test
 
-Coverage
+Unit tests for frontend
+----------
+$ npm test
+
+Coverage for Django
 --------
 Run coverage testing with:
 $ ./coverage.sh
