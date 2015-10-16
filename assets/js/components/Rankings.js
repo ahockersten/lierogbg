@@ -1,33 +1,45 @@
 import React, { Component, PropTypes } from 'react';
+import { map } from 'lodash/collection';
 
 class Player extends Component {
   render() {
+    const { season, player} = this.props;
+    const pool_points = season(player).pp == 0 ? null :
+      <span className="pool_points_remaining">
+            (+{ season(player).pp } pool)
+      </span>;
+    const lives = season(player).lives > 0 ?
+      <span className="change_positive">
+        +{ season(player).lives }
+      </span> :
+      season(player).lives < 0 ?
+        <span className="change_negative">
+          { season(player).lives }
+        </span> :
+        <span>
+          { season(player).lives }
+        </span>;
+    // FIXME add Liero worm image class here
     return (
       <tr>
-        <td>{this.props.player.rank}</td>
+        <td>{season(player).rank}</td>
         <td className="align_left">
-          <img id={this.props.player.color}
+          <img id={player.color}
                className="svg lieroworm lieroworm_right"
                src="/static/img/lieroworm_pointing_right.svg"></img>
-          { this.props.player.name }
+          { player.name }
         </td>
         <td>
-          <span className="rp_text">{ this.props.player.rp }</span>
-          <span className="pool_points_remaining">
-            (+{ this.props.player.pp } pool)
-          </span>
+          <span className="rp_text">{ season(player).rp }</span>
+          { pool_points }
         </td>
-        <td>{ this.props.player.wins }</td>
-        <td>{ this.props.player.losses }</td>
-        <td>{ this.props.player.ties }</td>
-        <td>{ this.props.player.matches }</td>
+        <td>{ season(player).wins }</td>
+        <td>{ season(player).losses }</td>
+        <td>{ season(player).ties }</td>
+        <td>{ season(player).matches }</td>
+        <td>{ lives } </td>
         <td>
-          <span className="change_positive">
-            +{ this.props.player.lives }
-          </span>
-        </td>
-        <td>
-          <span className="rp_text">{ this.props.player.ante }</span>
+          <span className="rp_text">{ player.ante }</span>
         </td>
       </tr>
     );
@@ -35,17 +47,23 @@ class Player extends Component {
 }
 
 class Rankings extends Component {
+  // FIXME re-add sorting functionality
+
+  constructor(props) {
+    super(props);
+    this.state = {allTime: false };
+  }
+
   componentWillMount() {
-    this.props.actions.fetchRankings();
+    this.props.actions.fetchPlayers();
   }
 
   render() {
-    const { rankings } = this.props;
-    var players = [];
-    for (var i = 0; i < rankings.season.players.length; i++) {
-      players.push(<Player key={rankings.season.players[i].pk}
-                           player={rankings.season.players[i]}/>);
-    }
+    const { players } = this.props.players;
+    var playerElems = map(players,
+      p => <Player key={p.pk} player={p}
+                   season={x => this.state.allTime ? x.allTime : x.season} />
+    );
     return (
       <div className="row">
         <div className="col-xs-12">
@@ -65,7 +83,7 @@ class Rankings extends Component {
               </tr>
             </thead>
             <tbody>
-              { players }
+              { playerElems }
             </tbody>
           </table>
         </div>
@@ -75,11 +93,7 @@ class Rankings extends Component {
 }
 
 Rankings.propTypes = {
-  // FIXME more specific types
-  rankings: PropTypes.shape({
-    season: PropTypes.object,
-    alltime: PropTypes.object
-  }).isRequired
+  // FIXME this
 };
 
 export default Rankings;

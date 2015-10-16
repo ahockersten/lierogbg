@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Rankings from '../components/Rankings';
-import * as RankingsActions from '../actions/rankings';
+import * as PlayersActions from '../actions/players';
 
 class App extends Component {
   render() {
@@ -15,15 +15,16 @@ App.PropTypes = {
   // FIXME add
 };
 
+// FIXME move into Rankings?
 function mapStateToProps(state) {
   return {
-    rankings: state.rankings
+    players: state.players
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(RankingsActions, dispatch)
+    actions: bindActionCreators(PlayersActions, dispatch)
   }
 }
 
