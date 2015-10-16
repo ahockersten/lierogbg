@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { routerStateReducer as router } from 'redux-router';
-import counter from './counter';
+import rankings from './rankings';
 
 const rootReducer = combineReducers({
-  counter,
+  rankings,
   router
 });
 

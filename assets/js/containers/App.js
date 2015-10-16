@@ -1,16 +1,30 @@
-import { bindActionCreators } from 'redux';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Counter from '../components/Counter';
-import * as CounterActions from '../actions/counter';
+import { bindActionCreators } from 'redux';
+
+import Rankings from '../components/Rankings';
+import * as RankingsActions from '../actions/rankings';
+
+class App extends Component {
+  render() {
+    return <Rankings />
+  }
+}
+
+App.PropTypes = {
+  // FIXME add
+};
 
 function mapStateToProps(state) {
   return {
-    counter: state.counter
+    rankings: state.rankings
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(CounterActions, dispatch);
+  return {
+    actions: bindActionCreators(RankingsActions, dispatch)
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Counter);
+export default connect(mapStateToProps, mapDispatchToProps)(Rankings);
