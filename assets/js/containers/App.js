@@ -7,7 +7,46 @@ import * as PlayersActions from '../actions/players';
 
 class App extends Component {
   render() {
-    return <Rankings />
+    // FIXME authentication!
+    return (
+      <div className="container">
+        <nav className="navbar navbar-default" role="navigation">
+          <div className="container-fluid">
+            <ul className="nav navbar-nav nav-pills navbar-right">
+              <li id="hypermeet">
+                <a href=""><strong>HyperMeet 2015</strong></a>
+              </li>
+              <li id="about">
+                <a href="">LieroGBG</a>
+              </li>
+              <li id="rankings">
+                <a href="">Rankings</a>
+              </li>
+              <li id="rules">
+                <a href="">Rules</a>
+              </li>
+              <li id="maps">
+                <a href="">Maps</a>
+              </li>
+              <li id="administration">
+                <a href="/admin">Administration</a>
+              </li>
+              <li id="logout">
+                <a href="">Logout</a>
+              </li>
+              <li id="login">
+                <a href="">Login</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div id="sub_menu" className="navbar" role="navigation">
+        </div>
+        <div className="content">
+          {this.props.children}
+        </div>
+      </div>
+    );
   }
 }
 
@@ -15,17 +54,4 @@ App.PropTypes = {
   // FIXME add
 };
 
-// FIXME move into Rankings?
-function mapStateToProps(state) {
-  return {
-    players: state.players
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(PlayersActions, dispatch)
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Rankings);
+export default App;

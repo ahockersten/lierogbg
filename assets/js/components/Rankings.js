@@ -1,5 +1,9 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { map } from 'lodash/collection';
+
+import * as PlayersActions from '../actions/players';
 
 class Player extends Component {
   render() {
@@ -96,4 +100,16 @@ Rankings.propTypes = {
   // FIXME this
 };
 
-export default Rankings;
+function mapStateToProps(state) {
+  return {
+    players: state.players
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(PlayersActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rankings);

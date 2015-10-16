@@ -47,6 +47,9 @@ LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
+# FIXME: when all is said and done, i18n should not be needed, as it should
+# all be in JS.
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
