@@ -4,6 +4,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { ReduxRouter } from 'redux-router';
 
+import 'bootstrap/less/bootstrap.less'
+import '../../less/lierogbg.less';
+
 import App from './containers/App';
 import configureStore from './store/configureStore';
 

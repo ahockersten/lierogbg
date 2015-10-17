@@ -40,11 +40,7 @@ class App extends Component {
             </ul>
           </div>
         </nav>
-        <div id="sub_menu" className="navbar" role="navigation">
-        </div>
-        <div className="content">
-          {this.props.children}
-        </div>
+        {this.props.children}
       </div>
     );
   }

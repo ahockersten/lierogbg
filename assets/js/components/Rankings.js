@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { map } from 'lodash/collection';
+import bootstrap from 'bootstrap';
 
 import * as PlayersActions from '../actions/players';
 
@@ -68,28 +69,69 @@ class Rankings extends Component {
       p => <Player key={p.pk} player={p}
                    season={x => this.state.allTime ? x.allTime : x.season} />
     );
+    // FIXME check authentication
     return (
-      <div className="row">
-        <div className="col-xs-12">
-          <table id="id_ranking_table"
-                 className="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th className="align_left">Player</th>
-                <th>Ranking points</th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Ties</th>
-                <th>Matches</th>
-                <th>Lives</th>
-                <th>Ante</th>
-              </tr>
-            </thead>
-            <tbody>
-              { playerElems }
-            </tbody>
-          </table>
+      <div>
+        <div id="sub_menu" className="navbar" role="navigation">
+          <ul className="nav nav-pills navbar-left">
+            <li className="dropdown">
+              <a className="dropdown-toggle" id="show" data-toggle="dropdown">
+                Show <span className="caret"></span>
+              </a>
+              <ul className="dropdown-menu" role="menu">
+                <li role="presentation">
+                  <label role="menu-item"><input type="checkbox" id="inactive-players-checkbox"/>
+                    Inactive players
+                  </label>
+                  <label role="menu-item"><input type="checkbox" id="all-time-checkbox"/>
+                    All time
+                  </label>
+                </li>
+              </ul>
+            </li>
+            <li id="add_game">
+              <a href="">Add match</a>
+            </li>
+            <li id="add_tournament">
+              <a href="">Add tournament</a>
+            </li>
+          </ul>
+          <ul className="nav nav-pills navbar-right">
+            <li id="ranking" >
+              <a href="">Ranking</a>
+            </li>
+            <li id="games" >
+              <a href="">Matches</a>
+            </li>
+            <li id="tournaments" >
+              <a href="">Tournaments</a>
+            </li>
+          </ul>
+        </div>
+        <div className="content">
+          <div className="row">
+            <div className="col-xs-12">
+              <table id="id_ranking_table"
+                     className="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th className="align_left">Player</th>
+                    <th>Ranking points</th>
+                    <th>Wins</th>
+                    <th>Losses</th>
+                    <th>Ties</th>
+                    <th>Matches</th>
+                    <th>Lives</th>
+                    <th>Ante</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { playerElems }
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     );
