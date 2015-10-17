@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "-= Initializing a new virtual environment =-"
 export PYENV_ROOT="`pwd`/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
@@ -9,6 +11,8 @@ eval "$(pyenv virtualenv-init -)"
 pyenv install 3.4.3
 pyenv virtualenv 3.4.3 lierogbg-env
 pyenv activate lierogbg-env
+echo "-= Installing python packages =-"
 pip install --upgrade pip
 pip install -r requirements.txt
+echo "-= Installing NPM packages =-"
 npm install
