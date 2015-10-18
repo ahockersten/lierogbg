@@ -20,7 +20,7 @@ export default function players(state = defaultState, action) {
       players: [{
         pk: 1,
         name: "poukah",
-        color: "ffffff", // FIXME type?
+        color: "#ffffff",
         ante: 52,
         active: true,
         season: {
@@ -46,7 +46,7 @@ export default function players(state = defaultState, action) {
       },{
         pk: 2,
         name: "joosef",
-        color: "aaaaaa", // FIXME type?
+        color: "#aaaaaa",
         ante: 10,
         active: true,
         season: {
@@ -72,7 +72,7 @@ export default function players(state = defaultState, action) {
       },{
         pk: 3,
         name: "maria",
-        color: "cccccc", // FIXME type?
+        color: "#cccccc",
         ante: 10,
         active: false,
         season: {

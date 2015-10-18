@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'lodash';
-import bootstrap from 'bootstrap';
 
 import * as PlayersActions from '../actions/players';
+import { WormImageRight } from './WormImage';
 
 class Player extends Component {
   render() {
@@ -29,9 +29,7 @@ class Player extends Component {
       <tr>
         <td>{season(player).rank}</td>
         <td className="align_left">
-          <img id={player.color}
-               className="svg lieroworm lieroworm_right"
-               src="/static/img/lieroworm_pointing_right.svg"></img>
+          <WormImageRight color={player.color} />
           { player.name }
         </td>
         <td>

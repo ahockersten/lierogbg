@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import bootstrap from 'bootstrap';
 
 import Rankings from '../components/Rankings';
 import * as PlayersActions from '../actions/players';
