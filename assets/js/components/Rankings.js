@@ -9,37 +9,37 @@ import { WormImageRight } from './WormImage';
 class Player extends Component {
   render() {
     const { season, player} = this.props;
-    const pool_points = season(player).pp == 0 ? null :
+    const pool_points = player.pp == 0 ? null :
       <span className="pool_points_remaining">
-            (+{ season(player).pp } pool)
+        (+{ player.pp } pool
       </span>;
-    const lives = season(player).lives > 0 ?
+    const lives = player.lives > 0 ?
       <span className="change_positive">
-        +{ season(player).lives }
+        +{ player.lives }
       </span> :
-      season(player).lives < 0 ?
+      player.lives < 0 ?
         <span className="change_negative">
-          { season(player).lives }
+          { player.lives }
         </span> :
         <span>
-          { season(player).lives }
+          { player.lives }
         </span>;
     // FIXME add Liero worm image class here
     return (
       <tr>
-        <td>{season(player).rank}</td>
+        <td>{player.rank}</td>
         <td className="align_left">
           <WormImageRight color={player.color} />
           { player.name }
         </td>
         <td>
-          <span className="rp_text">{ season(player).rp }</span>
+          <span className="rp_text">{ player.rp }</span>
           { pool_points }
         </td>
-        <td>{ season(player).wins }</td>
-        <td>{ season(player).losses }</td>
-        <td>{ season(player).ties }</td>
-        <td>{ season(player).matches }</td>
+        <td>{ player.wins }</td>
+        <td>{ player.losses }</td>
+        <td>{ player.ties }</td>
+        <td>{ player.matches }</td>
         <td>{ lives } </td>
         <td>
           <span className="rp_text">{ player.ante }</span>
@@ -50,16 +50,18 @@ class Player extends Component {
 }
 
 class Rankings extends Component {
-  // FIXME re-add sorting functionality
-
   constructor(props) {
     super(props);
     this.state = {
       allTime: false,
-      inactive: false
+      inactive: false,
+      sortBy: 'rank',
+      sortOrder: 'asc'
     };
     this.inactivePlayersChanged = this.inactivePlayersChanged.bind(this);
     this.allTimeChanged = this.allTimeChanged.bind(this);
+    this.changeSorting = this.changeSorting.bind(this);
+    this.createTableHeader = this.createTableHeader.bind(this);
   }
 
   componentWillMount() {
@@ -74,11 +76,50 @@ class Rankings extends Component {
     this.setState({allTime: event.target.checked});
   }
 
+  changeSorting(sortBy) {
+    if (this.state.sortBy == sortBy) {
+      if (this.state.sortOrder == 'asc') {
+        this.setState({sortOrder: 'desc'});
+      }
+      else {
+        this.setState({sortOrder: 'asc'});
+      }
+    }
+    else {
+      this.setState({sortBy: sortBy});
+      this.setState({sortOrder: 'asc'});
+    }
+  }
+
+  // FIXME this could be its own element
+  createTableHeader(name, classes, sortBy) {
+    if (sortBy == this.state.sortBy) {
+      return (
+        <th className={"sortBy " + classes}
+            onClick={this.changeSorting.bind(this, sortBy)}>
+          {name} {this.state.sortOrder == 'asc' ? '▼' : '▲'}
+        </th>
+      );
+    }
+    else {
+      return (
+        <th className={classes}
+            onClick={this.changeSorting.bind(this, sortBy)}>
+          {name}
+        </th>
+      );
+    }
+  }
+
   render() {
-    let players = _(this.props.players.players)
+    let flatPlayers =
+      _.map(this.props.players.players,
+            p => _.merge(_.omit(p, 'season', 'allTime'),
+                         this.state.allTime ? p.allTime : p.season));
+    let players = _(flatPlayers)
       .filter(p => this.state.inactive ? p : p.active)
-      .map(p => <Player key={p.pk} player={p}
-                        season={x => this.state.allTime ? x.allTime : x.season} />)
+      .sortByOrder(this.state.sortBy, this.state.sortOrder)
+      .map(p => <Player key={p.pk} player={p} />)
       .value();
     // FIXME check authentication
     return (
@@ -129,18 +170,18 @@ class Rankings extends Component {
           <div className="row">
             <div className="col-xs-12">
               <table id="id_ranking_table"
-                     className="table table-striped table-bordered">
+                     className="table table-striped table-bordered table-sortable">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th className="align_left">Player</th>
-                    <th>Ranking points</th>
-                    <th>Wins</th>
-                    <th>Losses</th>
-                    <th>Ties</th>
-                    <th>Matches</th>
-                    <th>Lives</th>
-                    <th>Ante</th>
+                    {this.createTableHeader('#', '', 'rank')}
+                    {this.createTableHeader('Player', 'align_left', 'name')}
+                    {this.createTableHeader('Ranking points', '', 'rp')}
+                    {this.createTableHeader('Wins', '', 'wins')}
+                    {this.createTableHeader('Losses', '', 'losses')}
+                    {this.createTableHeader('Ties', '', 'ties')}
+                    {this.createTableHeader('Matches', '', 'matches')}
+                    {this.createTableHeader('Lives', '', 'lives')}
+                    {this.createTableHeader('Ante', '', 'ante')}
                   </tr>
                 </thead>
                 <tbody>
