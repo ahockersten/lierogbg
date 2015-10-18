@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { map } from 'lodash/collection';
+import _ from 'lodash';
 import bootstrap from 'bootstrap';
 
 import * as PlayersActions from '../actions/players';
@@ -56,19 +56,32 @@ class Rankings extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {allTime: false };
+    this.state = {
+      allTime: false,
+      inactive: false
+    };
+    this.inactivePlayersChanged = this.inactivePlayersChanged.bind(this);
+    this.allTimeChanged = this.allTimeChanged.bind(this);
   }
 
   componentWillMount() {
     this.props.actions.fetchPlayers();
   }
 
+  inactivePlayersChanged(event) {
+    this.setState({inactive: event.target.checked});
+  }
+
+  allTimeChanged(event) {
+    this.setState({allTime: event.target.checked});
+  }
+
   render() {
-    const { players } = this.props.players;
-    var playerElems = map(players,
-      p => <Player key={p.pk} player={p}
-                   season={x => this.state.allTime ? x.allTime : x.season} />
-    );
+    let players = _(this.props.players.players)
+      .filter(p => this.state.inactive ? p : p.active)
+      .map(p => <Player key={p.pk} player={p}
+                        season={x => this.state.allTime ? x.allTime : x.season} />)
+      .value();
     // FIXME check authentication
     return (
       <div>
@@ -80,10 +93,16 @@ class Rankings extends Component {
               </a>
               <ul className="dropdown-menu" role="menu">
                 <li role="presentation">
-                  <label role="menu-item"><input type="checkbox" id="inactive-players-checkbox"/>
+                  <label role="menu-item">
+                  <input type="checkbox" onChange={this.inactivePlayersChanged}
+                         value={this.state.inactive}
+                         id="inactive-players-checkbox"/>
                     Inactive players
                   </label>
-                  <label role="menu-item"><input type="checkbox" id="all-time-checkbox"/>
+                  <label role="menu-item">
+                  <input type="checkbox" onChange={this.allTimeChanged}
+                         value={this.state.allTime}
+                         id="all-time-checkbox"/>
                     All time
                   </label>
                 </li>
@@ -127,7 +146,7 @@ class Rankings extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  { playerElems }
+                  { players }
                 </tbody>
               </table>
             </div>

@@ -36,6 +36,7 @@ export default function players(state = defaultState, action) {
         allTime: {
           rank: 1,
           rp: 1611,
+          pp: 0,
           wins: 56,
           losses: 23,
           ties: 0,
@@ -61,6 +62,33 @@ export default function players(state = defaultState, action) {
         allTime: {
           rank: 2,
           rp: 1011,
+          pp: 20,
+          wins: 5,
+          losses: 2,
+          ties: 0,
+          matches: 2,
+          lives: -9,
+        }
+      },{
+        pk: 3,
+        name: "maria",
+        color: "cccccc", // FIXME type?
+        ante: 10,
+        active: false,
+        season: {
+          rank: 3,
+          rp: 1001,
+          pp: 20,
+          wins: 7,
+          losses: 3,
+          ties: 0,
+          matches: 3,
+          lives: -5,
+        },
+        allTime: {
+          rank: 3,
+          rp: 1001,
+          pp: 20,
           wins: 5,
           losses: 2,
           ties: 0,
