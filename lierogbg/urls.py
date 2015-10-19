@@ -18,11 +18,6 @@ urlpatterns = patterns(
     # Special case: '/' is handled by the app to redirect to /app
     url(r'^$', 'index.views.index'),
 
-
-    url(r'^about/', include('about.urls')),
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^hypermeet/', include('hypermeet.urls')),
-    url(r'^maps/', include('maps.urls')),
-    url(r'^rankings/', include('rankings.urls')),
-    url(r'^rules/', include('rules.urls')),
+    # api
+    url(r'^api/rankings', include('rankings.urls')),
 )

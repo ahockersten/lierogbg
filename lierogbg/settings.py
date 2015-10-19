@@ -162,6 +162,7 @@ INSTALLED_APPS = (
 
     # installed apps
     'django_nose',
+    'rest_framework',
     'webpack_loader',
 
     # our own apps

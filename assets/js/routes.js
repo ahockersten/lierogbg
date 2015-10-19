@@ -7,8 +7,7 @@ import Rankings from './components/Rankings';
 
 const routes = (
   <ReduxRouter>
-    <Redirect from="/" to="/app" />
-    <Route path="/app" component={App}>
+    <Route path="/" component={App}>
       <Route path="rankings" component={Rankings}/>
       <IndexRoute component={Rankings} />
       <Route path="*" component={NotFound} />

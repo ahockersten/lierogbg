@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class ColorFormField(forms.IntegerField):
     """
-    A form field for describing a color as hex.
+    A form field for ColorField
     """
     default_error_messages = {
         'invalid': _('Enter a valid Color value: e.g. "#ff0022"'),

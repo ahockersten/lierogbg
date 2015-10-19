@@ -1,6 +1,7 @@
 """
 Models used in the rankings
 """
+import datetime
 from django.db import models
 from django.db.models import Q
 from django.forms import ValidationError
@@ -11,6 +12,7 @@ class PlayerManager(models.Manager):
     """
     Model manager for Player.
     """
+    @property
     def active_players(self):
         """
         Returns all active players.
@@ -42,7 +44,21 @@ class Player(models.Model):
     objects = PlayerManager()
 
     @property
-    def ranking_points(self):
+    def rank(self):
+        """
+        Current rank of this player. For inactive players, this is '-'
+        """
+        print("rank 1")
+        if not self.active:
+            return "-"
+        player_list = sorted(Player.objects.active_players,
+                             key=lambda p: p.rp, reverse=True)
+        print(player_list)
+        print(Player.objects.active_players)
+        return str(player_list.index(self))
+
+    @property
+    def rp(self):
         """
         Current ranking points for this player
         """
@@ -52,7 +68,7 @@ class Player(models.Model):
         return latest_pcs.rp_after
 
     @property
-    def pool_points(self):
+    def pp(self):
         """
         Current pool points for this player
         """
@@ -60,6 +76,80 @@ class Player(models.Model):
         if latest_pcs is None:
             return self.start_pool_points
         return latest_pcs.pp_after
+
+    @property
+    def wins(self):
+        """
+        Number of wins for this player in official games
+        """
+        games = self.ranked_and_tournament_games(
+            since=datetime.datetime(datetime.datetime.today().year, 1, 1))
+        wins = 0
+        for g in games:
+            for s in g.subgames():
+                if (g.player_left == self and s.pl_lives > s.pr_lives) or \
+                   (g.player_right == self and s.pr_lives > s.pl_lives):
+                    wins += 1
+        return wins
+
+    @property
+    def losses(self):
+        """
+        Number of losses for this player in official games
+        """
+        games = self.ranked_and_tournament_games(
+            since=datetime.datetime(datetime.datetime.today().year, 1, 1))
+        losses = 0
+        for g in games:
+            for s in g.subgames():
+                if (g.player_left == self and s.pl_lives < s.pr_lives) or \
+                   (g.player_right == self and s.pr_lives < s.pl_lives):
+                    losses += 1
+        return losses
+
+    @property
+    def ties(self):
+        """
+        Number of ties for this player in official games
+        """
+        games = self.ranked_and_tournament_games(
+            since=datetime.datetime(datetime.datetime.today().year, 1, 1))
+        ties = 0
+        for g in games:
+            for s in g.subgames():
+                if s.pl_lives == s.pr_lives:
+                    ties += 1
+        return ties
+
+    @property
+    def matches(self):
+        """
+        Number of subgames this player has played
+        """
+        games = self.ranked_and_tournament_games(
+            since=datetime.datetime(datetime.datetime.today().year, 1, 1))
+        matches = 0
+        for g in games:
+            matches += len(g.subgames())
+        return matches
+
+    @property
+    def lives(self):
+        """
+        The current lives status of this player
+        """
+        games = self.ranked_and_tournament_games(
+            since=datetime.datetime(datetime.datetime.today().year, 1, 1))
+        lives = 0
+        for g in games:
+            for s in g.subgames():
+                if g.player_left == self:
+                    lives += s.pl_lives
+                    lives -= s.pr_lives
+                else:
+                    lives += s.pr_lives
+                    lives -= s.pl_lives
+        return lives
 
     def get_latest_pcs(self):
         """
