@@ -49,6 +49,49 @@ class Player extends Component {
   }
 }
 
+
+class TableHeader extends Component {
+  render() {
+    var classes;
+    var sortSymbol = "";
+    if (this.props.sorter == this.props.sortBy) {
+      classes = _.reduce(this.props.cssClasses, function(acc, n) {
+        return acc + ", " + n;
+      }, "sorter");
+      sortSymbol = this.props.sortOrder == 'asc' ? '▼' : '▲';
+    }
+    else {
+      classes = _.reduce(this.props.cssClasses, function(acc, n) {
+        return acc + ", " + n;
+      });
+    }
+    return (
+      <th className={classes}
+          onClick={this.props.changeSorting.bind(null, this.props.sorter)}>
+        {this.props.name} {sortSymbol}
+      </th>
+    );
+  }
+}
+TableHeader.propTypes = {
+  // the externally visible name to put on this header
+  name: PropTypes.string.isRequired,
+  // additional css classes for this
+  cssClasses: PropTypes.arrayOf(PropTypes.string),
+  // the player property to use for sorting
+  sorter: PropTypes.string.isRequired,
+  // the player property currently being used for sorting
+  sortBy: PropTypes.string.isRequired,
+  // the current sorting order, 'asc' or 'desc'
+  sortOrder: PropTypes.string.isRequired,
+  // function to call to change the sorting
+  changeSorting: PropTypes.func.isRequired
+};
+TableHeader.defaultProps = {
+  cssClasses: []
+};
+
+
 class Rankings extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +104,6 @@ class Rankings extends Component {
     this.inactivePlayersChanged = this.inactivePlayersChanged.bind(this);
     this.allTimeChanged = this.allTimeChanged.bind(this);
     this.changeSorting = this.changeSorting.bind(this);
-    this.createTableHeader = this.createTableHeader.bind(this);
   }
 
   componentWillMount() {
@@ -88,26 +130,6 @@ class Rankings extends Component {
     else {
       this.setState({sortBy: sortBy});
       this.setState({sortOrder: 'asc'});
-    }
-  }
-
-  // FIXME this could be its own element
-  createTableHeader(name, classes, sortBy) {
-    if (sortBy == this.state.sortBy) {
-      return (
-        <th className={"sortBy " + classes}
-            onClick={this.changeSorting.bind(this, sortBy)}>
-          {name} {this.state.sortOrder == 'asc' ? '▼' : '▲'}
-        </th>
-      );
-    }
-    else {
-      return (
-        <th className={classes}
-            onClick={this.changeSorting.bind(this, sortBy)}>
-          {name}
-        </th>
-      );
     }
   }
 
@@ -173,15 +195,44 @@ class Rankings extends Component {
                      className="table table-striped table-bordered table-sortable">
                 <thead>
                   <tr>
-                    {this.createTableHeader('#', '', 'rank')}
-                    {this.createTableHeader('Player', 'align_left', 'name')}
-                    {this.createTableHeader('Ranking points', '', 'rp')}
-                    {this.createTableHeader('Wins', '', 'wins')}
-                    {this.createTableHeader('Losses', '', 'losses')}
-                    {this.createTableHeader('Ties', '', 'ties')}
-                    {this.createTableHeader('Matches', '', 'matches')}
-                    {this.createTableHeader('Lives', '', 'lives')}
-                    {this.createTableHeader('Ante', '', 'ante')}
+                    <TableHeader name='#' sorter='rank'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Player'
+                                 cssClasses='align_left' sorter='name'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Ranking points' sorter='rp'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Wins' sorter='wins'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Losses' sorter='losses'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Ties' sorter='ties'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Matches'
+                                 sorter='matches'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Lives' sorter='lives'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
+                    <TableHeader name='Ante' sorter='ante'
+                                 sortBy={this.state.sortBy}
+                                 sortOrder={this.state.sortOrder}
+                                 changeSorting={this.changeSorting} />
                   </tr>
                 </thead>
                 <tbody>
@@ -195,10 +246,10 @@ class Rankings extends Component {
     );
   }
 }
-
 Rankings.propTypes = {
   // FIXME this
 };
+
 
 function mapStateToProps(state) {
   return {
