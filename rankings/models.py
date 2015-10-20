@@ -49,10 +49,10 @@ class Player(models.Model):
         Current rank of this player. For inactive players, this is '-'
         """
         if not self.active:
-            return "-"
+            return '-'
         player_list = sorted(Player.objects.active_players,
                              key=lambda p: p.rp, reverse=True)
-        return str(player_list.index(self))
+        return str(player_list.index(self) + 1)
 
     @property
     def rp(self):
