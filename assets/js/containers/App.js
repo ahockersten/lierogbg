@@ -47,8 +47,4 @@ class App extends Component {
   }
 }
 
-App.PropTypes = {
-  // FIXME add
-};
-
 export default App;
