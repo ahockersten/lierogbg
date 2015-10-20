@@ -9,7 +9,7 @@ import { Spinner } from './Spinner';
 
 class Player extends Component {
   render() {
-    const { season, player} = this.props;
+    const { season, player, total_players} = this.props;
     const pool_points = player.pp == 0 ? null :
       <span className="pool_points_remaining">
         (+{ player.pp } pool
@@ -28,7 +28,7 @@ class Player extends Component {
     // FIXME add Liero worm image class here
     return (
       <tr>
-        <td>{player.rank}</td>
+        <td>{player.rank == total_players ? '-' : player.rank}</td>
         <td className="align_left">
           <WormImageRight color={player.color} />
           { player.name }
@@ -147,7 +147,8 @@ class Rankings extends Component {
       let players = _(flatPlayers)
         .filter(p => this.state.inactive ? p : p.active)
         .sortByOrder(this.state.sortBy, this.state.sortOrder)
-        .map(p => <Player key={p.pk} player={p} />)
+        .map(p => <Player key={p.pk} player={p}
+                          total_players={this.props.players.players.length} />)
         .value();
       // FIXME check authentication
       content = (
