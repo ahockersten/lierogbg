@@ -148,6 +148,13 @@ class Player(models.Model):
                     lives -= s.pl_lives
         return lives
 
+    @property
+    def ante(self):
+        """
+        Returns the current ante for this player
+        """
+        return self.calculate_ranked_ante()["ante"]
+
     def get_latest_pcs(self):
         """
         Returns the latest PointsChanged that applied to this player
@@ -211,10 +218,10 @@ class Player(models.Model):
         consisting of the ante, the new rp (without removing the ante)
         and the new pp.
         """
-        rp = self.ranking_points
-        pp = self.pool_points
+        rp = self.rp
+        pp = self.pp
         if pp != 0:
-            rp = self.ranking_points + min(self.pool_points, pool_points)
+            rp = self.rp + min(self.pp, pool_points)
             pp = pp - min(pp, pool_points)
         player_ante = round((rp ** 2) * 0.001 * (percentage * 0.01))
         if player_ante == 0 and rp != 0:

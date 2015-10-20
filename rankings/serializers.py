@@ -37,8 +37,6 @@ class AllTimeSerializer(serializers.ModelSerializer):
 
 
 class PlayerSerializer(serializers.ModelSerializer):
-    ante = serializers.IntegerField(source='calculate_ranked_ante().ante',
-                                    read_only=True)
     color = ColorFormSerializerField()
     season = AllTimeSerializer(source='*') # FIXME implement SeasonSerializer
     allTime = AllTimeSerializer(source='*')
