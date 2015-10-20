@@ -29,7 +29,8 @@ function playersFailure(err) {
 
 export function fetchPlayers() {
   // FIXME error handling
-  return function(dispatch) {
+  return dispatch => {
+    dispatch(playersRequest());
     return fetch('/api/rankings')
       .then(response => response.json())
       .then(json =>

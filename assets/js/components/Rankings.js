@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import * as PlayersActions from '../actions/players';
 import { WormImageRight } from './WormImage';
+import { Spinner } from './Spinner';
 
 class Player extends Component {
   render() {
@@ -134,16 +135,72 @@ class Rankings extends Component {
   }
 
   render() {
-    let flatPlayers =
-      _.map(this.props.players.players,
-            p => _.merge(_.omit(p, 'season', 'allTime'),
-                         this.state.allTime ? p.allTime : p.season));
-    let players = _(flatPlayers)
-      .filter(p => this.state.inactive ? p : p.active)
-      .sortByOrder(this.state.sortBy, this.state.sortOrder)
-      .map(p => <Player key={p.pk} player={p} />)
-      .value();
-    // FIXME check authentication
+    var content;
+    if (this.props.players.isFetching) {
+      content = <Spinner />
+    }
+    else {
+      let flatPlayers =
+        _.map(this.props.players.players,
+              p => _.merge(_.omit(p, 'season', 'allTime'),
+                           this.state.allTime ? p.allTime : p.season));
+      let players = _(flatPlayers)
+        .filter(p => this.state.inactive ? p : p.active)
+        .sortByOrder(this.state.sortBy, this.state.sortOrder)
+        .map(p => <Player key={p.pk} player={p} />)
+        .value();
+      // FIXME check authentication
+      content = (
+        <table id="id_ranking_table"
+               className="table table-striped table-bordered table-sortable">
+          <thead>
+            <tr>
+              <TableHeader name='#' sorter='rank'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Player'
+                           cssClasses={['align_left']} sorter='name'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Ranking points' sorter='rp'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Wins' sorter='wins'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Losses' sorter='losses'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Ties' sorter='ties'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Matches'
+                           sorter='matches'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Lives' sorter='lives'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+              <TableHeader name='Ante' sorter='ante'
+                           sortBy={this.state.sortBy}
+                           sortOrder={this.state.sortOrder}
+                           changeSorting={this.changeSorting} />
+            </tr>
+          </thead>
+          <tbody>
+            { players }
+          </tbody>
+        </table>
+      );
+    }
     return (
       <div>
         <div id="sub_menu" className="navbar" role="navigation">
@@ -191,54 +248,7 @@ class Rankings extends Component {
         <div className="content">
           <div className="row">
             <div className="col-xs-12">
-              <table id="id_ranking_table"
-                     className="table table-striped table-bordered table-sortable">
-                <thead>
-                  <tr>
-                    <TableHeader name='#' sorter='rank'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Player'
-                                 cssClasses={['align_left']} sorter='name'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Ranking points' sorter='rp'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Wins' sorter='wins'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Losses' sorter='losses'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Ties' sorter='ties'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Matches'
-                                 sorter='matches'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Lives' sorter='lives'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                    <TableHeader name='Ante' sorter='ante'
-                                 sortBy={this.state.sortBy}
-                                 sortOrder={this.state.sortOrder}
-                                 changeSorting={this.changeSorting} />
-                  </tr>
-                </thead>
-                <tbody>
-                  { players }
-                </tbody>
-              </table>
+              {content}
             </div>
           </div>
         </div>
