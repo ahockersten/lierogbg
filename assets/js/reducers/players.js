@@ -14,8 +14,12 @@ export default function players(state = defaultState, action) {
       isFetching: true,
     });
   case PLAYERS_SUCCESS:
-    // FIXME static data for now, read from action.json later
-    return {
+    return Object.assign({}, state, {
+      isFetching: false,
+      players: action.players
+    });
+    // this is kept so that when I write tests later, I can reuse it.
+    /*return {
       isFetching: false,
       players: [{
         pk: 1,
@@ -96,7 +100,7 @@ export default function players(state = defaultState, action) {
           lives: -9,
         }
       }]
-    };
+    };*/
   case PLAYERS_FAILURE:
     // FIXME error handling
     return state;

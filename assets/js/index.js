@@ -1,3 +1,5 @@
+import 'babel-core/polyfill';
+
 import { createHistory } from 'history';
 import React from 'react';
 import { render } from 'react-dom';
