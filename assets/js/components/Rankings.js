@@ -200,7 +200,7 @@ class Rankings extends Component {
                                  sortOrder={this.state.sortOrder}
                                  changeSorting={this.changeSorting} />
                     <TableHeader name='Player'
-                                 cssClasses='align_left' sorter='name'
+                                 cssClasses={['align_left']} sorter='name'
                                  sortBy={this.state.sortBy}
                                  sortOrder={this.state.sortOrder}
                                  changeSorting={this.changeSorting} />
