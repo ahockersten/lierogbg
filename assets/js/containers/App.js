@@ -15,7 +15,7 @@ class App extends Component {
           <div className="container-fluid">
             <ul className="nav navbar-nav nav-pills navbar-right">
               <li id="hypermeet">
-                <a href=""><strong>HyperMeet 2015</strong></a>
+                <a href="/hypermeet2015">HyperMeet 2015</a>
               </li>
               <li id="about">
                 <a href="/about">LieroGBG</a>
