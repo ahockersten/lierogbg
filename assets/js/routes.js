@@ -1,5 +1,6 @@
 import React from 'react';
-import { IndexRoute, NotFound, Redirect, Router, Route } from 'react-router';
+import { IndexRedirect, IndexRoute, NotFound, Redirect, Router,
+         Route } from 'react-router';
 import { ReduxRouter } from 'redux-router';
 
 import App from './containers/App';
@@ -19,11 +20,11 @@ const routes = (
       <Route path="maps" component={Maps} />
       <Route path="rankings" component={Rankings}>
         <Route path="matches" component={Matches} />
-        <Route path="table" component={RankingTable} />
-        <IndexRoute component={RankingTable} />
+        <Route path="players" component={RankingTable} />
+        <IndexRedirect to="players" />
       </Route>
       <Route path="rules" component={Rules} />
-      <IndexRoute component={Rankings} />
+      <IndexRedirect to="rankings" />
       <Route path="*" component={NotFound} />
     </Route>
     <Route path="*" component={NotFound} />

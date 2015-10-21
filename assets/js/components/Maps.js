@@ -19,7 +19,7 @@ class MapItem extends Component {
   }
 }
 
-class Maps extends Component {
+export class Maps extends Component {
   render() {
     return (
       <div className="row">

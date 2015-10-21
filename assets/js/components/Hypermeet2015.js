@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Hypermeet2015 extends Component {
+export class Hypermeet2015 extends Component {
   render() {
     return (
       <div className="row">

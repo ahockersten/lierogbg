@@ -4,27 +4,15 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import * as PlayersActions from '../actions/players';
-import { WormImageRight } from './WormImage';
+import { Lives } from './Lives';
+import { PoolPoints } from './PoolPoints';
 import { Spinner } from './Spinner';
+import { TableHeader } from './TableHeader';
+import { WormImageRight } from './WormImage';
 
 class Player extends Component {
   render() {
     const { season, player, total_players} = this.props;
-    const pool_points = player.pp == 0 ? null :
-      <span className="pool_points_remaining">
-        (+{ player.pp } pool
-      </span>;
-    const lives = player.lives > 0 ?
-      <span className="change_positive">
-        +{ player.lives }
-      </span> :
-      player.lives < 0 ?
-        <span className="change_negative">
-          { player.lives }
-        </span> :
-        <span>
-          { player.lives }
-        </span>;
     return (
       <tr>
         <td>{player.rank == total_players ? '-' : player.rank}</td>
@@ -34,13 +22,15 @@ class Player extends Component {
         </td>
         <td>
           <span className="rp_text">{ player.rp }</span>
-          { pool_points }
+          <PoolPoints pp={player.pp} />
         </td>
         <td>{ player.wins }</td>
         <td>{ player.losses }</td>
         <td>{ player.ties }</td>
         <td>{ player.matches }</td>
-        <td>{ lives } </td>
+        <td>
+          <Lives lives={player.lives} />
+        </td>
         <td>
           <span className="rp_text">{ player.ante }</span>
         </td>
@@ -48,48 +38,6 @@ class Player extends Component {
     );
   }
 }
-
-
-class TableHeader extends Component {
-  render() {
-    var classes;
-    var sortSymbol = "";
-    if (this.props.sorter == this.props.sortBy) {
-      classes = _.reduce(this.props.cssClasses, function(acc, n) {
-        return acc + ", " + n;
-      }, "sorter");
-      sortSymbol = this.props.sortOrder == 'asc' ? '▼' : '▲';
-    }
-    else {
-      classes = _.reduce(this.props.cssClasses, function(acc, n) {
-        return acc + ", " + n;
-      });
-    }
-    return (
-      <th className={classes}
-          onClick={this.props.changeSorting.bind(null, this.props.sorter)}>
-        {this.props.name} {sortSymbol}
-      </th>
-    );
-  }
-}
-TableHeader.propTypes = {
-  // the externally visible name to put on this header
-  name: PropTypes.string.isRequired,
-  // additional css classes for this
-  cssClasses: PropTypes.arrayOf(PropTypes.string),
-  // the player property to use for sorting
-  sorter: PropTypes.string.isRequired,
-  // the player property currently being used for sorting
-  sortBy: PropTypes.string.isRequired,
-  // the current sorting order, 'asc' or 'desc'
-  sortOrder: PropTypes.string.isRequired,
-  // function to call to change the sorting
-  changeSorting: PropTypes.func.isRequired
-};
-TableHeader.defaultProps = {
-  cssClasses: []
-};
 
 
 class RankingTable extends Component {
