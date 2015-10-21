@@ -92,7 +92,7 @@ TableHeader.defaultProps = {
 };
 
 
-class Rankings extends Component {
+class RankingTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -202,61 +202,40 @@ class Rankings extends Component {
       );
     }
     return (
-      <div>
-        <div id="sub_menu" className="navbar" role="navigation">
-          <ul className="nav nav-pills navbar-left">
-            <li className="dropdown">
-              <a className="dropdown-toggle" id="show" data-toggle="dropdown">
-                Show <span className="caret"></span>
-              </a>
-              <ul className="dropdown-menu" role="menu">
-                <li role="presentation">
-                  <label role="menu-item">
-                  <input type="checkbox" onChange={this.inactivePlayersChanged}
-                         value={this.state.inactive}
-                         id="inactive-players-checkbox"/>
-                    Inactive players
-                  </label>
-                  <label role="menu-item">
-                  <input type="checkbox" onChange={this.allTimeChanged}
-                         value={this.state.allTime}
-                         id="all-time-checkbox"/>
-                    All time
-                  </label>
-                </li>
-              </ul>
-            </li>
-            <li id="add_game">
-              <a href="">Add match</a>
-            </li>
-            <li id="add_tournament">
-              <a href="">Add tournament</a>
-            </li>
-          </ul>
-          <ul className="nav nav-pills navbar-right">
-            <li id="ranking" >
-              <a href="/rankings">Ranking</a>
-            </li>
-            <li id="games" >
-              <a href="">Matches</a>
-            </li>
-            <li id="tournaments" >
-              <a href="">Tournaments</a>
-            </li>
-          </ul>
-        </div>
-        <div className="content">
-          <div className="row">
-            <div className="col-xs-12">
-              {content}
-            </div>
+      <div className="row">
+        <div className="col-xs-12">
+          <div className="dropdown">
+            <button type="button" className="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+              Show <span className="caret"></span>
+            </button>
+            <ul className="dropdown-menu" role="menu">
+              <li role="presentation">
+                <label role="menu-item">
+                <input type="checkbox" onChange={this.inactivePlayersChanged}
+                       value={this.state.inactive}
+                       id="inactive-players-checkbox"/>
+                  Inactive players
+                </label>
+                <label role="menu-item">
+                <input type="checkbox" onChange={this.allTimeChanged}
+                       value={this.state.allTime}
+                       id="all-time-checkbox"/>
+                  All time
+                </label>
+              </li>
+            </ul>
           </div>
+        </div>
+        <div className="col-xs-12">
+          {content}
         </div>
       </div>
     );
   }
 }
-Rankings.propTypes = {
+RankingTable.propTypes = {
   // FIXME this
 };
 
@@ -273,4 +252,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Rankings);
+export default connect(mapStateToProps, mapDispatchToProps)(RankingTable);

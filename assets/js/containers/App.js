@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import bootstrap from 'bootstrap';
-
-import Rankings from '../components/Rankings';
-import * as PlayersActions from '../actions/players';
 
 class App extends Component {
   render() {
     // FIXME authentication!
+    // FIXME use <Link> not direct hrefs. Here and elsewhere!
     return (
       <div className="container">
         <nav className="navbar navbar-default" role="navigation">
