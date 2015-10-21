@@ -25,7 +25,6 @@ class Player extends Component {
         <span>
           { player.lives }
         </span>;
-    // FIXME add Liero worm image class here
     return (
       <tr>
         <td>{player.rank == total_players ? '-' : player.rank}</td>
@@ -236,7 +235,7 @@ class Rankings extends Component {
           </ul>
           <ul className="nav nav-pills navbar-right">
             <li id="ranking" >
-              <a href="">Ranking</a>
+              <a href="/rankings">Ranking</a>
             </li>
             <li id="games" >
               <a href="">Matches</a>

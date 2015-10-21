@@ -18,16 +18,16 @@ class App extends Component {
                 <a href=""><strong>HyperMeet 2015</strong></a>
               </li>
               <li id="about">
-                <a href="">LieroGBG</a>
+                <a href="/about">LieroGBG</a>
               </li>
               <li id="rankings">
-                <a href="">Rankings</a>
+                <a href="/rankings">Rankings</a>
               </li>
               <li id="rules">
-                <a href="">Rules</a>
+                <a href="/rules">Rules</a>
               </li>
               <li id="maps">
-                <a href="">Maps</a>
+                <a href="/maps">Maps</a>
               </li>
               <li id="administration">
                 <a href="/admin">Administration</a>

@@ -13,11 +13,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin', include(admin.site.urls)),
 
-    # URLs handled by React's router. Everything under /app
-    url(r'^app', include('index.urls')),
-    # Special case: '/' is handled by the app to redirect to /app
-    url(r'^$', 'index.views.index'),
-
-    # api
     url(r'^api/rankings', include('rankings.urls')),
+
+    # All other urls are handled by React
+    url(r'^.*$', 'index.views.index'),
 )
