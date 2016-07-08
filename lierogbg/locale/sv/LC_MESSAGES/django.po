@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-26 11:07+0200\n"
+"POT-Creation-Date: 2016-07-07 22:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,11 +63,11 @@ msgstr "Kom ihåg mig"
 msgid "Sign in"
 msgstr "Logga in"
 
-#: lierogbg/accounts/views.py:32
+#: lierogbg/accounts/views.py:33
 msgid "User disabled"
 msgstr "Användaren avstängd"
 
-#: lierogbg/accounts/views.py:38
+#: lierogbg/accounts/views.py:39
 msgid "User does not exist"
 msgstr "Användaren finns inte"
 
@@ -83,98 +83,98 @@ msgstr "Svenska"
 msgid "English"
 msgstr "Engelska"
 
-#: lierogbg/rankings/fields.py:14
+#: lierogbg/rankings/fields.py:15
 msgid "Enter a valid Color value: e.g. \"#ff0022\""
 msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
 
-#: lierogbg/rankings/fields.py:33
+#: lierogbg/rankings/fields.py:35
 msgid "Hex value for a color"
 msgstr "Hex-värde för en färg"
 
-#: lierogbg/rankings/forms.py:29 lierogbg/rankings/forms.py:158
+#: lierogbg/rankings/forms.py:30 lierogbg/rankings/forms.py:167
 msgid "Start time"
 msgstr "Starttid"
 
-#: lierogbg/rankings/forms.py:30 lierogbg/rankings/forms.py:57
+#: lierogbg/rankings/forms.py:31 lierogbg/rankings/forms.py:61
 #: lierogbg/rankings/templates/rankings/tournaments.html:37
 msgid "Name"
 msgstr "Namn"
 
-#: lierogbg/rankings/forms.py:31
+#: lierogbg/rankings/forms.py:32
 #: lierogbg/rankings/templates/rankings/edit_tournament.html:31
 #: lierogbg/rankings/templates/rankings/view_tournament.html:25
 msgid "Players"
 msgstr "Spelare"
 
-#: lierogbg/rankings/forms.py:32
+#: lierogbg/rankings/forms.py:33
 msgid "Ante (in %)"
 msgstr "Ante (i %)"
 
-#: lierogbg/rankings/forms.py:33
+#: lierogbg/rankings/forms.py:34
 msgid "Pool points unlocked"
 msgstr "Pool-poäng upplåsta"
 
-#: lierogbg/rankings/forms.py:58
+#: lierogbg/rankings/forms.py:62
 #: lierogbg/rankings/templates/rankings/tournaments.html:42
 msgid "Total ante"
 msgstr "Total ante"
 
-#: lierogbg/rankings/forms.py:59
+#: lierogbg/rankings/forms.py:63
 #: lierogbg/rankings/templates/rankings/tournaments.html:43
 msgid "Finished"
 msgstr "Slutförd"
 
-#: lierogbg/rankings/forms.py:76 lierogbg/rankings/forms.py:99
+#: lierogbg/rankings/forms.py:81 lierogbg/rankings/forms.py:105
 msgid "Placing"
 msgstr "Placering"
 
-#: lierogbg/rankings/forms.py:77 lierogbg/rankings/forms.py:100
+#: lierogbg/rankings/forms.py:82 lierogbg/rankings/forms.py:106
 msgid "Received ante"
 msgstr "Mottagen ante"
 
-#: lierogbg/rankings/forms.py:101
+#: lierogbg/rankings/forms.py:107
 #: lierogbg/rankings/templates/rankings/includes/list_players.html:7
 msgid "Player"
 msgstr "Spelare"
 
-#: lierogbg/rankings/forms.py:131
+#: lierogbg/rankings/forms.py:139
 msgid "Map played"
 msgstr "Spelad karta"
 
-#: lierogbg/rankings/forms.py:132
+#: lierogbg/rankings/forms.py:140
 msgid "Left player lives left"
 msgstr "Antal liv kvar för vänster spelare"
 
-#: lierogbg/rankings/forms.py:133
+#: lierogbg/rankings/forms.py:141
 msgid "Right player lives left"
 msgstr "Antal liv kvar för höger spelare"
 
-#: lierogbg/rankings/forms.py:134
+#: lierogbg/rankings/forms.py:142
 msgid "Replay file"
 msgstr "Replay-fil"
 
-#: lierogbg/rankings/forms.py:159
+#: lierogbg/rankings/forms.py:168
 #: lierogbg/rankings/templates/rankings/includes/list_games.html:9
 #: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:12
 #: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:9
 msgid "Left player"
 msgstr "Vänster spelare"
 
-#: lierogbg/rankings/forms.py:160
+#: lierogbg/rankings/forms.py:169
 #: lierogbg/rankings/templates/rankings/includes/list_games.html:11
 #: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:13
 #: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:10
 msgid "Right player"
 msgstr "Höger spelare"
 
-#: lierogbg/rankings/forms.py:161
+#: lierogbg/rankings/forms.py:170
 #: lierogbg/rankings/templates/rankings/includes/list_games.html:13
 #: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:11
 #: lierogbg/rankings/templates/rankings/tournaments.html:38
 msgid "Winner"
 msgstr "Vinnare"
 
-#: lierogbg/rankings/forms.py:162
+#: lierogbg/rankings/forms.py:171
 #: lierogbg/rankings/templates/rankings/includes/list_games.html:52
 #: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:36
 msgid "Ranked"
@@ -417,7 +417,7 @@ msgstr "Ante i procent"
 msgid "view tournament"
 msgstr "visa turnering"
 
-#: lierogbg/rankings/views.py:121
+#: lierogbg/rankings/views.py:126
 msgid "Tied"
 msgstr "Oavgjort"
 
