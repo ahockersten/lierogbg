@@ -1,0 +1,446 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-07 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lierogbg/about/templates/about/index.html:5
+#: lierogbg/maps/templates/maps/index.html:6
+#: lierogbg/rules/templates/rules/index.html:5
+msgid "About LieroGBG"
+msgstr "Om LieroGBG"
+
+#: lierogbg/accounts/templates/accounts/error.html:4
+#: lierogbg/accounts/templates/accounts/login.html:4
+#: lierogbg/rankings/templates/rankings/add_game.html:4
+#: lierogbg/rankings/templates/rankings/add_tournament.html:6
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:5
+#: lierogbg/rankings/templates/rankings/error.html:4
+#: lierogbg/rankings/templates/rankings/games.html:6
+#: lierogbg/rankings/templates/rankings/internal_info.html:4
+#: lierogbg/rankings/templates/rankings/ranking.html:6
+#: lierogbg/rankings/templates/rankings/tournaments.html:4
+#: lierogbg/rankings/templates/rankings/view_tournament.html:5
+#: templates/base.html:8 templates/base.html.py:55
+msgid "LieroGBG"
+msgstr "LieroGBG"
+
+#: lierogbg/accounts/templates/accounts/error.html:4
+#: lierogbg/rankings/templates/rankings/error.html:4
+msgid "Error"
+msgstr "Fel"
+
+#: lierogbg/accounts/templates/accounts/login.html:4 templates/base.html:75
+msgid "Login"
+msgstr "Logga in"
+
+#: lierogbg/accounts/templates/accounts/login.html:12
+msgid "Username"
+msgstr "Användarnamn"
+
+#: lierogbg/accounts/templates/accounts/login.html:13
+msgid "Password"
+msgstr "Lösenord"
+
+#: lierogbg/accounts/templates/accounts/login.html:16
+msgid "Remember me"
+msgstr "Kom ihåg mig"
+
+#: lierogbg/accounts/templates/accounts/login.html:20
+msgid "Sign in"
+msgstr "Logga in"
+
+#: lierogbg/accounts/views.py:33
+msgid "User disabled"
+msgstr "Användaren avstängd"
+
+#: lierogbg/accounts/views.py:39
+msgid "User does not exist"
+msgstr "Användaren finns inte"
+
+#: lierogbg/hypermeet/templates/hypermeet/index.html:5 templates/base.html:52
+msgid "HyperMeet 2015"
+msgstr "HyperMeet 2015"
+
+#: lierogbg/lierogbg/settings.py:98
+msgid "Swedish"
+msgstr "Svenska"
+
+#: lierogbg/lierogbg/settings.py:99
+msgid "English"
+msgstr "Engelska"
+
+#: lierogbg/rankings/fields.py:15
+msgid "Enter a valid Color value: e.g. \"#ff0022\""
+msgstr "Slå in ett giltigt färgvärde, t. ex. \"#ff0022\""
+
+#: lierogbg/rankings/fields.py:35
+msgid "Hex value for a color"
+msgstr "Hex-värde för en färg"
+
+#: lierogbg/rankings/forms.py:30 lierogbg/rankings/forms.py:167
+msgid "Start time"
+msgstr "Starttid"
+
+#: lierogbg/rankings/forms.py:31 lierogbg/rankings/forms.py:61
+#: lierogbg/rankings/templates/rankings/tournaments.html:37
+msgid "Name"
+msgstr "Namn"
+
+#: lierogbg/rankings/forms.py:32
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:31
+#: lierogbg/rankings/templates/rankings/view_tournament.html:25
+msgid "Players"
+msgstr "Spelare"
+
+#: lierogbg/rankings/forms.py:33
+msgid "Ante (in %)"
+msgstr "Ante (i %)"
+
+#: lierogbg/rankings/forms.py:34
+msgid "Pool points unlocked"
+msgstr "Pool-poäng upplåsta"
+
+#: lierogbg/rankings/forms.py:62
+#: lierogbg/rankings/templates/rankings/tournaments.html:42
+msgid "Total ante"
+msgstr "Total ante"
+
+#: lierogbg/rankings/forms.py:63
+#: lierogbg/rankings/templates/rankings/tournaments.html:43
+msgid "Finished"
+msgstr "Slutförd"
+
+#: lierogbg/rankings/forms.py:81 lierogbg/rankings/forms.py:105
+msgid "Placing"
+msgstr "Placering"
+
+#: lierogbg/rankings/forms.py:82 lierogbg/rankings/forms.py:106
+msgid "Received ante"
+msgstr "Mottagen ante"
+
+#: lierogbg/rankings/forms.py:107
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:7
+msgid "Player"
+msgstr "Spelare"
+
+#: lierogbg/rankings/forms.py:139
+msgid "Map played"
+msgstr "Spelad karta"
+
+#: lierogbg/rankings/forms.py:140
+msgid "Left player lives left"
+msgstr "Antal liv kvar för vänster spelare"
+
+#: lierogbg/rankings/forms.py:141
+msgid "Right player lives left"
+msgstr "Antal liv kvar för höger spelare"
+
+#: lierogbg/rankings/forms.py:142
+msgid "Replay file"
+msgstr "Replay-fil"
+
+#: lierogbg/rankings/forms.py:168
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:9
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:12
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:9
+msgid "Left player"
+msgstr "Vänster spelare"
+
+#: lierogbg/rankings/forms.py:169
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:11
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:13
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:10
+msgid "Right player"
+msgstr "Höger spelare"
+
+#: lierogbg/rankings/forms.py:170
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:13
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:11
+#: lierogbg/rankings/templates/rankings/tournaments.html:38
+msgid "Winner"
+msgstr "Vinnare"
+
+#: lierogbg/rankings/forms.py:171
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:52
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:36
+msgid "Ranked"
+msgstr "Rankad"
+
+#: lierogbg/rankings/templates/rankings/add_game.html:4
+msgid "add match"
+msgstr "lägg till match"
+
+#: lierogbg/rankings/templates/rankings/add_game.html:14
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:114
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:122
+#: lierogbg/rankings/templates/rankings/games.html:12
+#: lierogbg/rankings/templates/rankings/ranking.html:27
+#: lierogbg/rankings/templates/rankings/tournaments.html:10
+msgid "Add match"
+msgstr "Lägg till match"
+
+#: lierogbg/rankings/templates/rankings/add_tournament.html:6
+msgid "add tournament"
+msgstr "lägg till turnering"
+
+#: lierogbg/rankings/templates/rankings/add_tournament.html:16
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:18
+#: lierogbg/rankings/templates/rankings/view_tournament.html:12
+msgid "Tournament info"
+msgstr "Turnerings-info"
+
+#: lierogbg/rankings/templates/rankings/add_tournament.html:34
+msgid "Total Ante:"
+msgstr "Total Ante:"
+
+#: lierogbg/rankings/templates/rankings/add_tournament.html:44
+msgid "Ante per placing"
+msgstr "Ante per placering"
+
+#: lierogbg/rankings/templates/rankings/add_tournament.html:72
+#: lierogbg/rankings/templates/rankings/games.html:15
+#: lierogbg/rankings/templates/rankings/ranking.html:30
+#: lierogbg/rankings/templates/rankings/tournaments.html:13
+msgid "Add tournament"
+msgstr "Lägg till turnering"
+
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:5
+msgid "edit tournament"
+msgstr "editera turnering"
+
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:61
+#: lierogbg/rankings/templates/rankings/view_tournament.html:47
+msgid "Matches played"
+msgstr "Spelade matcher"
+
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:69
+#: lierogbg/rankings/templates/rankings/view_tournament.html:55
+msgid "Final placings"
+msgstr "Slutplacering"
+
+#: lierogbg/rankings/templates/rankings/edit_tournament.html:104
+msgid "Save tournament"
+msgstr "Spara turnering"
+
+#: lierogbg/rankings/templates/rankings/games.html:6
+msgid "matches"
+msgstr "matcher"
+
+#: lierogbg/rankings/templates/rankings/games.html:21
+#: lierogbg/rankings/templates/rankings/ranking.html:36
+#: lierogbg/rankings/templates/rankings/tournaments.html:19
+msgid "Ranking"
+msgstr "Ranking"
+
+#: lierogbg/rankings/templates/rankings/games.html:24
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:12
+#: lierogbg/rankings/templates/rankings/ranking.html:39
+#: lierogbg/rankings/templates/rankings/tournaments.html:22
+msgid "Matches"
+msgstr "Matcher"
+
+#: lierogbg/rankings/templates/rankings/games.html:27
+#: lierogbg/rankings/templates/rankings/ranking.html:42
+#: lierogbg/rankings/templates/rankings/tournaments.html:25
+msgid "Tournaments"
+msgstr "Turneringar"
+
+#: lierogbg/rankings/templates/rankings/games.html:38
+#: lierogbg/rankings/templates/rankings/ranking.html:53
+msgid "The last match was played "
+msgstr "Den senaste matchen spelades "
+
+#: lierogbg/rankings/templates/rankings/includes/add_game_form_contents.html:6
+msgid "Match info"
+msgstr "Match-info"
+
+#: lierogbg/rankings/templates/rankings/includes/add_game_form_contents.html:60
+msgid "Round info"
+msgstr "Info om runda"
+
+#: lierogbg/rankings/templates/rankings/includes/add_game_form_contents.html:99
+msgid "Add round"
+msgstr "Lägg till runda"
+
+#: lierogbg/rankings/templates/rankings/includes/add_game_form_contents.html:100
+msgid "Delete round"
+msgstr "Ta bort runda"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:8
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:11
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:8
+msgid "Time"
+msgstr "Tid"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:10
+msgid "Left player RP"
+msgstr "Vänster spelares RP"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:12
+msgid "Right player RP"
+msgstr "Höger spelares RP"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:14
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:15
+msgid "Match type"
+msgstr "Match-typ"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:50
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:34
+msgid "Tournament"
+msgstr "Turnering"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:54
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:38
+msgid "Unranked"
+msgstr "Orankad"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:65
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:74
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:49
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:68
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:35
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:44
+msgid "Round"
+msgstr "Runda"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:66
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:52
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:36
+msgid "Map"
+msgstr "Karta"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:67
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:55
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:37
+msgid "Score"
+msgstr "Slutställning"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games.html:68
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:58
+#: lierogbg/rankings/templates/rankings/includes/list_games_tournament.html:38
+msgid "Download"
+msgstr "Ladda ner"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:5
+msgid "Show all results"
+msgstr "Visa alla resultat"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:79
+#: lierogbg/rankings/templates/rankings/ranking.html:12
+msgid "Show"
+msgstr "Visa"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:90
+msgid "Show results"
+msgstr "Visa resultat"
+
+#: lierogbg/rankings/templates/rankings/includes/list_games_hidden.html:117
+msgid "Winner:"
+msgstr "Vinnare:"
+
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:8
+msgid "Ranking points"
+msgstr "Ranking-poäng"
+
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:9
+msgid "Wins"
+msgstr "Vinster"
+
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:10
+msgid "Losses"
+msgstr "Förluster"
+
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:11
+msgid "Ties"
+msgstr "Oavgjorda"
+
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:13
+msgid "Lives"
+msgstr "Liv"
+
+#: lierogbg/rankings/templates/rankings/includes/list_players.html:14
+msgid "Ante"
+msgstr "Ante"
+
+#: lierogbg/rankings/templates/rankings/internal_info.html:4
+msgid "Internal info"
+msgstr "Intern information"
+
+#: lierogbg/rankings/templates/rankings/ranking.html:6
+msgid "ranking"
+msgstr "ranking"
+
+#: lierogbg/rankings/templates/rankings/ranking.html:17
+msgid "Inactive players"
+msgstr "Inaktiva spelare"
+
+#: lierogbg/rankings/templates/rankings/ranking.html:20
+msgid "All time"
+msgstr "All time"
+
+#: lierogbg/rankings/templates/rankings/tournaments.html:4
+msgid "tournaments"
+msgstr "turneringar"
+
+#: lierogbg/rankings/templates/rankings/tournaments.html:36
+msgid "Date"
+msgstr "Datum"
+
+#: lierogbg/rankings/templates/rankings/tournaments.html:39
+msgid "Number of players"
+msgstr "Antal spelare"
+
+#: lierogbg/rankings/templates/rankings/tournaments.html:40
+msgid "Number of matches"
+msgstr "Antal matcher"
+
+#: lierogbg/rankings/templates/rankings/tournaments.html:41
+msgid "Ante percentage"
+msgstr "Ante i procent"
+
+#: lierogbg/rankings/templates/rankings/view_tournament.html:5
+msgid "view tournament"
+msgstr "visa turnering"
+
+#: lierogbg/rankings/views.py:126
+msgid "Tied"
+msgstr "Oavgjort"
+
+#: templates/admin/base_site.html:4
+msgid "Django site admin"
+msgstr "Djangos administration"
+
+#: templates/base.html:58
+msgid "Rankings"
+msgstr "Rankingar"
+
+#: templates/base.html:61
+msgid "Rules"
+msgstr "Regler"
+
+#: templates/base.html:64
+msgid "Maps"
+msgstr "Kartor"
+
+#: templates/base.html:68
+msgid "Administration"
+msgstr "Administration"
+
+#: templates/base.html:71
+msgid "Logout"
+msgstr "Logga ut"

@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 here = lambda *x: os.path.join(BASE_DIR, *x)
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -112,7 +112,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '%xeasdfxa!abga9iup@y#^#p2e9hpb-jooosifer7pa^tmdb0f_i(e$^'
+SECRET_KEY = '%xeasdfxa!abga9iup@y#^#p2e9hpb-jooo89pu463j[}oik7u6esifer7pa^tmdb0f_i(e$^'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -137,14 +137,31 @@ ROOT_URLCONF = 'lierogbg.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'lierogbg.wsgi.application'
 
-TEMPLATE_DIRS = (
-    here('templates'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            here('templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
+               'lierogbg.template_context_processors.get_current_path',
+            ],
+        },
+    },
+]
 
-TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-    'django.core.context_processors.request',
-    'lierogbg.template_context_processors.get_current_path',
-)
 
 INSTALLED_APPS = (
     # django apps
@@ -213,6 +230,5 @@ LOGGING = {
 SERVER_EMAIL = 'django@orbmit.org'
 
 ALLOWED_HOSTS = [
-    '.maskinskrift.com',
     '.orbmit.org'
 ]
