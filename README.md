@@ -1,3 +1,7 @@
+Note
+============
+*THIS PROJECT IS CURRENTLY UNMAINTAINED AND CONTAINS PACKAGES WITH KNOWN SECURITY VULNERABILITIES.*
+
 About
 ============
 This is the LieroGBG ranking and match system. It's a Django + Bootstrap web application used for managing a Liero ranking system. It might serve as a good basis if you want to build your own, or for another game's ranking system.
